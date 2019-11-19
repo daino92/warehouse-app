@@ -19,6 +19,9 @@ const validations = (value, rules) => {
             case 'isNumeric':
                 isValid = isValid && isNumeric(value)
                 break
+            case 'isAlphaNumeric':
+                isValid = isValid && isAlphaNumeric(value)
+                break
             default: 
                 isValid = true
         } 
@@ -98,6 +101,18 @@ const isEmail = value => {
 
 const isNumeric = value => {
     const pattern = /^\d+$/;
+    return pattern.test(String(value).toLowerCase());
+}
+
+/**
+ * Alphanumeric validation
+ * 
+ * @param value
+ * @return 
+ */
+
+const isAlphaNumeric = value => {
+    const pattern = /^[a-zA-Z0-9]*$/;
     return pattern.test(String(value).toLowerCase());
 }
   
