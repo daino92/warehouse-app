@@ -11,15 +11,14 @@ import Select from '../components/forms/Select';
 import Radio from '../components/forms/RadioButton';
 import Button from '../components/Button';
 import Checkbox from '../components/forms/Checkbox';
-import {dict} from '../util/variables';
-import {ErrorContainer} from '../components/forms/Components';
+import {dict, colors} from '../util/variables';
 
 const NewPostContainer = styled('div')`
     width: 80%;
     margin: 20px auto;
     padding-bottom: .5em;
-    border: 1px solid #EEE;
-    box-shadow: 0 2px 3px #CCC;
+    border: 1px solid ${colors.whisper};
+    box-shadow: 0 2px 3px ${colors.lightGrey};
     text-align: center;
 
     form {
@@ -276,7 +275,8 @@ class NewProduct extends Component {
                     <TextInput name="productSKU" type={productSKU.params.type}
                         placeholder={productSKU.params.placeholder} label={productSKU.label}
                         value={productSKU.value} valid={productSKU.valid} touched={productSKU.touched}
-                        maxLength={productSKU.validationRules.maxLength} onChange={this.changeHandler} />
+                        maxLength={productSKU.validationRules.maxLength} onChange={this.changeHandler} 
+                        errorMessage={productSKU.params.errorMessage}/>
 
                     <TextInput name="weight" type={weight.params.type}
                         placeholder={weight.params.placeholder} label={weight.label}
