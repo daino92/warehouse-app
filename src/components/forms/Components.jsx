@@ -23,6 +23,11 @@ const FormComponent = styled('div')`
 
 const ErrorContainer = styled('div')`
     display: block;
+    font-style: italic;
+    text-align: center;
+    font-size: 1.3em;
+    line-height: 1.1;
+    padding: 1.5em;
     color: ${colors.red};
 `;
 
