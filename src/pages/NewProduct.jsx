@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import axiosInstance from '../axios';
-import {Redirect} from 'react-router-dom';
+import {withRouter, Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
 import styled from '@emotion/styled';
 import {updateObject} from '../util/utilities';
 import {validations, validationMessages} from '../util/validations';
-//import Input from '../components/Input';
 import TextInput from '../components/forms/TextInput';
 import TextArea from '../components/forms/TextArea';
 import Select from '../components/forms/Select';
@@ -13,6 +12,7 @@ import Button from '../components/Button';
 import Checkbox from '../components/forms/Checkbox';
 import {dict} from '../util/variables';
 import {ErrorContainer} from '../components/forms/Components';
+import {initAddProduct} from '../redux/product/product.actions';
 
 const NewPostContainer = styled('div')`
     width: 80%;
@@ -226,6 +226,7 @@ class NewProduct extends Component {
     
     formSubmitHandler = event => {
         event.preventDefault();
+        const {initAddProduct} = this.props;
 
         const formData = {};
         const {productForm} = this.state;
@@ -238,21 +239,21 @@ class NewProduct extends Component {
             productForm: formData
         };
 
-        axiosInstance.post('/posts', data)
-            .then(response => {
-                console.log(response);
-                this.props.history.replace('/products');
-                //this.setState({ submitted: true})
-            });
+        initAddProduct(data);
     }
 
     render () {
         let redirect = null;
+        const {submitted, error} = this.props;
         const {formIsValid} = this.state;
         const {productName, productSKU, weight, productDescription, price, netPrice, productCategory, shopAvailability, color, test} = this.state.productForm;
-        // if (submitted) {
-        //     redirect = <Redirect to="/products"/>;
-        // }
+        
+        if (submitted) {
+            redirect = <Redirect to="/products"/>;
+        }
+        if (error) {
+            return <ErrorContainer>{dict.errorUponProductAddition}</ErrorContainer>
+        }
 
         // const formElementsArray = [];
         // for (let key in productForm) {
@@ -336,4 +337,13 @@ class NewProduct extends Component {
     }
 }
 
-export default NewProduct;
+const mapStateToProps = state => ({
+    submitted: state.product.submitted,
+    error: state.product.error
+})
+  
+const mapDispatchToProps = dispatch => ({
+    initAddProduct: product => dispatch(initAddProduct(product))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NewProduct));

@@ -80,9 +80,9 @@ class ProductDetails extends Component {
         if (match.params.id) product = <Spinner/>
 
         if (error) return (
-            <ErrorContainer>{dict.errorUponPostDeletion}</ErrorContainer>
+            <ErrorContainer>{dict.errorUponProductDeletion}</ErrorContainer>
         )
-        // if (!error) return (<h1>{dict.successfulPostDeletion}</h1>)
+        // if (!error) return (<h1>{dict.successfulProductDeletion}</h1>)
         if (loadedProduct) {
             product = (
                 <FullProduct>
