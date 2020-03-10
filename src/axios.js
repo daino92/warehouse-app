@@ -1,10 +1,18 @@
 import axios from 'axios';
+import {info} from '../src/util/env';
+
+// Get the info from env.js
+const username = info.username;
+const password = info.password;
+
+const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
 
 const axiosInstance = axios.create({
-    baseURL: 'https://jsonplaceholder.typicode.com',
+    baseURL: info.baseAPI,
     headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
+        Accept: "application/JSON",
+        "Content-Type": "application/JSON",
+        'Authorization': `Basic ${token}`
     }
 });
 
