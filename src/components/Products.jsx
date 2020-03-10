@@ -12,6 +12,7 @@ const ProductsContainer = styled('section')`
     justify-content: center;
     width: 80%;
     margin: auto;
+    
 `;
 
 class Products extends Component {

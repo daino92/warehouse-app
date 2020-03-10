@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import styled from '@emotion/styled';
-import axiosInstance from '../axios';
-import {initSingleProduct} from '../redux/product/product.actions';
+import {initSingleProduct, initDeleteProduct} from '../redux/product/product.actions';
 import Spinner from './Spinner';
 import Button from './Button';
 import {colors, dict} from '../util/variables';
@@ -34,57 +33,39 @@ const EditProduct = styled('div')`
 `;
 
 class ProductDetails extends Component {
-    state = {
-        loadedProduct: null,
-        error: false
-    }
-    
     componentDidMount () {
         console.log(this.props)
         this.loadData();
-        // const {initSingleProduct} = this.props;
-        // initSingleProduct();
     }
 
-    componentDidUpdate() {
-        console.log(this.props)
-        // const {initSingleProduct} = this.props;
-        // initSingleProduct();
-        this.loadData();
-    }
+    componentDidUpdate(prevProps) {
+        const {product, match} = this.props;
 
-    loadData() {
-        const {loadedProduct} = this.state;
-        const {match, initSingleProduct} = this.props;
-        
-        if (match.params.id) {
-            if (!loadedProduct || (loadedProduct && loadedProduct.id != match.params.id)) {
-                axiosInstance.get('/posts/' + match.params.id)
-                    .then(response => {
-                        console.log("Data of individual product: ", response);
-                        this.setState({loadedProduct: response.data});
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-            }
+        if (prevProps.match.params.id !== match.params.id && product && product.loadedProduct.id) {
+            this.loadData();
         }
     }
 
+    loadData() {
+        const {match, initSingleProduct} = this.props;
+        initSingleProduct(match.params.id);
+    }
+
     deleteProductHandler = () => {
-        const {match} = this.props;
+        const {match, initDeleteProduct} = this.props;
 
         window.confirm("Are you sure you wish to delete this product?") &&
- 
-        axiosInstance.delete('/posts/' + match.params.id)
-            .then(response => {
-                console.log(response);
-                //return (<p>Successful deletion!</p>)
-                this.redirectBack();
-            }).catch(error => {
-                this.setState({error: true})
-                this.redirectBack();
-            });
+        initDeleteProduct(match.params.id);
+
+        // axiosInstance.delete('/posts/' + match.params.id)
+        //     .then(response => {
+        //         console.log(response);
+        //         //return (<p>Successful deletion!</p>)
+        //         this.redirectBack();
+        //     }).catch(error => {
+        //         this.setState({error: true})
+        //         this.redirectBack();
+        //     });
     }
 
     redirectBack = () => {
@@ -93,14 +74,15 @@ class ProductDetails extends Component {
     }
 
     render () {
-        const {loadedProduct, error} = this.state;
-        const {match} = this.props;
+        const {error, match, loadedProduct} = this.props;
 
         let product = <p style={{textAlign: 'center'}}>{dict.selectProduct}</p>;
         if (match.params.id) product = <Spinner/>
 
-        if (error) return (<ErrorContainer>{dict.errorUponPostDeletion}</ErrorContainer>)
-        // if (!error) return (<h1>{dict.successfulPostDeletion}</h1>)
+        if (error) return (
+            <ErrorContainer>{dict.errorUponProductDeletion}</ErrorContainer>
+        )
+        // if (!error) return (<h1>{dict.successfulProductDeletion}</h1>)
         if (loadedProduct) {
             product = (
                 <FullProduct>
@@ -118,11 +100,13 @@ class ProductDetails extends Component {
 }
 
 const mapStateToProps = state => ({
-    product: state.product.product
+    loadedProduct: state.product.loadedProduct,
+    error: state.product.error
 })
   
 const mapDispatchToProps = dispatch => ({
-    initSingleProduct: () => dispatch(initSingleProduct())
+    initSingleProduct: id => dispatch(initSingleProduct(id)),
+    initDeleteProduct: id => dispatch(initDeleteProduct(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProductDetails));

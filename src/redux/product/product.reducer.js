@@ -6,60 +6,88 @@ const initialState = {
     selected: false,
     selectedProductId: null,
     isFetching: false,
-    errorMessage: undefined
+    errorMessage: undefined,
+    submitted: false,
+    error: false
 }
 
 const productReducer = (state = initialState, action) => {
     switch(action.type) {
-        // case ProductActionTypes.ADD_PRODUCT:
-        //     return {
-        //         ...state,
-        //     }
-        // case ProductActionTypes.DELETE_PRODUCT:
-        //     return {
-        //         ...state,
-        //         isFetching: false,
-        //     }
         case ProductActionTypes.FETCH_PRODUCTS_START:
             return {
                 ...state,
-                isFetching: true
+                isFetching: true,
+                error: false
             }
         case ProductActionTypes.FETCH_PRODUCTS_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
+                error: false,
                 products: action.payload
             }
         case ProductActionTypes.FETCH_PRODUCTS_FAILED:
             return {
                 ...state,
                 isFetching: false,
+                error: true,
                 errorMessage: action.payload
-            }
-        case ProductActionTypes.SELECT_PRODUCT_ID:
-            return {
-                ...state,
-                isFetching: false,
-                selected: true,
-                //selectedProductId: ,
-                productId: action.payload
             }
         case ProductActionTypes.FETCH_SINGLE_PRODUCT_START:
             return {
                 ...state,
-                isFetching: true
+                isFetching: true,
+                error: false
             }
         case ProductActionTypes.FETCH_SINGLE_PRODUCT_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
-                product: action.payload
+                error: false,
+                loadedProduct: action.payload
             }
         case ProductActionTypes.FETCH_SINGLE_PRODUCT_FAILED:
             return {
                 ...state,
                 isFetching: false,
+                error: true,
+                errorMessage: action.payload
+            }
+        case ProductActionTypes.DELETE_PRODUCT_START:
+            return {
+                ...state,
+                error: false
+            }
+        case ProductActionTypes.DELETE_PRODUCT_SUCCESS:
+            return {
+                ...state,
+                error: false,
+                deletedProduct: action.payload
+            }
+        case ProductActionTypes.DELETE_PRODUCT_FAILED:
+            return {
+                ...state,
+                error: true,
+                errorMessage: action.payload
+            }
+         case ProductActionTypes.ADD_PRODUCT_START:
+            return {
+                ...state,
+                error: false,
+                submitted: false
+            }
+        case ProductActionTypes.ADD_PRODUCT_SUCCESS:
+            return {
+                ...state,
+                error: false,
+                submitted: true,
+                addedProduct: action.payload
+            }
+        case ProductActionTypes.ADD_PRODUCT_FAILED:
+            return {
+                ...state,
+                error: true,
+                submitted: false,
                 errorMessage: action.payload
             }
         default:
