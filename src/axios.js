@@ -4,11 +4,12 @@ import {info} from '../src/util/env';
 // Get the info from env.js
 const username = info.username;
 const password = info.password;
+const url = info.baseAPI ? info.baseAPI : info.fauxAPI;
 
 const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
 
 const axiosInstance = axios.create({
-    baseURL: info.baseAPI,
+    baseURL: url,
     headers: {
         Accept: "application/JSON",
         "Content-Type": "application/JSON",

@@ -45,7 +45,7 @@ const FlexContainer = styled('div')`
     justify-content: space-between;
 `;
 
-const Product = ({clicked, imageUrl, title, price, quantity}) => (
+const Product = ({clicked, imageUrl, title, stock:{quantity}, product:{price, cost_eu, cost_usd, producer_code}}) => (
     <ProductContainer onClick={clicked}>
         <img src={imageUrl} alt={title}/>
         <h1>{title}</h1>

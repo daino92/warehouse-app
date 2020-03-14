@@ -60,18 +60,18 @@ export const addProductFailed = errorMessage => ({
 export const initProducts = () => {
     return dispatch => {
         dispatch(fetchProductsStart());
-        axiosInstance.get('/posts')
+        axiosInstance.get('/pseudo/get/pseudoProducts/Kifisia')
             .then(response => {
                 const products = response.data.slice(0, 4);
-                const updatedProducts = products.map(product => {
-                    return {
-                        ...product,
-                        price: 145.5,
-                        quantity: 3,
-                        imageUrl: null
-                    }
-                });
-                dispatch(fetchProductsSuccess(updatedProducts))
+                // const updatedProducts = products.map(product => {
+                //     return {
+                //         ...product,
+                //         price: 145.5,
+                //         quantity: 3,
+                //         imageUrl: null
+                //     }
+                // });
+                dispatch(fetchProductsSuccess(products))
             })
             .catch(error => {
                 dispatch(fetchProductsFailed(error.message))
