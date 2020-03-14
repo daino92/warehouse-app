@@ -39,19 +39,30 @@ const QuantityContainer = styled('div')`
 
 `;
 
+const ColorContainer = styled('div')`
+
+`;
+
+const ProductIdContainer = styled('div')`
+    color: ${colors.red};
+    font-weight: 700;
+`;
+
 const FlexContainer = styled('div')`
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
 `;
 
-const Product = ({clicked, imageUrl, title, stock:{quantity}, product:{price, cost_eu, cost_usd, producer_code}}) => (
+const Product = ({clicked, imageUrl, title, stock:{quantity, color, productId}, product:{price, cost_eu, cost_usd, producer_code}}) => (
     <ProductContainer onClick={clicked}>
         <img src={imageUrl} alt={title}/>
         <h1>{title}</h1>
         <FlexContainer>
             <PriceContainer>{price} €</PriceContainer>
             <QuantityContainer>{quantity}</QuantityContainer>
+            <ColorContainer>{color}</ColorContainer>
+            <ProductIdContainer>{productId}</ProductIdContainer>
         </FlexContainer>
     </ProductContainer>
 )

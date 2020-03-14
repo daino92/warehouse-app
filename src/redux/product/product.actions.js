@@ -62,7 +62,8 @@ export const initProducts = () => {
         dispatch(fetchProductsStart());
         axiosInstance.get('/pseudo/get/pseudoProducts/Kifisia')
             .then(response => {
-                const products = response.data.slice(0, 4);
+                //const products = response.data.slice(0, 4);
+                const products = response.data;
                 // const updatedProducts = products.map(product => {
                 //     return {
                 //         ...product,
