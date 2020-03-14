@@ -8,6 +8,7 @@
     "axios": "^0.19.0",
     "babel-plugin-emotion": "^10.0.21",
     "facepaint": "^1.2.1",
+    "lodash": "^4.17.15",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-redux": "^7.1.1",
