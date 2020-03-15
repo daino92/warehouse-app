@@ -1,5 +1,6 @@
 import React, { Component} from 'react';
 import {connect} from 'react-redux';
+import _ from 'lodash';
 import styled from '@emotion/styled';
 import IndividualProduct from './IndividualProduct';
 import imagePlaceholder from '../assets/picture-not-available.jpg';
@@ -11,8 +12,7 @@ const ProductsContainer = styled('section')`
     flex-flow: row wrap;
     justify-content: center;
     width: 80%;
-    margin: auto;
-    
+    margin: auto; 
 `;
 
 class Products extends Component {
@@ -39,15 +39,19 @@ class Products extends Component {
         const {error} = this.state;
         
         if (error) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)
+ 
+        const sortedByProductCode = _.orderBy(products, ['productcode', 'stock.color'], ['asc', 'desc'])
+        //console.log("Sorted by productCode: ", sortedByProductCode)
 
         return (
             <>
-                <ProductsContainer>{products.map(({id, imageUrl, ...otherProps}) => (
-                    <IndividualProduct key={id.toString()} id={id} {...otherProps}
-                        imageUrl={imageUrl ? imageUrl : imagePlaceholder} 
-                        clicked={() => this.productSelection(id)} 
-                    />
-                ))}
+                <ProductsContainer>
+                    {sortedByProductCode.map(({id, imageUrl, ...otherProps}) => (
+                        <IndividualProduct key={id.toString()} id={id} {...otherProps}
+                            imageUrl={imageUrl ? imageUrl : imagePlaceholder} 
+                            clicked={() => this.productSelection(id)} 
+                        />
+                    ))}
                 </ProductsContainer>
             </>
         )
