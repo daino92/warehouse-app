@@ -12,6 +12,7 @@ const ProductsContainer = styled('section')`
     flex-flow: row wrap;
     justify-content: center;
     width: 80%;
+    max-width: 1080px;
     margin: auto; 
 `;
 
