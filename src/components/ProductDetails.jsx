@@ -40,22 +40,22 @@ class ProductDetails extends Component {
 
     componentDidUpdate(prevProps) {
         const {product, match} = this.props;
-
-        if (prevProps.match.params.id !== match.params.id && product && product.loadedProduct.id) {
+        // TODO: fix name conventions
+        if (prevProps.match.params.productcode !== match.params.productcode && product && product.loadedProduct.productcode) {
             this.loadData();
         }
     }
 
     loadData() {
         const {match, initSingleProduct} = this.props;
-        initSingleProduct(match.params.id);
+        initSingleProduct(match.params.productcode);
     }
 
     deleteProductHandler = () => {
         const {match, initDeleteProduct} = this.props;
 
         window.confirm("Are you sure you wish to delete this product?") &&
-        initDeleteProduct(match.params.id);
+        initDeleteProduct(match.params.productcode);
 
         // axiosInstance.delete('/posts/' + match.params.id)
         //     .then(response => {
@@ -86,8 +86,8 @@ class ProductDetails extends Component {
         if (loadedProduct) {
             product = (
                 <FullProduct>
-                    <ProductTitle>{loadedProduct.title}</ProductTitle>
-                    <ProductBody>{loadedProduct.body}</ProductBody>
+                    <ProductTitle>{loadedProduct.productcode}</ProductTitle>
+                    <ProductBody>Karats: {loadedProduct.product.karats}</ProductBody>
                     <EditProduct>
                         <Button btnType='danger'  disabled={false}  onClick={this.deleteProductHandler}>{dict.delete}</Button>
                         <Button btnType='success' disabled={false}  onClick={this.redirectBack}>{dict.back}</Button>

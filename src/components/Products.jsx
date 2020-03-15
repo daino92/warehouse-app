@@ -40,17 +40,18 @@ class Products extends Component {
         const {error} = this.state;
         
         if (error) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)
- 
+
+        // TODO: fix name conventions
         const sortedByProductCode = _.orderBy(products, ['productcode', 'stock.color'], ['asc', 'desc'])
         //console.log("Sorted by productCode: ", sortedByProductCode)
 
         return (
             <>
                 <ProductsContainer>
-                    {sortedByProductCode.map(({id, imageUrl, ...otherProps}) => (
-                        <IndividualProduct key={id.toString()} id={id} {...otherProps}
+                    {sortedByProductCode.map(({id, productcode, imageUrl, ...otherProps}) => (
+                        <IndividualProduct key={id.toString()} id={productcode} {...otherProps}
                             imageUrl={imageUrl ? imageUrl : imagePlaceholder} 
-                            clicked={() => this.productSelection(id)} 
+                            clicked={() => this.productSelection(productcode)} 
                         />
                     ))}
                 </ProductsContainer>

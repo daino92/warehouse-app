@@ -62,16 +62,7 @@ export const initProducts = () => {
         dispatch(fetchProductsStart());
         axiosInstance.get('/pseudo/get/pseudoProducts/Kifisia')
             .then(response => {
-                //const products = response.data.slice(0, 4);
                 const products = response.data;
-                // const updatedProducts = products.map(product => {
-                //     return {
-                //         ...product,
-                //         price: 145.5,
-                //         quantity: 3,
-                //         imageUrl: null
-                //     }
-                // });
                 dispatch(fetchProductsSuccess(products))
             })
             .catch(error => {
@@ -80,10 +71,10 @@ export const initProducts = () => {
     }
 }
 
-export const initSingleProduct = id => {
+export const initSingleProduct = productcode => {
     return dispatch => {
         dispatch(fetchSingleProductStart());
-        axiosInstance.get('/posts/' + id)
+        axiosInstance.get('/pseudo/get/' + productcode)
             .then(response => {
                 const product = response.data;
                 console.log("Data of individual product: ", response);
