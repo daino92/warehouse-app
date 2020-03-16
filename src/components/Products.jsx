@@ -29,9 +29,9 @@ class Products extends Component {
         console.log("Products.jsx did mount: ", this.props);
     }
 
-    productSelection = id => {
-        this.setState({selectedProductId: id});
-        this.props.history.push({pathname: '/products/' + id})
+    productSelection = stockId => {
+        this.setState({selectedProductId: stockId});
+        this.props.history.push({pathname: '/products/' + stockId})
         this.setState({selected: true}) 
     }
 
@@ -43,17 +43,20 @@ class Products extends Component {
 
         // TODO: fix name conventions
         const sortedByProductCode = _.orderBy(products, ['productcode', 'stock.color'], ['asc', 'desc'])
-        //console.log("Sorted by productCode: ", sortedByProductCode)
+        console.log("Sorted by productCode: ", sortedByProductCode)
 
         return (
             <>
                 <ProductsContainer>
-                    {sortedByProductCode.map(({id, productcode, imageUrl, ...otherProps}) => (
-                        <IndividualProduct key={id.toString()} {...otherProps}
-                            imageUrl={imageUrl ? imageUrl : imagePlaceholder} 
-                            clicked={() => this.productSelection(productcode)} 
-                        />
-                    ))}
+                    {sortedByProductCode.map(({imageUrl, ...otherProps}) => {
+                        const {id} = otherProps.stock;
+                        return (
+                            <IndividualProduct key={otherProps.id.toString()} {...otherProps}
+                                imageUrl={imageUrl ? imageUrl : imagePlaceholder} 
+                                clicked={() => this.productSelection(id)} 
+                            />
+                        )
+                    })}
                 </ProductsContainer>
             </>
         )

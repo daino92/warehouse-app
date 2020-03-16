@@ -54,17 +54,22 @@ const FlexContainer = styled('div')`
     justify-content: space-between;
 `;
 
-const Product = ({clicked, imageUrl, title, stock:{quantity, color, productId}, product:{price, cost_eu, cost_usd, producer_code}}) => (
-    <ProductContainer onClick={clicked}>
-        <img src={imageUrl} alt={title}/>
-        <h1>{title}</h1>
-        <FlexContainer>
-            <PriceContainer>{price} €</PriceContainer>
-            <QuantityContainer>{quantity}</QuantityContainer>
-            <ColorContainer>{color}</ColorContainer>
-            <ProductIdContainer>{productId}</ProductIdContainer>
-        </FlexContainer>
-    </ProductContainer>
-)
+const Product = ({clicked, imageUrl, title, product, stock}) => {
+    const {price} = product;
+    const {color, productId, quantity} = stock;
+    
+    return (
+        <ProductContainer onClick={clicked}>
+            <img src={imageUrl} alt={title}/>
+            <h1>{title}</h1>
+            <FlexContainer>
+                <PriceContainer>{price} €</PriceContainer>
+                <QuantityContainer>{quantity}</QuantityContainer>
+                <ColorContainer>{color}</ColorContainer>
+                <ProductIdContainer>{productId}</ProductIdContainer>
+            </FlexContainer>
+        </ProductContainer>
+    )
+}
 
 export default Product;

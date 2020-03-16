@@ -34,26 +34,26 @@ const EditProduct = styled('div')`
 
 class ProductDetails extends Component {
     componentDidMount () {
-        console.log(this.props)
+        console.log("component did mount: ", this.props)
         this.loadData();
     }
 
     componentDidUpdate(prevProps) {
         const {product, match} = this.props;
-        // TODO: fix name conventions
-        if (prevProps.match.params.productcode !== match.params.productcode && product && product.loadedProduct.productcode) {
+        
+        if (prevProps.match.params.stockId !== match.params.stockId && product && product.loadedProduct.stock.id) {
             this.loadData();
         }
     }
 
     loadData() {
         const {match, initSingleProduct} = this.props;
-        initSingleProduct(match.params.productcode);
+        initSingleProduct(match.params.stockId);
     }
 
     deleteProductHandler = () => {
         const {initDeleteProduct, loadedProduct} = this.props;
-        console.log("loadedProduct props: ", loadedProduct)
+        //console.log("loadedProduct props: ", loadedProduct.stock.id)
         
         window.confirm("Are you sure you wish to delete this product?") &&
         initDeleteProduct(loadedProduct.stock.id);
@@ -78,7 +78,7 @@ class ProductDetails extends Component {
         const {error, match, loadedProduct} = this.props;
 
         let product = <p style={{textAlign: 'center'}}>{dict.selectProduct}</p>;
-        if (match.params.id) product = <Spinner/>
+        if (match.params.stockId) product = <Spinner/>
 
         if (error) return (
             <ErrorContainer>{dict.errorUponProductDeletion}</ErrorContainer>
@@ -106,8 +106,8 @@ const mapStateToProps = state => ({
 })
   
 const mapDispatchToProps = dispatch => ({
-    initSingleProduct: id => dispatch(initSingleProduct(id)),
-    initDeleteProduct: id => dispatch(initDeleteProduct(id))
+    initSingleProduct: stockId => dispatch(initSingleProduct(stockId)),
+    initDeleteProduct: stockId => dispatch(initDeleteProduct(stockId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProductDetails));

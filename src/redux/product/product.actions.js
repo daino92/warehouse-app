@@ -71,10 +71,10 @@ export const initProducts = () => {
     }
 }
 
-export const initSingleProduct = productcode => {
+export const initSingleProduct = stockId => {
     return dispatch => {
         dispatch(fetchSingleProductStart());
-        axiosInstance.get('/pseudo/get/' + productcode)
+        axiosInstance.get('/pseudo/get/' + stockId)
             .then(response => {
                 const product = response.data;
                 console.log("Data of individual product: ", response);

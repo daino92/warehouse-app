@@ -24,7 +24,7 @@ class App extends Component {
           <Switch>
             { auth ? <Route path="/new-product" component={AsyncNewProduct} /> : null }
             <Route exact path="/products" component={HomePage} />
-            <Route path={`/products/:productcode`} component={ProductDetails} />
+            <Route path={`/products/:stockId`} component={ProductDetails} />
             <Redirect exact from="/" to="/products"/>
             <Route render={() => <Page404 />}/>
           </Switch>
@@ -33,4 +33,4 @@ class App extends Component {
   }
 }
 
-export default App;// TODO: fix name conventions
+export default App;
