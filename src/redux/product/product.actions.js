@@ -86,12 +86,12 @@ export const initSingleProduct = productcode => {
     }
 }
 
-export const initDeleteProduct = id => {
+export const initDeleteProduct = stockId => {
     return dispatch => {
         dispatch(deleteProductStart());
-        axiosInstance.delete('/posts/' + id)
+        axiosInstance.delete('/stock/delete/' + stockId)
             .then(response => {
-                console.log("Product deleted successfully: " , response);
+                console.log("Product deleted successfully: ", response);
                 dispatch(deleteProductSuccess(response))
             }).catch(error => {
                 dispatch(deleteProductFailed(error.message))

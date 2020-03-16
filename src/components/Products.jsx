@@ -49,7 +49,7 @@ class Products extends Component {
             <>
                 <ProductsContainer>
                     {sortedByProductCode.map(({id, productcode, imageUrl, ...otherProps}) => (
-                        <IndividualProduct key={id.toString()} id={productcode} {...otherProps}
+                        <IndividualProduct key={id.toString()} {...otherProps}
                             imageUrl={imageUrl ? imageUrl : imagePlaceholder} 
                             clicked={() => this.productSelection(productcode)} 
                         />

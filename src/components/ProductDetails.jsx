@@ -28,7 +28,7 @@ const ProductBody = styled('p')`
 const EditProduct = styled('div')`
     label {
         display: block;
-        color: grey;
+        color: ${colors.lightGrey};
     }
 `;
 
@@ -52,10 +52,11 @@ class ProductDetails extends Component {
     }
 
     deleteProductHandler = () => {
-        const {match, initDeleteProduct} = this.props;
-
+        const {initDeleteProduct, loadedProduct} = this.props;
+        console.log("loadedProduct props: ", loadedProduct)
+        
         window.confirm("Are you sure you wish to delete this product?") &&
-        initDeleteProduct(match.params.productcode);
+        initDeleteProduct(loadedProduct.stock.id);
 
         // axiosInstance.delete('/posts/' + match.params.id)
         //     .then(response => {
