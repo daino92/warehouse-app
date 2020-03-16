@@ -88,7 +88,21 @@ class ProductDetails extends Component {
             product = (
                 <FullProduct>
                     <ProductTitle>{loadedProduct.productcode}</ProductTitle>
-                    <ProductBody>Karats: {loadedProduct.product.karats}</ProductBody>
+                    <ProductBody>
+                        <ul>
+                            <li>Karats: {loadedProduct.product.karats}</li>
+                            <li>Cost in $: {loadedProduct.product.cost_usd}</li>
+                            <li>Cost in €: {loadedProduct.product.cost_eu}</li>
+                            <li>Gold weight: {loadedProduct.product.gold_weight}</li>
+                            <li>Silver weight: {loadedProduct.product.silver_weight}</li>
+                            <li>Producer Code: {loadedProduct.product.producer_code}</li>
+                            <li>Description: {loadedProduct.product.descr}</li>
+                            <li>Stones: {loadedProduct.product.stones}</li>
+                            <li>Color: {loadedProduct.stock.color}</li>
+                            <li>Quantity: {loadedProduct.stock.quantity}</li>
+                            <li>Color: {loadedProduct.product.category.kindOfCategory}</li>
+                        </ul>
+                    </ProductBody>
                     <EditProduct>
                         <Button btnType='danger'  disabled={false}  onClick={this.deleteProductHandler}>{dict.delete}</Button>
                         <Button btnType='success' disabled={false}  onClick={this.redirectBack}>{dict.back}</Button>
