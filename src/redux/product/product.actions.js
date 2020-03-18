@@ -19,9 +19,9 @@ export const fetchSingleProductStart = () => ({
     type: ProductActionTypes.FETCH_SINGLE_PRODUCT_START
 })
 
-export const fetchSingleProductSuccess = id => ({
+export const fetchSingleProductSuccess = stockId => ({
     type: ProductActionTypes.FETCH_SINGLE_PRODUCT_SUCCESS,
-    payload: id
+    payload: stockId
 })
 
 export const fetchSingleProductFailed = errorMessage => ({
@@ -33,9 +33,9 @@ export const deleteProductStart = () => ({
     type: ProductActionTypes.DELETE_PRODUCT_START
 })
 
-export const deleteProductSuccess = id => ({
+export const deleteProductSuccess = stockId => ({
     type: ProductActionTypes.DELETE_PRODUCT_SUCCESS,
-    payload: id
+    payload: stockId
 })
 
 export const deleteProductFailed = errorMessage => ({
@@ -91,10 +91,12 @@ export const initDeleteProduct = stockId => {
         dispatch(deleteProductStart());
         axiosInstance.delete('/stock/delete/' + stockId)
             .then(response => {
-                console.log("Product deleted successfully: ", response);
-                dispatch(deleteProductSuccess(response))
+                const responseInfo = response;
+                console.log("Product deleted successfully: ", responseInfo);
+                dispatch(deleteProductSuccess(responseInfo))
             }).catch(error => {
                 dispatch(deleteProductFailed(error.message))
+                console.log("HTTP Status", error.status);
             });
     }
 }
