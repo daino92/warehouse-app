@@ -10,7 +10,8 @@ const colors = {
     red: "#FF0000",
     whisper: '#EEE',
     solitude: '#E9EDF0',
-    pattensBlue: '#C0DDF5'
+    pattensBlue: '#C0DDF5',
+    nightRider: '#333333'
 }
 
 const dict = {
