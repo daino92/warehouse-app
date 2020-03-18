@@ -6,7 +6,7 @@ import {initSingleProduct, initDeleteProduct} from '../redux/product/product.act
 import Spinner from './Spinner';
 import Button from './Button';
 import {colors, dict} from '../util/variables';
-import {ErrorContainer} from '../components/forms/Components';
+import {Snackbar} from './Snackbar';
 
 const FullProduct = styled('div')`
     width: 80%;
@@ -21,7 +21,7 @@ const ProductTitle = styled('h1')`
     line-height: 1.2;
 `;
 
-const ProductBody = styled('p')`
+const ProductBody = styled('div')`
     padding: 1.5em .5em;
 `;
 
@@ -33,8 +33,25 @@ const EditProduct = styled('div')`
 `;
 
 class ProductDetails extends Component {
+    snackbarRef = React.createRef();
+
+    showSnackbarHandler = () => {
+        const {responseInfo} = this.props; 
+
+        if (responseInfo?.status && responseInfo?.status === 200) {
+            console.log("responseInfo status: ", responseInfo?.status)
+            this.snackbarRef.current.openSnackBar(dict.successfulProductDeletion);
+            setTimeout(() => {
+               this.redirectBack()
+            }, 1500);
+        } else {
+            console.log("responseInfo status: ", responseInfo?.status)
+            this.snackbarRef.current.openSnackBar(dict.errorUponProductDeletion);
+        }
+    }
+
     componentDidMount () {
-        console.log("component did mount: ", this.props)
+        console.log("Component did mount: ", this.props)
         this.loadData();
     }
 
@@ -57,16 +74,7 @@ class ProductDetails extends Component {
         
         window.confirm("Are you sure you wish to delete this product?") &&
         initDeleteProduct(loadedProduct.stock.id);
-
-        // axiosInstance.delete('/posts/' + match.params.id)
-        //     .then(response => {
-        //         console.log(response);
-        //         //return (<p>Successful deletion!</p>)
-        //         this.redirectBack();
-        //     }).catch(error => {
-        //         this.setState({error: true})
-        //         this.redirectBack();
-        //     });
+        this.showSnackbarHandler()
     }
 
     redirectBack = () => {
@@ -75,18 +83,28 @@ class ProductDetails extends Component {
     }
 
     render () {
-        const {error, match, loadedProduct} = this.props;
+        const {match, loadedProduct} = this.props;
 
         let product = <p style={{textAlign: 'center'}}>{dict.selectProduct}</p>;
+
         if (match.params.stockId) product = <Spinner/>
 
-        if (error) return (
-            <ErrorContainer>{dict.errorUponProductDeletion}</ErrorContainer>
-        )
+        // if (success) {
+        //     console.log("responseInfo status: ", success)
+        //     return (
+        //         <ErrorContainer>Product Succesfully deleted!</ErrorContainer>
+        //     )   
+           
+        // }
+            
+        // if (error) return (
+        //     <ErrorContainer>{dict.errorUponProductDeletion}</ErrorContainer>
+        // )
         // if (!error) return (<h1>{dict.successfulProductDeletion}</h1>)
         if (loadedProduct) {
             product = (
                 <FullProduct>
+                    <Snackbar ref={this.snackbarRef}/>
                     <ProductTitle>{loadedProduct.productcode}</ProductTitle>
                     <ProductBody>
                         <ul>
@@ -100,7 +118,7 @@ class ProductDetails extends Component {
                             <li>Stones: {loadedProduct.product.stones}</li>
                             <li>Color: {loadedProduct.stock.color}</li>
                             <li>Quantity: {loadedProduct.stock.quantity}</li>
-                            <li>Color: {loadedProduct.product.category.kindOfCategory}</li>
+                            <li>Category: {loadedProduct.product.category.kindOfCategory}</li>
                         </ul>
                     </ProductBody>
                     <EditProduct>
@@ -116,7 +134,8 @@ class ProductDetails extends Component {
 
 const mapStateToProps = state => ({
     loadedProduct: state.product.loadedProduct,
-    error: state.product.error
+    error: state.product.error,
+    responseInfo: state.product.responseInfo
 })
   
 const mapDispatchToProps = dispatch => ({
