@@ -89,18 +89,6 @@ class ProductDetails extends Component {
 
         if (match.params.stockId) product = <Spinner/>
 
-        // if (success) {
-        //     console.log("responseInfo status: ", success)
-        //     return (
-        //         <ErrorContainer>Product Succesfully deleted!</ErrorContainer>
-        //     )   
-           
-        // }
-            
-        // if (error) return (
-        //     <ErrorContainer>{dict.errorUponProductDeletion}</ErrorContainer>
-        // )
-        // if (!error) return (<h1>{dict.successfulProductDeletion}</h1>)
         if (loadedProduct) {
             product = (
                 <FullProduct>
@@ -108,14 +96,14 @@ class ProductDetails extends Component {
                     <ProductTitle>{loadedProduct.productcode}</ProductTitle>
                     <ProductBody>
                         <ul>
-                            <li>Karats: {loadedProduct.product.karats}</li>
+                            <li>Karats: {loadedProduct.stock.karats}</li>
                             <li>Cost in $: {loadedProduct.product.cost_usd}</li>
                             <li>Cost in €: {loadedProduct.product.cost_eu}</li>
-                            <li>Gold weight: {loadedProduct.product.gold_weight}</li>
-                            <li>Silver weight: {loadedProduct.product.silver_weight}</li>
+                            <li>Gold weight: {loadedProduct.stock.gold_weight}</li>
+                            <li>Silver weight: {loadedProduct.stock.silver_weight}</li>
                             <li>Producer Code: {loadedProduct.product.producer_code}</li>
                             <li>Description: {loadedProduct.product.descr}</li>
-                            <li>Stones: {loadedProduct.product.stones}</li>
+                            <li>Stones: {loadedProduct.stock.stones}</li>
                             <li>Color: {loadedProduct.stock.color}</li>
                             <li>Quantity: {loadedProduct.stock.quantity}</li>
                             <li>Category: {loadedProduct.product.category.kindOfCategory}</li>
