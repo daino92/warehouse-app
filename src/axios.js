@@ -18,6 +18,8 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(request => {
+    const timestamp = Math.round(new Date() / 1000);
+    request.metadata = {start: timestamp}
     console.log(request);
     return request;
 }, error => {
@@ -26,7 +28,11 @@ axiosInstance.interceptors.request.use(request => {
 });
 
 axiosInstance.interceptors.response.use(response => {
+    const timestamp = Math.round(new Date() / 1000);
+    response.config.metadata.end = timestamp;
+    response.duration = response.config.metadata.end - response.config.metadata.start;
     console.log(response);
+    console.log(`API request time: ${response.duration}s`);
     return response;
 }, error => {
     console.log(error);
