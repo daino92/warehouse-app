@@ -6,7 +6,7 @@ const initialState = {
     selected: false,
     selectedProductId: null,
     isFetching: false,
-    responseInfo: null,
+    response: null,
     errorMessage: undefined,
     submitted: false,
     error: false
@@ -63,7 +63,7 @@ const productReducer = (state = initialState, action) => {
             return {
                 ...state,
                 error: false,
-                responseInfo: action.payload
+                response: action.payload
             }
         case ProductActionTypes.DELETE_PRODUCT_FAILED:
             return {

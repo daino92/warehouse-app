@@ -11,25 +11,29 @@ const colors = {
     whisper: '#EEE',
     solitude: '#E9EDF0',
     pattensBlue: '#C0DDF5',
-    nightRider: '#333333'
+    nightRider: '#333333',
+    westSide : '#F08238',
+    atomicTangerine: '#FFA263'
 }
 
 const dict = {
-    addNewProduct: 'Add new product',
+    home: 'Home',
+    edit: 'Edit',
+    delete: 'Delete',
     clear: 'Clear',
     submit: 'Submit',
+    back: 'Go back',
+    products: 'Products',
+    newProducts: 'New Products',
     pageNotFound: 'The page you were trying to get was not found',
     unexpectedError: 'Something went wrong!',
+    addNewProduct: 'Add new product',
     selectProduct: 'Please select a Post!',
     errorUponProductAddition: 'Something went wrong adding that product!',
     errorUponProductDeletion: 'Something went wrong deleting that product!',
     successfulProductAddition: 'Product added successfully!',
     successfulProductDeletion: 'Product deleted successfully!',
-    delete: 'Delete',
-    back: 'Go back',
-    home: 'Home',
-    products: 'Products',
-    newProducts: 'New Products',
+    productNotExist: 'Sorry, the product does not exist.'
 }
 
 export {colors, dict};

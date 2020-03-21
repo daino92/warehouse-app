@@ -13,16 +13,18 @@ const ButtonComponent = styled('button')`
     font-size: 1.2em;
     width: 5em;
 	line-height: 1;
-    font-weight: bold;
+    font-weight: 700;
     box-shadow: 0 3px 3px ${colors.lightGrey};
-    color: ${props => props.btnType === 'success'   ? 
-        colors.verdunGreen : props.btnType === 'danger'      ? 
-        colors.saddleBrown : colors.white};
+    color: ${props => props.btnType === 'success'           ? 
+        colors.verdunGreen : props.btnType === 'danger'     ? 
+        colors.saddleBrown : props.btnType === 'edit'       ? 
+        colors.westSide : colors.white};
 
     :hover {
-        color: ${props => props.btnType === 'success'   ? 
-        colors.altGreen : props.btnType === 'danger'      ? 
-        colors.harleyDavidsonOrange : colors.white};
+        color: ${props => props.btnType === 'success'       ? 
+        colors.altGreen : props.btnType === 'danger'        ? 
+        colors.harleyDavidsonOrange : props.btnType === 'edit'       ? 
+        colors.atomicTangerine : colors.white};
     }
 
     :active {
