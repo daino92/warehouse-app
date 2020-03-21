@@ -105,17 +105,17 @@ class ProductDetails extends Component {
                     <ProductTitle>{loadedProduct.productcode}</ProductTitle>
                     <ProductBody>
                         <ul>
-                            <li>Karats: {loadedProduct.stock.karats}</li>
-                            <li>Cost in $: {loadedProduct.product.cost_usd}</li>
-                            <li>Cost in €: {loadedProduct.product.cost_eu}</li>
-                            <li>Gold weight: {loadedProduct.stock.gold_weight}</li>
-                            <li>Silver weight: {loadedProduct.stock.silver_weight}</li>
-                            <li>Producer Code: {loadedProduct.product.producer_code}</li>
-                            <li>Description: {loadedProduct.product.descr}</li>
-                            <li>Stones: {loadedProduct.stock.stones}</li>
-                            <li>Color: {loadedProduct.stock.color}</li>
-                            <li>Quantity: {loadedProduct.stock.quantity}</li>
-                            <li>Category: {loadedProduct.product.category.kindOfCategory}</li>
+                            <li>{dict.karats}: {loadedProduct.stock.karats}</li>
+                            <li>{dict.costDollars}: {loadedProduct.product.cost_usd}$</li>
+                            <li>{dict.costEuro}: {loadedProduct.product.cost_eu}€</li>
+                            <li>{dict.goldWeight}: {loadedProduct.stock.gold_weight}</li>
+                            <li>{dict.silverWeight}: {loadedProduct.stock.silver_weight}</li>
+                            <li>{dict.producerCode}: {loadedProduct.product.producer_code}</li>
+                            <li>{dict.description}: {loadedProduct.product.descr}</li>
+                            <li>{dict.stones}: {loadedProduct.stock.stones}</li>
+                            <li>{dict.color}: {loadedProduct.stock.color}</li>
+                            <li>{dict.quantity}: {loadedProduct.stock.quantity}</li>
+                            <li>{dict.category}: {loadedProduct.product.category.kindOfCategory}</li>
                         </ul>
                     </ProductBody>
                     <EditProduct>
