@@ -4,7 +4,7 @@ import Header from './components/Header';
 import HomePage from './pages/Homepage';
 import Page404 from './pages/404';
 import asyncComponent from './hoc/asyncComponent';
-import ProductDetails from './components/ProductDetails';
+import ProductDetails from './pages/ProductDetails';
 import './App.css';
 
 const AsyncNewProduct = asyncComponent(() => {
