@@ -23,8 +23,8 @@ axiosInstance.interceptors.request.use(request => {
     console.log(request);
     return request;
 }, error => {
-    console.log(error);
-    return Promise.reject(error);
+    console.log(error.response);
+    return Promise.reject(error.response);
 });
 
 axiosInstance.interceptors.response.use(response => {
@@ -35,8 +35,8 @@ axiosInstance.interceptors.response.use(response => {
     console.log(`API request time: ${response.duration}s`);
     return response;
 }, error => {
-    console.log(error);
-    return Promise.reject(error);
+    console.log(error.response);
+    return Promise.reject(error.response);
 });
 
 export default axiosInstance;
