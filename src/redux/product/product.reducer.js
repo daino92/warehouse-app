@@ -52,7 +52,7 @@ const productReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 error: true,
-                errorMessage: action.payload
+                response: action.payload
             }
         case ProductActionTypes.DELETE_PRODUCT_START:
             return {

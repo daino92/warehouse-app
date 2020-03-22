@@ -81,7 +81,7 @@ export const initSingleProduct = stockId => {
                 dispatch(fetchSingleProductSuccess(product))
             })
             .catch(error => {
-                dispatch(fetchSingleProductFailed(error.message))
+                dispatch(fetchSingleProductFailed(error))
             });
     }
 }

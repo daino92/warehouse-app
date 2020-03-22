@@ -88,13 +88,13 @@ class ProductDetails extends Component {
     }
 
     render () {
-        const {match, loadedProduct, error} = this.props;
+        const {match, loadedProduct, response} = this.props;
 
         let product = <p style={{textAlign: 'center'}}>{dict.selectProduct}</p>;
-
-        if (error?.code === 404) {
-            return (<ErrorContainer>{dict.productNotExist}</ErrorContainer>)
-        }
+        
+        // if (response?.status === 404) {
+        //     return (<ErrorContainer>{dict.productNotExist}</ErrorContainer>)
+        // }
 
         if (match.params.stockId) product = <Spinner/>
 
@@ -132,7 +132,6 @@ class ProductDetails extends Component {
 
 const mapStateToProps = state => ({
     loadedProduct: state.product.loadedProduct,
-    error: state.product.error,
     response: state.product.response
 })
   
