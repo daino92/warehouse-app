@@ -3,11 +3,11 @@ import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import styled from '@emotion/styled';
 import {initSingleProduct, initDeleteProduct} from '../redux/product/product.actions';
-import Spinner from './Spinner';
-import Button from './Button';
 import {colors, dict} from '../util/variables';
-import {ErrorContainer} from './forms/Components'
-import {Snackbar} from './Snackbar';
+import Spinner from '../components/Spinner';
+import Button from '../components/Button';
+import {Snackbar} from '../components/Snackbar';
+import {ErrorContainer} from '../components/forms/Components'
 
 const FullProduct = styled('div')`
     width: 80%;
