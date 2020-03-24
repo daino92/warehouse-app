@@ -55,7 +55,7 @@ const FlexContainer = styled('div')`
 `;
 
 const Product = ({clicked, imageUrl, title, product, stock}) => {
-    const {price} = product;
+    const {price} = product || {};
     const {color, productId, quantity} = stock;
     
     return (

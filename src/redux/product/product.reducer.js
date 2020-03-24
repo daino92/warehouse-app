@@ -91,6 +91,26 @@ const productReducer = (state = initialState, action) => {
                 submitted: false,
                 errorMessage: action.payload
             }
+        case ProductActionTypes.FETCH_HISTORY_START:
+            return {
+                ...state,
+                isFetching: true,
+                error: false
+            }
+        case ProductActionTypes.FETCH_HISTORY_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+                error: false,
+                products: action.payload
+            }
+        case ProductActionTypes.FETCH_HISTORY_FAILED:
+            return {
+                ...state,
+                isFetching: false,
+                error: true,
+                errorMessage: action.payload
+            }
         default:
             return state;
     }
