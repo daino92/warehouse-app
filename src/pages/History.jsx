@@ -63,9 +63,9 @@ class History extends Component {
                                 <Attributes>{dict.quantity}: {quantity}</Attributes>
                             </AttributesColumn>
                             <AttributesColumn>
-                                <Attributes>{dict.goldWeight}t: {gold_weight}</Attributes>
+                                <Attributes>{dict.goldWeight}: {gold_weight}</Attributes>
                                 <Attributes>{dict.silverWeight}: {silver_weight}</Attributes>
-                                <Attributes>Stone Weight: {stoneWeight}</Attributes>
+                                <Attributes>{dict.stoneWeight}: {stoneWeight}</Attributes>
                                 <Attributes>{dict.karats}: {karats}</Attributes>
                             </AttributesColumn> 
                         </ProductHistoryContainer>

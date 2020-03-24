@@ -129,9 +129,10 @@ class ProductDetails extends Component {
                             <li>{dict.costEuro}: {loadedProduct.product.cost_eu}€</li>
                             <li>{dict.goldWeight}: {loadedProduct.stock.gold_weight}</li>
                             <li>{dict.silverWeight}: {loadedProduct.stock.silver_weight}</li>
+                            <li>{dict.stoneWeight}: {loadedProduct.stock.stoneWeight}</li>
                             <li>{dict.producerCode}: {loadedProduct.product.producer_code}</li>
                             <li>{dict.description}: {loadedProduct.product.descr}</li>
-                            <li>{dict.stones}: {loadedProduct.stock.stones}</li>
+                            <li>{dict.stones}: {loadedProduct.product.stones}</li>
                             <li>{dict.color}: {loadedProduct.stock.color}</li>
                             <li>{dict.quantity}: {loadedProduct.stock.quantity}</li>
                             <li>{dict.category}: {loadedProduct.product.category.kindOfCategory}</li>

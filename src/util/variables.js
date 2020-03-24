@@ -38,6 +38,7 @@ const dict = {
     newProducts: 'New Products',
     history: 'History',
     time: 'Time',
+    stoneWeight: 'Stone weight',
     productID: 'Product ID',
     pageNotFound: 'The page you were trying to get was not found',
     unexpectedError: 'Something went wrong!',
