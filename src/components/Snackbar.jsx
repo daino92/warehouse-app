@@ -36,7 +36,7 @@ const fadeOut = keyframes`
     from {
         bottom: 50%; 
         opacity: 1;
-        }
+    }
     to {
         bottom: 0;
         opacity: 0;
@@ -45,24 +45,9 @@ const fadeOut = keyframes`
 
 
 export class Snackbar extends PureComponent {
-    message = ''
-
-    state = {
-        isActive: false,
-    }
-
-    openSnackBar = message => {
-        this.message = message;
-
-        this.setState({isActive: true}, () => {
-            setTimeout(() => {
-                this.setState({isActive: false});
-            }, 3000);
-        });
-    }
 
     render() {
-        const {isActive} = this.state;
-        return <SnackbarComponent isActive={isActive}>{this.message}</SnackbarComponent>
+        const {snackBarOpen, snackBarMessage} = this.props;
+        return <SnackbarComponent isActive={snackBarOpen}>{snackBarMessage}</SnackbarComponent>
     }
 }

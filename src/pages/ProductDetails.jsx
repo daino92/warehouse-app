@@ -7,7 +7,7 @@ import {colors, dict} from '../util/variables';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
 import {Snackbar} from '../components/Snackbar';
-import {ErrorContainer} from '../components/forms/Components'
+//import {ErrorContainer} from '../components/forms/Components'
 
 const FullProduct = styled('div')`
     width: 80%;
@@ -34,33 +34,57 @@ const EditProduct = styled('div')`
 `;
 
 class ProductDetails extends Component {
-    snackbarRef = React.createRef();
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            snackBarOpen: false,
+            snackBarMessage: ''
+        }
+    }
 
     showSnackbarHandler = () => {
         const {response} = this.props; 
 
         if (response?.status && response?.status === 200) {
             console.log("responseInfo status: ", response?.status)
-            this.snackbarRef.current.openSnackBar(dict.successfulProductDeletion);
+            this.setState({
+                snackBarOpen: true,
+                snackBarMessage: dict.successfulProductDeletion 
+            })
             setTimeout(() => {
                this.redirectBack()
             }, 1500);
         } else {
             console.log("responseInfo status: ", response?.status)
-            this.snackbarRef.current.openSnackBar(dict.errorUponProductDeletion);
+            this.setState({
+                snackBarOpen: true,
+                snackBarMessage: dict.errorUponProductDeletion 
+            })
         }
     }
 
     componentDidMount () {
-        console.log("Component did mount: ", this.props)
+        console.log("ProductDetails.jsx did mount: ", this.props)
         this.loadData();
     }
 
     componentDidUpdate(prevProps) {
-        const {product, match} = this.props;
+        const {product, match, response} = this.props;
+        console.log("ProductDetails.jsx did update: ", this.props);
         
         if (prevProps.match.params.stockId !== match.params.stockId && product && product.loadedProduct.stock.id) {
             this.loadData();
+        }
+   
+        console.log(response?.status)
+        if (response?.status === 404 ) {
+            this.redirectBack()
+            //return (<ErrorContainer>{dict.productNotExist}</ErrorContainer>)
+        }
+
+        if (prevProps.response !== response) {
+            this.showSnackbarHandler()
         }
     }
 
@@ -78,8 +102,7 @@ class ProductDetails extends Component {
         //console.log("loadedProduct props: ", loadedProduct.stock.id)
         
         window.confirm("Are you sure you wish to delete this product?") &&
-        initDeleteProduct(loadedProduct.stock.id);
-        this.showSnackbarHandler()
+            initDeleteProduct(loadedProduct.stock.id);
     }
 
     redirectBack = () => {
@@ -88,20 +111,16 @@ class ProductDetails extends Component {
     }
 
     render () {
-        const {match, loadedProduct, response} = this.props;
+        const {match, loadedProduct} = this.props;
 
         let product = <p style={{textAlign: 'center'}}>{dict.selectProduct}</p>;
-        
-        // if (response?.status === 404) {
-        //     return (<ErrorContainer>{dict.productNotExist}</ErrorContainer>)
-        // }
 
         if (match.params.stockId) product = <Spinner/>
 
         if (loadedProduct) {
             product = (
                 <FullProduct>
-                    <Snackbar ref={this.snackbarRef}/>
+                    <Snackbar snackBarOpen={this.state.snackBarOpen} snackBarMessage={this.state.snackBarMessage}/>
                     <ProductTitle>{loadedProduct.productcode}</ProductTitle>
                     <ProductBody>
                         <ul>
