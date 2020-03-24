@@ -6,6 +6,7 @@ import IndividualProduct from './IndividualProduct';
 import imagePlaceholder from '../assets/picture-not-available.jpg';
 import {initProducts} from '../redux/product/product.actions';
 import {dict} from '../util/variables';
+import Spinner from './Spinner';
 
 const ProductsContainer = styled('section')`
     display: flex;
@@ -36,10 +37,12 @@ class Products extends Component {
     }
 
     render () {
-        const {products} = this.props;
+        const {products, isFetching} = this.props;
         const {error} = this.state;
         
         if (error) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)
+
+        if (isFetching) return <Spinner/>
 
         // TODO: fix name conventions
         const sortedByProductCode = _.orderBy(products, ['productcode', 'stock.color'], ['asc', 'desc'])
@@ -64,7 +67,8 @@ class Products extends Component {
 }
 
 const mapStateToProps = state => ({
-    products: state.product.products
+    products: state.product.products,
+    isFetching: state.product.isFetching
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import styled from "@emotion/styled";
 import {initHistory} from '../redux/product/product.actions';
 import {colors, dict} from '../util/variables';
+import Spinner from '../components/Spinner';
 
 const HistoryContainer = styled("section")`
     display: flex;
@@ -46,7 +47,9 @@ class History extends Component {
     }
 
     render() {
-        const {products} = this.props;
+        const {products, isFetching} = this.props;
+
+        if (isFetching) return <Spinner/>
 
         return (
             <>
@@ -74,7 +77,8 @@ class History extends Component {
 }
 
 const mapStateToProps = state => ({
-    products: state.product.products
+    products: state.product.products,
+    isFetching: state.product.isFetching
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -13,6 +13,7 @@ import Checkbox from '../components/forms/Checkbox';
 import {dict} from '../util/variables';
 import {ErrorContainer} from '../components/forms/Components';
 import {initAddProduct} from '../redux/product/product.actions';
+import Spinner from '../components/Spinner';
 
 const NewPostContainer = styled('div')`
     width: 80%;
@@ -244,7 +245,7 @@ class NewProduct extends Component {
 
     render () {
         let redirect = null;
-        const {submitted, error} = this.props;
+        const {submitted, error, isFetching} = this.props;
         const {formIsValid} = this.state;
         const {productName, productSKU, weight, productDescription, price, netPrice, productCategory, shopAvailability, color, test} = this.state.productForm;
         
@@ -254,6 +255,8 @@ class NewProduct extends Component {
         if (error) {
             return <ErrorContainer>{dict.errorUponProductAddition}</ErrorContainer>
         }
+
+        if (isFetching) return <Spinner/>
 
         // const formElementsArray = [];
         // for (let key in productForm) {
@@ -339,7 +342,8 @@ class NewProduct extends Component {
 
 const mapStateToProps = state => ({
     submitted: state.product.submitted,
-    error: state.product.error
+    error: state.product.error,
+    isFetching: state.product.isFetching
 })
   
 const mapDispatchToProps = dispatch => ({
