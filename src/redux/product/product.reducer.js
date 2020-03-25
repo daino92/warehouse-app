@@ -9,6 +9,7 @@ const initialState = {
     response: null,
     errorMessage: undefined,
     submitted: false,
+    categories: null,
     error: false
 }
 
@@ -105,6 +106,26 @@ const productReducer = (state = initialState, action) => {
                 products: action.payload
             }
         case ProductActionTypes.FETCH_HISTORY_FAILED:
+            return {
+                ...state,
+                isFetching: false,
+                error: true,
+                errorMessage: action.payload
+            }
+        case ProductActionTypes.FETCH_CATEGORIES_START:
+            return {
+                ...state,
+                isFetching: true,
+                error: false
+            }
+        case ProductActionTypes.FETCH_CATEGORIES_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+                error: false,
+                categories: action.payload
+            }
+        case ProductActionTypes.FETCH_CATEGORIES_FAILED:
             return {
                 ...state,
                 isFetching: false,

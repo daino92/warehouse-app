@@ -15,6 +15,10 @@ const asyncHistory = asyncComponent(() => {
   return import('./pages/History');
 });
 
+const asyncCategory = asyncComponent(() => {
+  return import('./pages/Category');
+});
+
 class App extends Component {
   state = {
     auth: true,
@@ -27,6 +31,7 @@ class App extends Component {
         <Header/>
           <Switch>
             { auth ? <Route path="/new-product" component={AsyncNewProduct} /> : null }
+            { auth ? <Route path="/categories" component={asyncCategory} /> : null }
             { auth ? <Route path="/history" component={asyncHistory} /> : null }
             <Route exact path="/products" component={HomePage} />
             <Route path={`/products/:stockId`} component={ProductDetails} />

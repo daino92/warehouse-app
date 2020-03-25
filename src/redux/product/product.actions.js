@@ -71,6 +71,20 @@ export const fetchHistoryFailed = errorMessage => ({
     payload: errorMessage 
 })
 
+export const fetchCategoriesStart = () => ({
+    type: ProductActionTypes.FETCH_CATEGORIES_START
+})
+
+export const fetchCategoriesSuccess = categories => ({
+    type: ProductActionTypes.FETCH_CATEGORIES_SUCCESS,
+    payload: categories
+})
+
+export const fetchCategoriesFailed = errorMessage => ({
+    type: ProductActionTypes.FETCH_CATEGORIES_FAILED,
+    payload: errorMessage 
+})
+
 export const initProducts = () => {
     return dispatch => {
         dispatch(fetchProductsStart());
@@ -131,11 +145,25 @@ export const initHistory = () => {
         dispatch(fetchHistoryStart());
         axiosInstance.get('/history/')
             .then(response => {
-                const products = response?.data.slice(0, 8);
+                const products = response.data;
                 dispatch(fetchHistorySuccess(products))
             })
             .catch(error => {
                 dispatch(fetchHistoryFailed(error.message))
+            });
+    }
+}
+
+export const initCategories = () => {
+    return dispatch => {
+        dispatch(fetchCategoriesStart());
+        axiosInstance.get('/category/')
+            .then(response => {
+                const categories = response.data;
+                dispatch(fetchCategoriesSuccess(categories))
+            })
+            .catch(error => {
+                dispatch(fetchCategoriesFailed(error.message))
             });
     }
 }

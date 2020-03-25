@@ -37,6 +37,7 @@ const dict = {
     description: 'Description',
     newProducts: 'New Products',
     history: 'History',
+    categories: 'Categories',
     time: 'Time',
     stoneWeight: 'Stone weight',
     productID: 'Product ID',
@@ -48,6 +49,7 @@ const dict = {
     errorUponProductDeletion: 'Something went wrong deleting that product!',
     successfulProductAddition: 'Product added successfully!',
     successfulProductDeletion: 'Product deleted successfully!',
+    categoriesNotFound: 'Didn\'t find any categories',
     productsNotFound: 'Didn\'t find any products',
     productNotExist: 'Sorry, the product does not exist.'
 }

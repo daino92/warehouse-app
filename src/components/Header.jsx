@@ -42,6 +42,7 @@ const Header = () => (
         <OptionsContainer>
             <OptionLink activeClassName='active' to='/products'>{dict.products}</OptionLink>
             <OptionLink activeClassName='active' to='/new-product'>{dict.newProducts}</OptionLink>
+            <OptionLink activeClassName="active" to="/categories">{dict.categories}</OptionLink>
             <OptionLink activeClassName="active" to="/history">{dict.history}</OptionLink>
         </OptionsContainer>
     </HeaderContainer>
