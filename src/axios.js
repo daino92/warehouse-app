@@ -6,6 +6,8 @@ const username = info.username;
 const password = info.password;
 const url = info.baseAPI ? info.baseAPI : info.fauxAPI;
 
+export const source = axios.CancelToken.source();
+
 const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
 
 const axiosInstance = axios.create({
