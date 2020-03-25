@@ -48,6 +48,7 @@ const dict = {
     errorUponProductDeletion: 'Something went wrong deleting that product!',
     successfulProductAddition: 'Product added successfully!',
     successfulProductDeletion: 'Product deleted successfully!',
+    productsNotFound: 'Didn\'t find any products',
     productNotExist: 'Sorry, the product does not exist.'
 }
 

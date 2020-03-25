@@ -1,12 +1,13 @@
 import React, { Component} from 'react';
 import {connect} from 'react-redux';
-import _ from 'lodash';
+import orderBy from 'lodash/orderBy';
 import styled from '@emotion/styled';
 import IndividualProduct from './IndividualProduct';
 import imagePlaceholder from '../assets/picture-not-available.jpg';
 import {initProducts} from '../redux/product/product.actions';
 import {dict} from '../util/variables';
 import Spinner from './Spinner';
+import {ErrorContainer} from './forms/Components'
 
 const ProductsContainer = styled('section')`
     display: flex;
@@ -45,21 +46,24 @@ class Products extends Component {
         if (isFetching) return <Spinner/>
 
         // TODO: fix name conventions
-        const sortedByProductCode = _.orderBy(products, ['productcode', 'stock.color'], ['asc', 'desc'])
-        console.log("Sorted by productCode: ", sortedByProductCode)
+        const sortedByProductCode = orderBy(products, ['productcode', 'stock.color'], ['asc', 'desc'])
+        //console.log("Sorted by productCode: ", sortedByProductCode)
 
         return (
             <>
                 <ProductsContainer>
-                    {sortedByProductCode.map(({imageUrl, ...otherProps}) => {
-                        const {id} = otherProps.stock;
-                        return (
-                            <IndividualProduct key={otherProps.id.toString()} {...otherProps}
-                                imageUrl={imageUrl ? imageUrl : imagePlaceholder} 
-                                clicked={() => this.productSelection(id)} 
-                            />
-                        )
-                    })}
+                    {
+                    sortedByProductCode.length ?
+                        sortedByProductCode.map(({imageUrl, ...otherProps}) => {
+                            const {id} = otherProps.stock;
+                            return (
+                                <IndividualProduct key={otherProps.id.toString()} {...otherProps}
+                                    imageUrl={imageUrl ? imageUrl : imagePlaceholder} 
+                                    clicked={() => this.productSelection(id)} 
+                                />
+                            )
+                        }) : (<ErrorContainer>{dict.productsNotFound}</ErrorContainer>)
+                    }
                 </ProductsContainer>
             </>
         )
