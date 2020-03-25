@@ -69,22 +69,21 @@ class ProductDetails extends Component {
         this.loadData();
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
         const {product, match, response} = this.props;
         console.log("ProductDetails.jsx did update: ", this.props);
         
         if (prevProps.match.params.stockId !== match.params.stockId && product && product.loadedProduct.stock.id) {
             this.loadData();
         }
-   
-        console.log(response?.status)
-        if (response?.status === 404 ) {
-            this.redirectBack()
-            //return (<ErrorContainer>{dict.productNotExist}</ErrorContainer>)
-        }
 
         if (prevProps.response !== response) {
             this.showSnackbarHandler()
+
+            if (response?.status === 404) {
+                this.redirectBack()
+                //return (<ErrorContainer>{dict.productNotExist}</ErrorContainer>)
+            }
         }
     }
 
