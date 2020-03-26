@@ -16,7 +16,7 @@ const asyncHistory = asyncComponent(() => {
 });
 
 const asyncCategory = asyncComponent(() => {
-  return import('./pages/Category');
+  return import('./pages/CategoryPage');
 });
 
 class App extends Component {
