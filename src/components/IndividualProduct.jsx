@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import {colors} from '../util/variables';
+import {dict} from '../util/variables.js'
 
 const ProductContainer = styled('div')`
     width: 250px;
@@ -75,7 +76,7 @@ const Product = ({clicked, imageUrl, title, product, stock}) => {
             <h1>{title}</h1>
             <FlexContainer>
                 <PriceContainer>{price} €</PriceContainer>
-                <QuantityContainer>{quantity}</QuantityContainer>
+                <QuantityContainer>{zeroQuantity ? <>{dict.noStock}</> : quantity}</QuantityContainer>
                 <ColorContainer>{color}</ColorContainer>
                 <ProductIdContainer>{productId}</ProductIdContainer>
             </FlexContainer>

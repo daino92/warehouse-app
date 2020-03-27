@@ -41,6 +41,7 @@ const dict = {
     history: 'History',
     categories: 'Categories',
     time: 'Time',
+    noStock: 'Out of stock',
     stoneWeight: 'Stone weight',
     productID: 'Product ID',
     pageNotFound: 'The page you were trying to get was not found',
