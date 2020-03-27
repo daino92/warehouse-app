@@ -45,14 +45,9 @@ const EditCategory = styled('div')`
     }
 `;
 
-function Category({
-    categories,
-    isFetching,
-    onEditProduct,
-    onDeleteProduct,
-    onGoBack
-}) {
+const Category = ({categories, isFetching, onEditProduct, onDeleteProduct, onGoBack}) => {
     if (isFetching) return <Spinner />;
+    
     if (categories) {
         console.log("categories: ", categories);
 
