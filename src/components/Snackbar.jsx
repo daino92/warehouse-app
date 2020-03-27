@@ -1,7 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import styled from '@emotion/styled';
-import {keyframes, css} from '@emotion/core'
+import {css} from '@emotion/core';
 import {colors} from '../util/variables.js';
+import {fadeIn, fadeOut} from '../util/keyframes.js';
 
 const SnackbarComponent = styled('div')`
     visibility: ${props => props.isActive ? `visible` : 'hidden'};
@@ -17,32 +18,8 @@ const SnackbarComponent = styled('div')`
     left: 50%;
     bottom: 50%;
     font-size: 1rem;
-    
     animation: ${props => props.isActive ? css`${fadeIn} 1s, ${fadeOut} 1s 2.5s` : ''};
 `;
-
-const fadeIn = keyframes`
-    from {
-        bottom: 0;
-        opacity: 0;
-    }
-    to {
-        bottom: 50%; 
-        opacity: 1;
-    }
-`;
-
-const fadeOut = keyframes`
-    from {
-        bottom: 50%; 
-        opacity: 1;
-    }
-    to {
-        bottom: 0;
-        opacity: 0;
-    }
-`;
-
 
 export class Snackbar extends PureComponent {
 

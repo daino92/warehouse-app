@@ -1,7 +1,9 @@
 import React from 'react';
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
+import {colors} from '../util/variables.js';
+import {spin} from '../util/keyframes.js';
 
-const SpinnerOverlay = styled.div`
+const SpinnerOverlay = styled('div')`
     height: 60vh;
     width: 100%;
     display: flex;
@@ -9,27 +11,14 @@ const SpinnerOverlay = styled.div`
     align-items: center;
 `;
 
-const SpinnerContainer = styled.div`
+const SpinnerContainer = styled('div')`
     display: inline-block;
     width: 50px;
     height: 50px;
-    border: 3px solid rgba(195, 195, 195, 0.6);
+    border: 3px solid rgba(${colors.silver}, .6);
     border-radius: 50%;
-    border-top-color: #636767;
-    animation: spin 1s ease-in-out infinite;
-    -webkit-animation: spin 1s ease-in-out infinite;
-
-    @keyframes spin {
-        to {
-            -webkit-transform: rotate(360deg);
-        }
-    }
-    
-    @-webkit-keyframes spin {
-        to {
-            -webkit-transform: rotate(360deg);
-        }
-    }
+    border-top-color: ${colors.nevada};
+    animation: ${spin} 1s ease-in-out infinite;
 `;
 
 const spinner = () => (

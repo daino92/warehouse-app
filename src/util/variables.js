@@ -13,7 +13,9 @@ const colors = {
     pattensBlue: '#C0DDF5',
     nightRider: '#333333',
     westSide : '#F08238',
-    atomicTangerine: '#FFA263'
+    atomicTangerine: '#FFA263',
+    nevada: '#636767',
+    silver: '195, 195, 195'
 }
 
 const dict = {
