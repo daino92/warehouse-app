@@ -8,33 +8,34 @@ import Spinner from '../components/Spinner';
 const HistoryContainer = styled("section")`
     display: flex;
     flex-flow: row wrap;
-    flex-direction: column;
     justify-content: center;
     width: 80%;
     margin: auto;
 `;
 
 const ProductHistoryContainer = styled("div")`
-    width: 35%;
-    padding: 1em;
-    border: 1px solid ${colors.whisper};
-    box-shadow: 0 2px 3px ${colors.lightGrey};
-    margin: 10px;
     display: flex;
-    /* flex-direction: column; */
     justify-content: space-between;
-    flex-grow: 1;
-    background-color: ${colors.solitude};
+    margin: 10px;
+    padding: 1em;
+    width: 48%;
+    border: 1px solid ${colors.whisper};
 	border-radius: .5em;
+    box-shadow: 0 2px 3px ${colors.lightGrey};
+    background-color: ${colors.solitude};
 `;
 
 const AttributesColumn = styled("div")`
-    /* width: 20%; */
- 
+
 `;
 
 const Attributes = styled("div")`
+    padding: 2px 20px 0px 2px;
+    margin-right: 5px;
 
+    label {
+        font-weight: 700;
+    }
 `;
 
 class History extends Component {
@@ -57,16 +58,32 @@ class History extends Component {
                     {products.map(({id, timestamp, stock: {color, productId, quantity, gold_weight, stoneWeight, karats, silver_weight}}) => (
                         <ProductHistoryContainer key={id.toString()}>
                             <AttributesColumn>
-                                <Attributes>{dict.time}: {timestamp}</Attributes>
-                                <Attributes>{dict.color}: {color}</Attributes>
-                                <Attributes>{dict.productID}: {productId}</Attributes>
-                                <Attributes>{dict.quantity}: {quantity}</Attributes>
+                                <Attributes>
+                                    <label>{dict.time}: </label> {timestamp}
+                                </Attributes>
+                                <Attributes>
+                                    <label>{dict.color}: </label> {color}
+                                </Attributes>
+                                <Attributes>
+                                    <label>{dict.productID}: </label> {productId}
+                                </Attributes>
+                                <Attributes>
+                                    <label>{dict.quantity}: </label> {quantity > 0 ? quantity : <>{dict.noStock}</> }
+                                </Attributes>
                             </AttributesColumn>
                             <AttributesColumn>
-                                <Attributes>{dict.goldWeight}: {gold_weight}</Attributes>
-                                <Attributes>{dict.silverWeight}: {silver_weight}</Attributes>
-                                <Attributes>{dict.stoneWeight}: {stoneWeight}</Attributes>
-                                <Attributes>{dict.karats}: {karats}</Attributes>
+                                <Attributes>
+                                    <label>{dict.goldWeight}: </label> {gold_weight}
+                                </Attributes>
+                                <Attributes>
+                                    <label>{dict.silverWeight}: </label> {silver_weight}
+                                </Attributes>
+                                <Attributes>
+                                    <label>{dict.stoneWeight}: </label> {stoneWeight}
+                                </Attributes>
+                                <Attributes>
+                                    <label>{dict.karats}: </label> {karats}
+                                </Attributes>
                             </AttributesColumn> 
                         </ProductHistoryContainer>
                     ))}
