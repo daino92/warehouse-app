@@ -15,10 +15,11 @@ const ProductContainer = styled('div')`
     justify-content: space-between;
     background-color: ${colors.solitude};
 	border-radius: .5em;
+    opacity: ${props => props.quantity ? '35%' : '100%'};
 
     &:hover,
     &:active {
-        //background-color: ${colors.pattensBlue};
+        /* background-color: ${colors.pattensBlue}; */
         box-shadow: rgba(${colors.black}, .8) 0 1px 8px;
         transform: scale(1.03);
         transition: all .3s;
@@ -33,6 +34,14 @@ const ProductContainer = styled('div')`
 const PriceContainer = styled('div')`
     color: ${colors.black};
     font-weight: 700;
+`;
+
+const Line = styled('div')`
+    width: 21em;
+	height: 47px;
+	border-bottom: 2px solid red;
+	transform: translateY(93px) translateX(-45px) rotate(137deg);
+	position: absolute;
 `;
 
 const QuantityContainer = styled('div')`
@@ -57,9 +66,11 @@ const FlexContainer = styled('div')`
 const Product = ({clicked, imageUrl, title, product, stock}) => {
     const {price} = product || {};
     const {color, productId, quantity} = stock;
-    
+    const zeroQuantity = quantity === 0;
+
     return (
-        <ProductContainer onClick={clicked}>
+        <ProductContainer quantity={zeroQuantity} onClick={clicked}>
+            {zeroQuantity ? (<Line/>) : null }
             <img src={imageUrl} alt={title}/>
             <h1>{title}</h1>
             <FlexContainer>
