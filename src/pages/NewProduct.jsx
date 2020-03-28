@@ -3,15 +3,15 @@ import {withRouter, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import styled from '@emotion/styled';
 import {updateObject} from '../util/utilities';
-import {validations, validationMessages} from '../util/validations';
+import {validations} from '../util/validations';
 import TextInput from '../components/forms/TextInput';
 import TextArea from '../components/forms/TextArea';
 import Select from '../components/forms/Select';
 import Radio from '../components/forms/RadioButton';
 import Button from '../components/Button';
-import Checkbox from '../components/forms/Checkbox';
 import {dict} from '../util/variables';
 import {ErrorContainer} from '../components/forms/Components';
+import {initCategories} from '../redux/category/category.actions';
 import {initAddProduct} from '../redux/product/product.actions';
 import Spinner from '../components/Spinner';
 
@@ -24,16 +24,15 @@ const NewPostContainer = styled('div')`
     text-align: center;
 
     form {
-        display: box;
         display: flex;
         flex-wrap: wrap;
-        //justify-content: space-around;
         justify-content: flex-start;
     }
 `;
 
 const ButtonsContainer = styled('div')`
     margin: 0 auto;
+    width: 100%;
 `;
 
 const getInitialState = () => {
@@ -158,28 +157,10 @@ const getInitialState = () => {
                     type: 'radio'
                 },
                 options: [
-                    { value: 'Bronze',   isChecked: false},
-                    { value: 'Silver',   isChecked: true},
-                    { value: 'Gold',     isChecked: false},
-                    { value: 'Black',    isChecked: false}
-                ],
-                validationRules: {
-                   
-                }
-            },
-            test: {
-                label: 'Product test',
-                value: 'Black',
-                valid: true,
-                touched: true,
-                params: {
-                    type: 'checkbox'
-                },
-                options: [
-                    { value: 'Bronze',   isChecked: false},
-                    { value: 'Silver',   isChecked: true},
-                    { value: 'Gold',     isChecked: false},
-                    { value: 'Black',    isChecked: false}
+                    { value: 'Yellow',  isChecked: false},
+                    { value: 'White',   isChecked: true},
+                    { value: 'Rose',    isChecked: false},
+                    { value: 'Black',   isChecked: false}
                 ],
                 validationRules: {
                    
@@ -193,7 +174,10 @@ class NewProduct extends Component {
     state = getInitialState();
 
     componentDidMount () {
-        console.log(this.props);
+        const {initCategories} = this.props;
+        initCategories();
+
+        console.log("NewProduct.jsx did mount: ", this.props);
     }
 
     changeHandler = event => {
@@ -245,16 +229,15 @@ class NewProduct extends Component {
 
     render () {
         let redirect = null;
-        const {submitted, error, isFetching} = this.props;
+        const {submitted, error, isFetching, categories} = this.props;
         const {formIsValid} = this.state;
-        const {productName, productSKU, weight, productDescription, price, netPrice, productCategory, shopAvailability, color, test} = this.state.productForm;
-        
-        if (submitted) {
-            redirect = <Redirect to="/products"/>;
-        }
-        if (error) {
-            return <ErrorContainer>{dict.errorUponProductAddition}</ErrorContainer>
-        }
+        const {productName, productSKU, weight, productDescription, price, netPrice, productCategory, shopAvailability, color} = this.state.productForm;
+
+        console.log("Categories: ", categories)
+
+        if (submitted) redirect = <Redirect to="/products"/>;
+
+        if (error) return <ErrorContainer>{dict.errorUponProductAddition}</ErrorContainer>
 
         if (isFetching) return <Spinner/>
 
@@ -317,11 +300,6 @@ class NewProduct extends Component {
                         value={color.value} valid={color.valid} touched={color.touched}
                         onChange={this.changeHandler} />
 
-                    <Checkbox name="test" 
-                        label={test.label} options={test.options} type={test.params.type}
-                        value={test.value} valid={test.valid} touched={test.touched} 
-                        onChange={this.changeHandler} /> 
-
                     <ButtonsContainer>
                         <Button btnType="success" onClick={this.formSubmitHandler} disabled={!formIsValid}>{dict.submit}</Button>
                         <Button btnType="danger" onClick={this.handleClearForm}>{dict.clear}</Button>
@@ -343,11 +321,13 @@ class NewProduct extends Component {
 const mapStateToProps = state => ({
     submitted: state.product.submitted,
     error: state.product.error,
+    categories: state.category.categories,
     isFetching: state.product.isFetching
 })
   
 const mapDispatchToProps = dispatch => ({
-    initAddProduct: product => dispatch(initAddProduct(product))
+    initAddProduct: product => dispatch(initAddProduct(product)),
+    initCategories: () => dispatch(initCategories())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NewProduct));
