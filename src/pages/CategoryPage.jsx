@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {initCategories} from '../redux/product/product.actions';
+import {initCategories} from '../redux/category/category.actions';
 import Category from '../components/Category';
 
 class CategoryPage extends Component {
@@ -46,8 +46,7 @@ class CategoryPage extends Component {
 }
 
 const mapStateToProps = state => ({
-    categories: state.product.categories,
-    response: state.product.response,
+    categories: state.category.categories,
     isFetching: state.product.isFetching
 })
   

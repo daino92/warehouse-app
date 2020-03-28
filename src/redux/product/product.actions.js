@@ -1,87 +1,73 @@
-import ProductActionTypes from "./product.types";
+import productActionTypes from "./product.types";
 import axiosInstance from '../../axios';
 
 export const fetchProductsStart = () => ({
-    type: ProductActionTypes.FETCH_PRODUCTS_START
+    type: productActionTypes.FETCH_PRODUCTS_START
 })
 
 export const fetchProductsSuccess = products => ({
-    type: ProductActionTypes.FETCH_PRODUCTS_SUCCESS,
+    type: productActionTypes.FETCH_PRODUCTS_SUCCESS,
     payload: products
 })
 
 export const fetchProductsFailed = errorMessage => ({
-    type: ProductActionTypes.FETCH_PRODUCTS_FAILED,
+    type: productActionTypes.FETCH_PRODUCTS_FAILED,
     payload: errorMessage 
 })
 
 export const fetchSingleProductStart = () => ({
-    type: ProductActionTypes.FETCH_SINGLE_PRODUCT_START
+    type: productActionTypes.FETCH_SINGLE_PRODUCT_START
 })
 
 export const fetchSingleProductSuccess = stockId => ({
-    type: ProductActionTypes.FETCH_SINGLE_PRODUCT_SUCCESS,
+    type: productActionTypes.FETCH_SINGLE_PRODUCT_SUCCESS,
     payload: stockId
 })
 
 export const fetchSingleProductFailed = errorMessage => ({
-    type: ProductActionTypes.FETCH_SINGLE_PRODUCT_FAILED,
+    type: productActionTypes.FETCH_SINGLE_PRODUCT_FAILED,
     payload: errorMessage 
 })
 
 export const deleteProductStart = () => ({
-    type: ProductActionTypes.DELETE_PRODUCT_START
+    type: productActionTypes.DELETE_PRODUCT_START
 })
 
 export const deleteProductSuccess = stockId => ({
-    type: ProductActionTypes.DELETE_PRODUCT_SUCCESS,
+    type: productActionTypes.DELETE_PRODUCT_SUCCESS,
     payload: stockId
 })
 
 export const deleteProductFailed = errorMessage => ({
-    type: ProductActionTypes.DELETE_PRODUCT_FAILED,
+    type: productActionTypes.DELETE_PRODUCT_FAILED,
     payload: errorMessage 
 })
 
 export const addProductStart = () => ({
-    type: ProductActionTypes.ADD_PRODUCT_START
+    type: productActionTypes.ADD_PRODUCT_START
 })
 
 export const addProductSuccess = product => ({
-    type: ProductActionTypes.ADD_PRODUCT_SUCCESS,
+    type: productActionTypes.ADD_PRODUCT_SUCCESS,
     payload: product
 })
 
 export const addProductFailed = errorMessage => ({
-    type: ProductActionTypes.ADD_PRODUCT_FAILED,
+    type: productActionTypes.ADD_PRODUCT_FAILED,
     payload: errorMessage 
 })
 
 export const fetchHistoryStart = () => ({
-    type: ProductActionTypes.FETCH_HISTORY_START
+    type: productActionTypes.FETCH_HISTORY_START
 })
 
 export const fetchHistorySuccess = products => ({
-    type: ProductActionTypes.FETCH_HISTORY_SUCCESS,
+    type: productActionTypes.FETCH_HISTORY_SUCCESS,
     payload: products
 })
 
 export const fetchHistoryFailed = errorMessage => ({
-    type: ProductActionTypes.FETCH_HISTORY_FAILED,
-    payload: errorMessage 
-})
-
-export const fetchCategoriesStart = () => ({
-    type: ProductActionTypes.FETCH_CATEGORIES_START
-})
-
-export const fetchCategoriesSuccess = categories => ({
-    type: ProductActionTypes.FETCH_CATEGORIES_SUCCESS,
-    payload: categories
-})
-
-export const fetchCategoriesFailed = errorMessage => ({
-    type: ProductActionTypes.FETCH_CATEGORIES_FAILED,
+    type: productActionTypes.FETCH_HISTORY_FAILED,
     payload: errorMessage 
 })
 
@@ -150,20 +136,6 @@ export const initHistory = () => {
             })
             .catch(error => {
                 dispatch(fetchHistoryFailed(error.message))
-            });
-    }
-}
-
-export const initCategories = () => {
-    return dispatch => {
-        dispatch(fetchCategoriesStart());
-        axiosInstance.get('/category/')
-            .then(response => {
-                const categories = response.data;
-                dispatch(fetchCategoriesSuccess(categories))
-            })
-            .catch(error => {
-                dispatch(fetchCategoriesFailed(error.message))
             });
     }
 }
