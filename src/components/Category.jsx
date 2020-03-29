@@ -2,9 +2,9 @@ import React from 'react';
 import capitalize from 'lodash/capitalize';
 import styled from '@emotion/styled';
 import {colors, dict} from '../util/variables';
-import Spinner from '../components/Spinner';
+import Spinner from './Spinner';
 import Button from '../components/Button';
-import {ErrorContainer} from '../components/forms/Components'
+import {ErrorContainer} from './forms/Components'
 
 const CategoriesComponent = styled('div')`
     width: 80%;
@@ -35,6 +35,12 @@ const CategoryBody = styled('div')`
         width: 8em;
         flex: 1 0 25%;
         box-shadow: 0 3px 3px ${colors.lightGrey};
+
+        /* :hover {
+            background-color: ${colors.pattensBlue};
+            cursor: pointer;
+            
+        } */
     }
 `;
 
@@ -45,9 +51,9 @@ const EditCategory = styled('div')`
     }
 `;
 
-const Category = ({categories, isFetching, onEditProduct, onDeleteProduct, onGoBack}) => {
+const Category = ({categories, isFetching, onAddCategory, onEditCategory, onDeleteCategory, onGoBack}) => {
     if (isFetching) return <Spinner />;
-    
+
     if (categories) {
         console.log("categories: ", categories);
 
@@ -55,16 +61,17 @@ const Category = ({categories, isFetching, onEditProduct, onDeleteProduct, onGoB
             <CategoriesComponent>
                 <CategoryTitle>{dict.categories}</CategoryTitle>
                 <CategoryBody>
-                    {categories.map(({id, kindOfCategory}) => (
+                    { categories.map(({id, kindOfCategory}) => (
                         <CategoryBody key={id.toString()}>
                             {capitalize(kindOfCategory)}
                         </CategoryBody>
                     ))}
                 </CategoryBody>
                 <EditCategory>
-                    <Button btnType="edit" disabled={false} onClick={onEditProduct}>{dict.edit}</Button>
-                    <Button btnType="danger" disabled={false} onClick={onDeleteProduct}>{dict.delete}</Button>
-                    <Button btnType="success" disabled={false} onClick={onGoBack}>{dict.back}</Button>
+                    {/* <Button btnType="add"       disabled={false} onClick={onAddCategory}>{dict.add}</Button> */}
+                    <Button btnType="edit"      disabled={false} onClick={onEditCategory}>{dict.edit}</Button>
+                    <Button btnType="danger"    disabled={false} onClick={onDeleteCategory}>{dict.delete}</Button>
+                    <Button btnType="success"   disabled={false} onClick={onGoBack}>{dict.back}</Button>
                 </EditCategory>
             </CategoriesComponent>
         );

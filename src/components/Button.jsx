@@ -16,15 +16,17 @@ const ButtonComponent = styled('button')`
     font-weight: 700;
     box-shadow: 0 3px 3px ${colors.lightGrey};
     color: ${props => props.btnType === 'success'           ? 
-        colors.verdunGreen : props.btnType === 'danger'     ? 
-        colors.saddleBrown : props.btnType === 'edit'       ? 
-        colors.westSide : colors.white};
+        colors.verdunGreen  : props.btnType === 'danger'     ? 
+        colors.saddleBrown  : props.btnType === 'edit'       ? 
+        colors.westSide     : props.btnType === 'add'       ?
+        colors.persianBlue  : colors.white};
 
     :hover {
         color: ${props => props.btnType === 'success'       ? 
         colors.altGreen : props.btnType === 'danger'        ? 
         colors.harleyDavidsonOrange : props.btnType === 'edit'       ? 
-        colors.atomicTangerine : colors.white};
+        colors.atomicTangerine : props.btnType === 'add'       ?
+        colors.neonBlue : colors.white};
     }
 
     :active {

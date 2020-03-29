@@ -15,7 +15,9 @@ const colors = {
     westSide : '#F08238',
     atomicTangerine: '#FFA263',
     nevada: '#636767',
-    silver: '195, 195, 195'
+    silver: '195, 195, 195',
+    neonBlue: '#5C5CFB',
+    persianBlue: '#2424AE',
 }
 
 const dict = {
@@ -41,6 +43,7 @@ const dict = {
     history: 'History',
     categories: 'Categories',
     time: 'Time',
+    add: 'Add',
     noStock: 'Out of stock',
     stoneWeight: 'Stone weight',
     productID: 'Product ID',

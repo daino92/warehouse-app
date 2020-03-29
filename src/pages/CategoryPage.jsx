@@ -21,11 +21,15 @@ class CategoryPage extends Component {
         console.log("Category.jsx did mount: ", this.props)
     }
 
-    editProductHandler = () => {
+    addCategoryHandler = () => {
+        console.log("Just a test for the additon of the category..")
+    }
+
+    editCategoryHandler = () => {
         console.log("Just a test for the edition of the category..")
     }
 
-    deleteProductHandler = () => {
+    deleteCategoryHandler = () => {
         console.log("Just a test for the deletion of the category..")
     }
 
@@ -34,20 +38,26 @@ class CategoryPage extends Component {
         if(history) history.push('/products');
     }
 
+    // categorySelection = id => {
+    //     this.props.history.push({pathname: '/categories/' + id})
+    // }
+
     render() {
         const {categories, isFetching} = this.props;
 
         return (
-            <Category categories={categories} isFetching={isFetching}
-                onEditProduct={this.editProductHandler} onDeleteProduct={this.deleteProductHandler}
-                onGoBack={this.redirectBack} />
+            <Category categories={categories} isFetching={isFetching} onGoBack={this.redirectBack}
+                //onSelection={this.categorySelection} 
+                onAddCategory={this.addCategoryHandler}
+                onEditCategory={this.editCategoryHandler} 
+                onDeleteCategory={this.deleteCategoryHandler} />
         );
     }
 }
 
 const mapStateToProps = state => ({
     categories: state.category.categories,
-    isFetching: state.product.isFetching
+    isFetching: state.category.isFetching
 })
   
 const mapDispatchToProps = dispatch => ({
