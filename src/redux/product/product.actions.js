@@ -74,7 +74,7 @@ export const fetchHistoryFailed = errorMessage => ({
 export const initProducts = () => {
     return dispatch => {
         dispatch(fetchProductsStart());
-        axiosInstance.get('/pseudo/get/pseudoProducts/Kifisia')
+        axiosInstance.get('/pseudo/get/pseudoProducts/?address=Kifisia&page=1')
             .then(response => {
                 const products = response.data;
                 dispatch(fetchProductsSuccess(products))
