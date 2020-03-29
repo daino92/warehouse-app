@@ -6,7 +6,7 @@ import Spinner from './Spinner';
 import Button from '../components/Button';
 import {ErrorContainer} from './forms/Components'
 
-const CategoriesComponent = styled('div')`
+const PageComponent = styled('div')`
     width: 80%;
     margin: 20px auto;
     border: 1px solid ${colors.whisper};
@@ -36,11 +36,11 @@ const CategoryBody = styled('div')`
         flex: 1 0 25%;
         box-shadow: 0 3px 3px ${colors.lightGrey};
 
-        /* :hover {
+        :hover {
             background-color: ${colors.pattensBlue};
             cursor: pointer;
             
-        } */
+        }
     }
 `;
 
@@ -51,29 +51,26 @@ const EditCategory = styled('div')`
     }
 `;
 
-const Category = ({categories, isFetching, onAddCategory, onEditCategory, onDeleteCategory, onGoBack}) => {
+const Category = ({categories, isFetching, clicked, onAddCategory, onEditCategory, onDeleteCategory, onGoBack}) => {
     if (isFetching) return <Spinner />;
 
     if (categories) {
         console.log("categories: ", categories);
 
         return (
-            <CategoriesComponent>
+            <PageComponent>
                 <CategoryTitle>{dict.categories}</CategoryTitle>
                 <CategoryBody>
                     { categories.map(({id, kindOfCategory}) => (
-                        <CategoryBody key={id.toString()}>
+                        <CategoryBody key={id.toString()} onClick={clicked}>
                             {capitalize(kindOfCategory)}
                         </CategoryBody>
                     ))}
                 </CategoryBody>
                 <EditCategory>
-                    {/* <Button btnType="add"       disabled={false} onClick={onAddCategory}>{dict.add}</Button> */}
-                    <Button btnType="edit"      disabled={false} onClick={onEditCategory}>{dict.edit}</Button>
-                    <Button btnType="danger"    disabled={false} onClick={onDeleteCategory}>{dict.delete}</Button>
                     <Button btnType="success"   disabled={false} onClick={onGoBack}>{dict.back}</Button>
                 </EditCategory>
-            </CategoriesComponent>
+            </PageComponent>
         );
     } else {
         return <ErrorContainer>{dict.categoriesNotFound}</ErrorContainer>;

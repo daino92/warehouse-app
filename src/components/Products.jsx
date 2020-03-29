@@ -9,7 +9,7 @@ import {dict} from '../util/variables';
 import Spinner from './Spinner';
 import {ErrorContainer} from './forms/Components'
 
-const ProductsContainer = styled('section')`
+const PageComponent = styled('section')`
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
@@ -51,7 +51,7 @@ class Products extends Component {
 
         return (
             <>
-                <ProductsContainer>
+                <PageComponent>
                     {
                     sortedByProductCode.length ?
                         sortedByProductCode.map(({imageUrl, ...otherProps}) => {
@@ -64,7 +64,7 @@ class Products extends Component {
                             )
                         }) : (<ErrorContainer>{dict.productsNotFound}</ErrorContainer>)
                     }
-                </ProductsContainer>
+                </PageComponent>
             </>
         )
     }

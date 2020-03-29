@@ -6,6 +6,7 @@ const initialState = {
     errorMessage: undefined,
     categories: [],
     submitted: false,
+    selectedCategoryId: null,
     loadedCategory: null,
     error: false
 }
@@ -43,6 +44,7 @@ const categoryReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 error: false,
+                selectedCategoryId: action.payload,
                 loadedCategory: action.payload
             }
         case categoryActionTypes.FETCH_SINGLE_CATEGORY_FAILED:
