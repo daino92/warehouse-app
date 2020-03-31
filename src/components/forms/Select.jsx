@@ -21,9 +21,9 @@ const Select = ({value, onChange, name, label, ...props}) => (
     <FormComponent>
         <LabelComponent>{label}</LabelComponent>
         <SelectComponent value={value} onChange={onChange} name={name}>
-            {props.options.map(({value, displayValue}) => (
-                <option key={value} value={value}>
-                    {displayValue}
+            {props.options.map(({value, id, kindOfCategory, displayValue}) => (
+                <option key={id} value={kindOfCategory}>
+                    {kindOfCategory} {displayValue}
                 </option>
             ))}
         </SelectComponent>

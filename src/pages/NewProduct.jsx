@@ -124,12 +124,12 @@ const getInitialState = () => {
             },
             productCategory: {
                 label: 'Product Category',
-                value: 'bracelet',
+                value: 'Pendants',
                 valid: true,              
                 options: [
-                    {value: 'bracelet', displayValue: 'Bracelet'},
-                    {value: 'test1', displayValue: 'test1'},
-                    {value: 'test2', displayValue: 'test2'},
+                    {value: 'Pendants', displayValue: 'Pendants'},
+                    // {value: 'test1', displayValue: 'test1'},
+                    // {value: 'test2', displayValue: 'test2'},
                 ],
                 validationRules: {
 
@@ -180,6 +180,29 @@ class NewProduct extends Component {
         console.log("NewProduct.jsx did mount: ", this.props);
     }
 
+    componentDidUpdate(prevProps) {
+        const {categories} = this.props;
+
+        //console.log("categories: ", categories)
+
+        if(prevProps.categories === categories) return;
+        
+        this.x= this.setState({
+            ...this.state,
+            productForm: {
+                ...this.state.productForm,
+                productCategory: {
+                    ...this.state.productForm.productCategory,
+                    options: categories
+                },
+                // shopAvailability: {
+                //     ...this.state.productForm.shopAvailability,
+                //     options: ...
+                // }
+            }
+        });
+    }
+
     changeHandler = event => {
         const {productForm} = this.state;
         const name = event.target.name;
@@ -207,6 +230,7 @@ class NewProduct extends Component {
     handleClearForm = event => {
         event.preventDefault();
         this.setState(getInitialState());
+       //this.setState(this.x)
     }
     
     formSubmitHandler = event => {
@@ -229,11 +253,9 @@ class NewProduct extends Component {
 
     render () {
         let redirect = null;
-        const {submitted, error, isFetching, categories} = this.props;
+        const {submitted, error, isFetching} = this.props;
         const {formIsValid} = this.state;
         const {productName, productSKU, weight, productDescription, price, netPrice, productCategory, shopAvailability, color} = this.state.productForm;
-
-        console.log("Categories: ", categories)
 
         if (submitted) redirect = <Redirect to="/products"/>;
 
