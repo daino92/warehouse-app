@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import capitalize from 'lodash/capitalize';
 import {LabelComponent, FormComponent} from './Components';
 import {colors} from '../../util/variables';
 
@@ -21,11 +22,15 @@ const Select = ({value, onChange, name, label, ...props}) => (
     <FormComponent>
         <LabelComponent>{label}</LabelComponent>
         <SelectComponent value={value} onChange={onChange} name={name}>
-            {props.options.map(({value, id, kindOfCategory, displayValue}) => (
-                <option key={id} value={kindOfCategory}>
-                    {kindOfCategory} {displayValue}
-                </option>
-            ))}
+            {props.options.map(({value, id, kindOfCategory, displayValue}) => {
+                const capitalizedValue = capitalize(kindOfCategory)
+
+                return (
+                    <option key={id} value={capitalizedValue}>
+                    {capitalizedValue} {displayValue}
+                    </option>
+                )})
+            }
         </SelectComponent>
     </FormComponent>
 );
