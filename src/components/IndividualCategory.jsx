@@ -62,7 +62,7 @@ const Category = ({categories, isFetching, clicked, onAddCategory, onEditCategor
                 <CategoryTitle>{dict.categories}</CategoryTitle>
                 <CategoryBody>
                     { categories.map(({id, kindOfCategory}) => (
-                        <CategoryBody key={id.toString()} onClick={clicked}>
+                        <CategoryBody key={id.toString()} onClick={() => clicked(id)}>
                             {capitalize(kindOfCategory)}
                         </CategoryBody>
                     ))}

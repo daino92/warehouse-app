@@ -29,14 +29,13 @@ class CategoryPage extends Component {
     }
 
     render() {
-        const {categories, isFetching, selectedCategoryId} = this.props;
-        //const {selectedCategoryId} = this.state;
+        const {categories, isFetching} = this.props;
  
         return (
             <IndividualCategory categories={categories} 
                 isFetching={isFetching} 
                 onGoBack={this.redirectBack}
-                clicked={() => this.categorySelection(selectedCategoryId)} 
+                clicked={(id) => this.categorySelection(id)} 
             />
         );
     }
