@@ -71,10 +71,24 @@ export const fetchHistoryFailed = errorMessage => ({
     payload: errorMessage 
 })
 
-export const initProducts = () => {
+export const fetchPagesStart = () => ({
+    type: productActionTypes.FETCH_PAGES_START
+})
+
+export const fetchPagesSuccess = pages => ({
+    type: productActionTypes.FETCH_PAGES_SUCCESS,
+    payload: pages
+})
+
+export const fetchPagesFailed = errorMessage => ({
+    type: productActionTypes.FETCH_PAGES_FAILED,
+    payload: errorMessage 
+})
+
+export const initProducts = (address, page) => {
     return dispatch => {
         dispatch(fetchProductsStart());
-        axiosInstance.get('/pseudo/get/pseudoProducts/?address=Kifisia&page=1')
+        axiosInstance.get(`/pseudo/get/pseudoProducts?address=${address}&page=${page}`)
             .then(response => {
                 const products = response.data;
                 dispatch(fetchProductsSuccess(products))
@@ -88,7 +102,7 @@ export const initProducts = () => {
 export const initSingleProduct = stockId => {
     return dispatch => {
         dispatch(fetchSingleProductStart());
-        axiosInstance.get('/pseudo/get/' + stockId)
+        axiosInstance.get(`/pseudo/get/${stockId}`)
             .then(response => {
                 const product = response.data;
                 console.log("Data of individual product: ", response);
@@ -103,7 +117,7 @@ export const initSingleProduct = stockId => {
 export const initDeleteProduct = stockId => {
     return dispatch => {
         dispatch(deleteProductStart());
-        axiosInstance.delete('/stock/delete/' + stockId)
+        axiosInstance.delete(`/stock/delete/${stockId}`)
             .then(response => {
                 console.log("Product deleted successfully: ", response);
                 dispatch(deleteProductSuccess(response))
@@ -136,6 +150,20 @@ export const initHistory = () => {
             })
             .catch(error => {
                 dispatch(fetchHistoryFailed(error.message))
+            });
+    }
+}
+
+export const initPageCount = address => {
+    return dispatch => {
+        dispatch(fetchPagesStart());
+        axiosInstance.get(`/store/pages/${address}`)
+            .then(response => {
+                const pageCount = response.data;
+                dispatch(fetchPagesSuccess(pageCount))
+            })
+            .catch(error => {
+                dispatch(fetchPagesFailed(error.message))
             });
     }
 }
