@@ -18,14 +18,25 @@ const productReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isFetching: true,
-                error: false
+                error: false,
             }
         case productActionTypes.FETCH_PRODUCTS_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
                 error: false,
-                products: action.payload
+                products: action.payload,
+                // products: [
+                //     ...state.products,
+                //     ...action.payload,
+
+                // ],
+                // data: [
+                //     ...state.data,
+                //     {[action.page]: action.payload}
+                // ],
+                page: action.page,
+                address: action.address
             }
         case productActionTypes.FETCH_PRODUCTS_FAILED:
             return {
@@ -111,6 +122,26 @@ const productReducer = (state = initialState, action) => {
                 error: true,
                 errorMessage: action.payload
             }
+        // case productActionTypes.FETCH_PAGES_START:
+        //     return {
+        //         ...state,
+        //         isFetching: true,
+        //         error: false
+        //     }
+        // case productActionTypes.FETCH_PAGES_SUCCESS:
+        //     return {
+        //         ...state,
+        //         isFetching: false,
+        //         error: false,
+        //         pageCount: action.payload
+        //     }
+        // case productActionTypes.FETCH_PAGES_FAILED:
+        //     return {
+        //         ...state,
+        //         isFetching: false,
+        //         error: true,
+        //         errorMessage: action.payload
+        //     }
         default:
             return state;
     }
