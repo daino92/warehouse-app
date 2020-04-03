@@ -3,6 +3,7 @@ import {Switch, Route, Redirect} from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './pages/Homepage';
 import Page404 from './pages/404';
+import Products from './components/Products';
 import asyncComponent from './hoc/asyncComponent';
 import ProductDetails from './pages/ProductDetails';
 import './App.css';
@@ -34,13 +35,14 @@ class App extends Component {
       <div className="App">
         <Header/>
           <Switch>
-            { auth ? <Route path="/new-product" component={AsyncNewProduct} /> : null }
+            { auth ? <Route exact path="/new-product" component={AsyncNewProduct} /> : null }
             { auth ? <Route exact path="/categories" component={asyncCategory} /> : null }
             { auth ? <Route path={`/categories/:id`} component={asyncCategoryDetails} /> : null }
             { auth ? <Route path="/history" component={asyncHistory} /> : null }
-            <Route exact path="/products" component={HomePage} />
+            {/* <Route exact path="/products" component={HomePage} /> */}
+            <Route path={`/products/:address/:page`} component={Products} />
             <Route path={`/products/:stockId`} component={ProductDetails} />
-            <Redirect exact from="/" to="/products"/>
+            <Redirect exact from="/" to="/products/Kifisia/1"/>
             <Route render={() => <Page404 />}/>
           </Switch>
       </div>
