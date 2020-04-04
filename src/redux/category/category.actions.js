@@ -88,7 +88,7 @@ export const initCategories = () => {
 export const initSingleCategory = id => {
     return dispatch => {
         dispatch(fetchSingleCategoryStart());
-        axiosInstance.get('/category/' + id)
+        axiosInstance.get(`/category/${id}`)
             .then(response => {
                 const category = response.data;
                 console.log("Data of individual category: ", response);
@@ -103,7 +103,7 @@ export const initSingleCategory = id => {
 export const initDeleteCategory = id => {
     return dispatch => {
         dispatch(deleteCategoryStart());
-        axiosInstance.delete('/category/' + id)
+        axiosInstance.delete(`/category/${id}`)
             .then(response => {
                 console.log("Category deleted successfully: ", response);
                 dispatch(deleteCategorySuccess(response))
@@ -129,12 +129,12 @@ export const initAddCategory = category => {
 export const initUpdateCategory = id => {
     return dispatch => {
         dispatch(updateCategoryStart());
-        axiosInstance.post('/category/update/' + id)
+        axiosInstance.patch(`/category/update/${id}`)
             .then(response => {
                 console.log("Category updated successfully: " , response);
                 dispatch(updateCategorySuccess(response))
             }).catch(error => {
-                dispatch(updateCategoryFailed(error.message))
+                dispatch(updateCategoryFailed(error))
             });
     }
 }

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
-import styled from '@emotion/styled';
 import {updateObject} from '../util/utilities';
 import {validations} from '../util/validations';
 import TextInput from '../components/forms/TextInput';
@@ -10,30 +9,10 @@ import Select from '../components/forms/Select';
 import Radio from '../components/forms/RadioButton';
 import Button from '../components/Button';
 import {dict} from '../util/variables';
-import {ErrorContainer} from '../components/forms/Components';
+import {ErrorContainer, MainContainer, ButtonsContainer} from '../components/Common';
 import {initCategories} from '../redux/category/category.actions';
 import {initAddProduct} from '../redux/product/product.actions';
 import Spinner from '../components/Spinner';
-
-const NewPostContainer = styled('div')`
-    width: 80%;
-    margin: 20px auto;
-    padding-bottom: .5em;
-    border: 1px solid #EEE;
-    box-shadow: 0 2px 3px #CCC;
-    text-align: center;
-
-    form {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-    }
-`;
-
-const ButtonsContainer = styled('div')`
-    margin: 0 auto;
-    width: 100%;
-`;
 
 const getInitialState = () => {
     return ({
@@ -187,7 +166,7 @@ class NewProduct extends Component {
 
         if(prevProps.categories === categories) return;
         
-        this.x= this.setState({
+        this.setState({
             ...this.state,
             productForm: {
                 ...this.state.productForm,
@@ -227,10 +206,14 @@ class NewProduct extends Component {
         this.setState({productForm: updatedProductForm, formIsValid: formIsValid});
     }
 
+    redirectBack = () => {
+        const {history} = this.props;
+        if(history) history.push('/');
+    }
+
     handleClearForm = event => {
         event.preventDefault();
         this.setState(getInitialState());
-       //this.setState(this.x)
     }
     
     formSubmitHandler = event => {
@@ -323,19 +306,20 @@ class NewProduct extends Component {
                         onChange={this.changeHandler} />
 
                     <ButtonsContainer>
-                        <Button btnType="success" onClick={this.formSubmitHandler} disabled={!formIsValid}>{dict.submit}</Button>
-                        <Button btnType="danger" onClick={this.handleClearForm}>{dict.clear}</Button>
+                        <Button btnType="success"   disabled={!formIsValid} onClick={this.formSubmitHandler} >{dict.submit}</Button>
+                        <Button btnType="danger"    disabled={false}        onClick={this.handleClearForm}>{dict.clear}</Button>
+                        <Button btnType='success'   disabled={false}        onClick={this.redirectBack}>{dict.back}</Button>
                     </ButtonsContainer> 
                 </form> 
             </>
         );  
 
         return (
-            <NewPostContainer>
+            <MainContainer>
                 {redirect}
                 <h1>{dict.addNewProduct}</h1>
                 {form}                
-            </NewPostContainer>
+            </MainContainer>
         );
     }
 }

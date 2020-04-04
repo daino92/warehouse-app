@@ -82,6 +82,7 @@ const categoryReducer = (state = initialState, action) => {
                 ...state,
                 error: false,
                 submitted: true,
+                response: action.payload,
                 addedProduct: action.payload
             }
         case categoryActionTypes.ADD_CATEGORY_FAILED:
@@ -89,7 +90,7 @@ const categoryReducer = (state = initialState, action) => {
                 ...state,
                 error: true,
                 submitted: false,
-                errorMessage: action.payload
+                response: action.payload
             }
         default:
             return state;

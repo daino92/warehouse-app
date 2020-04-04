@@ -24,6 +24,10 @@ const asyncCategoryDetails = asyncComponent(() => {
   return import('./pages/CategoryDetails');
 });
 
+const AsyncNewCategory = asyncComponent(() => {
+  return import('./pages/NewCategory');
+});
+
 class App extends Component {
   state = {
     auth: true,
@@ -35,8 +39,9 @@ class App extends Component {
       <div className="App">
         <Header/>
           <Switch>
-            { auth ? <Route exact path="/new-product" component={AsyncNewProduct} /> : null }
+            { auth ? <Route exact path="/products/new-product" component={AsyncNewProduct} /> : null }
             { auth ? <Route exact path="/categories" component={asyncCategory} /> : null }
+            { auth ? <Route path="/categories/new-category" component={AsyncNewCategory} /> : null }
             { auth ? <Route path={`/categories/:id`} component={asyncCategoryDetails} /> : null }
             { auth ? <Route path="/history" component={asyncHistory} /> : null }
             {/* <Route exact path="/products" component={HomePage} /> */}

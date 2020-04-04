@@ -4,16 +4,7 @@ import styled from '@emotion/styled';
 import {colors, dict} from '../util/variables';
 import Spinner from './Spinner';
 import Button from '../components/Button';
-import {ErrorContainer} from './forms/Components'
-
-const PageComponent = styled('div')`
-    width: 80%;
-    margin: 20px auto;
-    border: 1px solid ${colors.whisper};
-    box-shadow: 0 2px 3px ${colors.lightGrey};
-    text-align: center;
-    padding-bottom: .5em;
-`;
+import {ErrorContainer, ButtonsContainer, MainContainer} from './Common'
 
 const CategoryTitle = styled('h1')`
     line-height: 1.2;
@@ -44,13 +35,6 @@ const CategoryBody = styled('div')`
     }
 `;
 
-const EditCategory = styled('div')`
-    label {
-        display: block;
-        color: ${colors.lightGrey};
-    }
-`;
-
 const Category = ({categories, isFetching, clicked, onAddCategory, onEditCategory, onDeleteCategory, onGoBack}) => {
     if (isFetching) return <Spinner />;
 
@@ -58,7 +42,7 @@ const Category = ({categories, isFetching, clicked, onAddCategory, onEditCategor
         console.log("categories: ", categories);
 
         return (
-            <PageComponent>
+            <MainContainer>
                 <CategoryTitle>{dict.categories}</CategoryTitle>
                 <CategoryBody>
                     { categories.map(({id, kindOfCategory}) => (
@@ -67,10 +51,11 @@ const Category = ({categories, isFetching, clicked, onAddCategory, onEditCategor
                         </CategoryBody>
                     ))}
                 </CategoryBody>
-                <EditCategory>
+                <ButtonsContainer>
+                    <Button btnType="add"       disabled={false} onClick={onAddCategory}>{dict.add}</Button>
                     <Button btnType="success"   disabled={false} onClick={onGoBack}>{dict.back}</Button>
-                </EditCategory>
-            </PageComponent>
+                </ButtonsContainer>
+            </MainContainer>
         );
     } else {
         return <ErrorContainer>{dict.categoriesNotFound}</ErrorContainer>;

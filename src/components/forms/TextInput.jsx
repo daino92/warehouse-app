@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import {LabelComponent, FormComponent} from './Components';
+import {LabelComponent, FormComponent} from '../Common';
 import {colors} from '../../util/variables';
 
 const InputComponent = styled('input')`

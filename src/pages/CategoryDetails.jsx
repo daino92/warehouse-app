@@ -4,34 +4,14 @@ import {connect} from 'react-redux';
 import styled from '@emotion/styled';
 import capitalize from 'lodash/capitalize';
 import {initSingleCategory, initDeleteCategory} from '../redux/category/category.actions.js';
-import {colors, dict} from '../util/variables';
+import { dict} from '../util/variables';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
 import {Snackbar} from '../components/Snackbar';
-//import {ErrorContainer} from '../components/forms/Components'
-
-const PageComponent = styled('div')`
-    width: 80%;
-    margin: 20px auto;
-    border: 1px solid ${colors.whisper};
-    box-shadow: 0 2px 3px ${colors.lightGrey};
-    text-align: center;
-    padding-bottom: .5em;
-`;
+import {MainContainer, ButtonsContainer} from '../components/Common'
 
 const CategoryTitle = styled('h1')`
     line-height: 1.2;
-`;
-
-// const ProductBody = styled('div')`
-//     padding: 1.5em .5em;
-// `;
-
-const EditCategory = styled('div')`
-    label {
-        display: block;
-        color: ${colors.lightGrey};
-    }
 `;
 
 class CategoryDetails extends Component {
@@ -46,22 +26,20 @@ class CategoryDetails extends Component {
 
     showSnackbarHandler = () => {
         const {response} = this.props; 
+        console.log("responseInfo status: ", response?.status)
 
         if (response?.status && response?.status === 200) {
-            console.log("responseInfo status: ", response?.status)
-            this.setState({
-                snackBarOpen: true,
-                snackBarMessage: dict.successfulCategoryDeletion
-            })
+            this.setState({snackBarOpen: true, snackBarMessage: dict.successfulCategoryDeletion})
+            
             setTimeout(() => {
                this.redirectBack()
             }, 1500);
         } else {
-            console.log("responseInfo status: ", response?.status)
-            this.setState({
-                snackBarOpen: true,
-                snackBarMessage: dict.errorUponCategoryDeletion 
-            })
+            this.setState({snackBarOpen: true, snackBarMessage: dict.errorUponCategoryDeletion})
+
+            setTimeout(() => {
+               this.setState({snackBarOpen: false, snackBarMessage: ''})
+            }, 3500);
         }
     }
 
@@ -93,10 +71,6 @@ class CategoryDetails extends Component {
         initSingleCategory(match.params.id);
     }
 
-    addCategoryHandler = () => {
-        console.log("Just a test for the additon of the category..")
-    }
-
     editCategoryHandler = () => {
         console.log("Just a test for the edition of the category..")
     }
@@ -124,17 +98,16 @@ class CategoryDetails extends Component {
 
         if (loadedCategory) {
             category = (
-                <PageComponent>
+                <MainContainer>
                     <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
                     <CategoryTitle>{dict.category}</CategoryTitle>
                     <div>{capitalize(loadedCategory.kindOfCategory)}</div>
-                    <EditCategory>
-                        <Button btnType="add"       disabled={false} onClick={this.addCategoryHandler}>{dict.add}</Button>
+                    <ButtonsContainer>
                         <Button btnType="edit"      disabled={false} onClick={this.editCategoryHandler}>{dict.edit}</Button>
                         <Button btnType="danger"    disabled={false} onClick={this.deleteCategoryHandler}>{dict.delete}</Button>
                         <Button btnType="success"   disabled={false} onClick={this.redirectBack}>{dict.back}</Button>
-                    </EditCategory>
-                </PageComponent>
+                    </ButtonsContainer>
+                </MainContainer>
             );
         }
         return category;

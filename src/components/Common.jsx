@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import {colors} from '../../util/variables';
+import {colors} from '../util/variables';
 
 const LabelComponent = styled('label')`
     font-weight: bold;
@@ -21,6 +21,26 @@ const FormComponent = styled('div')`
     }
 `;
 
+const MainContainer = styled('div')`
+    width: 80%;
+    margin: 20px auto;
+    padding-bottom: .5em;
+    border: 1px solid ${colors.whisper};
+    box-shadow: 0 2px 3px ${colors.lightGrey};
+    text-align: center;
+
+    form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+`;
+
+const ButtonsContainer = styled('div')`
+    margin: 0 auto;
+    width: 100%;
+`;
+
 const ErrorContainer = styled('div')`
     display: block;
     font-style: italic;
@@ -31,4 +51,10 @@ const ErrorContainer = styled('div')`
     color: ${colors.red};
 `;
 
-export {LabelComponent, FormComponent, ErrorContainer};
+export {
+    LabelComponent, 
+    FormComponent, 
+    ErrorContainer,
+    ButtonsContainer,
+    MainContainer
+};

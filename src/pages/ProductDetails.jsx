@@ -3,20 +3,11 @@ import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import styled from '@emotion/styled';
 import {initSingleProduct, initDeleteProduct} from '../redux/product/product.actions';
-import {colors, dict} from '../util/variables';
+import {dict} from '../util/variables';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
 import {Snackbar} from '../components/Snackbar';
-//import {ErrorContainer} from '../components/forms/Components'
-
-const FullProduct = styled('div')`
-    width: 80%;
-    margin: 20px auto;
-    border: 1px solid ${colors.whisper};
-    box-shadow: 0 2px 3px ${colors.lightGrey};
-    text-align: center;
-    padding-bottom: .5em;
-`;
+import {MainContainer, ButtonsContainer} from '../components/Common';
 
 const ProductTitle = styled('h1')`
     line-height: 1.2;
@@ -24,13 +15,6 @@ const ProductTitle = styled('h1')`
 
 const ProductBody = styled('div')`
     padding: 1.5em .5em;
-`;
-
-const EditProduct = styled('div')`
-    label {
-        display: block;
-        color: ${colors.lightGrey};
-    }
 `;
 
 class ProductDetails extends Component {
@@ -45,22 +29,20 @@ class ProductDetails extends Component {
 
     showSnackbarHandler = () => {
         const {response} = this.props; 
+        console.log("responseInfo status: ", response?.status)
 
         if (response?.status && response?.status === 200) {
-            console.log("responseInfo status: ", response?.status)
-            this.setState({
-                snackBarOpen: true,
-                snackBarMessage: dict.successfulProductDeletion 
-            })
+            this.setState({snackBarOpen: true, snackBarMessage: dict.successfulProductDeletion})
+
             setTimeout(() => {
                this.redirectBack()
             }, 1500);
         } else {
-            console.log("responseInfo status: ", response?.status)
-            this.setState({
-                snackBarOpen: true,
-                snackBarMessage: dict.errorUponProductDeletion 
-            })
+            this.setState({snackBarOpen: true, snackBarMessage: dict.errorUponProductDeletion})
+
+            setTimeout(() => {
+               this.setState({snackBarOpen: false, snackBarMessage: ''})
+            }, 3500);
         }
     }
 
@@ -82,7 +64,6 @@ class ProductDetails extends Component {
 
             if (response?.status === 404) {
                 this.redirectBack()
-                //return (<ErrorContainer>{dict.productNotExist}</ErrorContainer>)
             }
         }
     }
@@ -90,6 +71,12 @@ class ProductDetails extends Component {
     loadData() {
         const {match, initSingleProduct} = this.props;
         initSingleProduct(match.params.stockId);
+    }
+
+    addProductHandler = () => {
+        const {history} = this.props;
+        const path = (history.location.pathname).split('/')[1];
+        history.push({pathname: `/${path}/new-product`})
     }
 
     editProductHandler = () => {
@@ -106,7 +93,7 @@ class ProductDetails extends Component {
 
     redirectBack = () => {
         const {history} = this.props;
-        if(history) history.push('/products');
+        if(history) history.push('/');
     }
 
     render () {
@@ -118,7 +105,7 @@ class ProductDetails extends Component {
 
         if (loadedProduct) {
             product = (
-                <FullProduct>
+                <MainContainer>
                     <Snackbar snackBarOpen={this.state.snackBarOpen} snackBarMessage={this.state.snackBarMessage}/>
                     <ProductTitle>{loadedProduct.productcode}</ProductTitle>
                     <ProductBody>
@@ -137,12 +124,13 @@ class ProductDetails extends Component {
                             <li>{dict.category}: {loadedProduct.product.category.kindOfCategory}</li>
                         </ul>
                     </ProductBody>
-                    <EditProduct>
-                        <Button btnType='edit'      disabled={false}  onClick={this.editProductHandler}>{dict.edit}</Button>
-                        <Button btnType='danger'    disabled={false}  onClick={this.deleteProductHandler}>{dict.delete}</Button>
-                        <Button btnType='success'   disabled={false}  onClick={this.redirectBack}>{dict.back}</Button>
-                    </EditProduct>
-                </FullProduct>
+                    <ButtonsContainer>
+                        <Button btnType="add"       disabled={false}    onClick={this.addProductHandler}>{dict.add}</Button>
+                        <Button btnType='edit'      disabled={false}    onClick={this.editProductHandler}>{dict.edit}</Button>
+                        <Button btnType='danger'    disabled={false}    onClick={this.deleteProductHandler}>{dict.delete}</Button>
+                        <Button btnType='success'   disabled={false}    onClick={this.redirectBack}>{dict.back}</Button>
+                    </ButtonsContainer>
+                </MainContainer>
             );
         }
         return product;

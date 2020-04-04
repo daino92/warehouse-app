@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import capitalize from 'lodash/capitalize';
 import {v4 as uuidv4} from 'uuid';
-import {LabelComponent, FormComponent} from './Components';
+import {LabelComponent, FormComponent} from '../Common';
 import {colors} from '../../util/variables';
 
 const SelectComponent = styled('select')`

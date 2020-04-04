@@ -19,7 +19,13 @@ class CategoryPage extends Component {
 
     redirectBack = () => {
         const {history} = this.props;
-        if(history) history.push('/products');
+        if(history) history.push('/');
+    }
+
+    addCategoryHandler = () => {
+        const {history} = this.props;
+        const path = (history.location.pathname).split('/')[1];
+        history.push({pathname: `/${path}/new-category`})
     }
 
     categorySelection = id => {
@@ -35,6 +41,7 @@ class CategoryPage extends Component {
             <IndividualCategory categories={categories} 
                 isFetching={isFetching} 
                 onGoBack={this.redirectBack}
+                onAddCategory={this.addCategoryHandler}
                 clicked={(id) => this.categorySelection(id)} 
             />
         );

@@ -9,7 +9,7 @@ import IndividualProduct from './IndividualProduct';
 import imagePlaceholder from '../assets/picture-not-available.jpg';
 import {dict, colors} from '../util/variables';
 import Spinner from './Spinner';
-import {ErrorContainer} from './forms/Components'
+import {ErrorContainer, MainContainer} from './Common'
 
 const PageComponent = styled('section')`
     display: flex;
@@ -54,8 +54,8 @@ const PaginationComponent = styled('div')`
 
 class Products extends Component {
     state = {
-        selectedProductId: null,
-        selected: false
+        //selectedProductId: null,
+        //selected: false
     }
 
     componentDidMount () {
@@ -66,10 +66,10 @@ class Products extends Component {
         console.log("Products.jsx did mount: ", this.props);
     }
 
-    productSelection = stockId => {
-        this.setState({selectedProductId: stockId});
-        this.props.history.push({pathname: '/products/' + stockId})
-        this.setState({selected: true}) 
+    productSelection = (path, id) => {
+        //this.setState({selectedProductId: stockId});
+        this.props.history.push({pathname: `/${path}/${id}`})
+        //this.setState({selected: true}) 
     }
 
     handlePageChange = page => {
@@ -81,8 +81,9 @@ class Products extends Component {
     }
 
     render () {
-        const {match, products, isFetching} = this.props;
+        const {match, history, products, isFetching} = this.props;
         const {error} = this.state;
+        const path = (history.location.pathname).split('/')[1];
 
         if (error) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)
 
@@ -122,7 +123,7 @@ class Products extends Component {
                             return (
                                 <IndividualProduct key={uuidv4()} {...otherProps}
                                     imageUrl={imageUrl ? imageUrl : imagePlaceholder} 
-                                    clicked={() => this.productSelection(id)} 
+                                    clicked={() => this.productSelection(path, id)} 
                                 />
                             )
                         }) : (<ErrorContainer>{dict.productsNotFound}</ErrorContainer>)

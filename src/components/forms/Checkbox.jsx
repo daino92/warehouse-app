@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import {LabelComponent, FormComponent} from './Components';
+import {LabelComponent, FormComponent} from '../Common';
 
 const CheckboxContainer = styled('div')`
     display: flex;
@@ -8,9 +8,9 @@ const CheckboxContainer = styled('div')`
 
     label {
         display: flow-root;
-        //display: flex;
-        //margin: 0 auto; 
-        //width: 100px;
+        /* display: flex;
+        margin: 0 auto; 
+        width: 100px; */
 
         input {
             width: 100%;
