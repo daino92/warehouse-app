@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import styled from '@emotion/styled';
+import capitalize from 'lodash/capitalize';
 import {initSingleCategory, initDeleteCategory} from '../redux/category/category.actions.js';
 import {colors, dict} from '../util/variables';
 import Spinner from '../components/Spinner';
@@ -43,26 +44,26 @@ class CategoryDetails extends Component {
         }
     }
 
-    // showSnackbarHandler = () => {
-    //     const {response} = this.props; 
+    showSnackbarHandler = () => {
+        const {response} = this.props; 
 
-    //     if (response?.status && response?.status === 200) {
-    //         console.log("responseInfo status: ", response?.status)
-    //         this.setState({
-    //             snackBarOpen: true,
-    //             snackBarMessage: dict.successfulProductDeletion 
-    //         })
-    //         setTimeout(() => {
-    //            this.redirectBack()
-    //         }, 1500);
-    //     } else {
-    //         console.log("responseInfo status: ", response?.status)
-    //         this.setState({
-    //             snackBarOpen: true,
-    //             snackBarMessage: dict.errorUponProductDeletion 
-    //         })
-    //     }
-    // }
+        if (response?.status && response?.status === 200) {
+            console.log("responseInfo status: ", response?.status)
+            this.setState({
+                snackBarOpen: true,
+                snackBarMessage: dict.successfulCategoryDeletion
+            })
+            setTimeout(() => {
+               this.redirectBack()
+            }, 1500);
+        } else {
+            console.log("responseInfo status: ", response?.status)
+            this.setState({
+                snackBarOpen: true,
+                snackBarMessage: dict.errorUponCategoryDeletion 
+            })
+        }
+    }
 
     componentDidMount () {
         console.log("ProductDetails.jsx did mount: ", this.props)
@@ -78,7 +79,7 @@ class CategoryDetails extends Component {
         }
 
         if (prevProps.response !== response) {
-            //this.showSnackbarHandler()
+            this.showSnackbarHandler()
 
             if (response?.status === 404) {
                 this.redirectBack()
@@ -101,15 +102,11 @@ class CategoryDetails extends Component {
     }
 
     deleteCategoryHandler = () => {
-        console.log("Just a test for the deletion of the category..")
-    }
-
-    deleteCategoryHandler = () => {
-        const {initDeleteProduct, loadedCategory} = this.props;
-        //console.log("loadedProduct props: ", loadedProduct.stock.id)
+        const {initDeleteCategory, loadedCategory} = this.props;
+        console.log("loadedCategory props: ", loadedCategory.id)
         
         window.confirm("Are you sure you wish to delete this category?") &&
-            initDeleteProduct(loadedCategory.id);
+            initDeleteCategory(loadedCategory.id);
     }
 
     redirectBack = () => {
@@ -130,7 +127,7 @@ class CategoryDetails extends Component {
                 <PageComponent>
                     <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
                     <CategoryTitle>{dict.category}</CategoryTitle>
-                    <div>{loadedCategory.kindOfCategory}</div>
+                    <div>{capitalize(loadedCategory.kindOfCategory)}</div>
                     <EditCategory>
                         <Button btnType="add"       disabled={false} onClick={this.addCategoryHandler}>{dict.add}</Button>
                         <Button btnType="edit"      disabled={false} onClick={this.editCategoryHandler}>{dict.edit}</Button>

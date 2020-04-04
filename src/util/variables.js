@@ -53,8 +53,10 @@ const dict = {
     selectProduct: 'Please select a Post!',
     errorUponProductAddition: 'Something went wrong adding that product!',
     errorUponProductDeletion: 'Something went wrong deleting that product!',
+    errorUponCategoryDeletion: 'Something went wrong deleting that category!',
     successfulProductAddition: 'Product added successfully!',
     successfulProductDeletion: 'Product deleted successfully!',
+    successfulCategoryDeletion: 'Category deleted successfully!',
     categoriesNotFound: 'Didn\'t find any categories',
     productsNotFound: 'Didn\'t find any products',
     productNotExist: 'Sorry, the product does not exist.'
