@@ -3,8 +3,6 @@ import productActionTypes from './product.types';
 const initialState = {
     loadedProduct: null,
     products: [],
-    selected: false,
-    selectedProductId: null,
     isFetching: false,
     response: null,
     errorMessage: undefined,
@@ -17,15 +15,16 @@ const productReducer = (state = initialState, action) => {
         case productActionTypes.FETCH_PRODUCTS_START:
             return {
                 ...state,
-                isFetching: true,
-                error: false,
+                isFetching: true
             }
         case productActionTypes.FETCH_PRODUCTS_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
-                error: false,
+                errorMessage: undefined,
                 products: action.payload,
+                page: action.page,
+                address: action.address
                 // products: [
                 //     ...state.products,
                 //     ...action.payload,
@@ -35,14 +34,11 @@ const productReducer = (state = initialState, action) => {
                 //     ...state.data,
                 //     {[action.page]: action.payload}
                 // ],
-                page: action.page,
-                address: action.address
             }
         case productActionTypes.FETCH_PRODUCTS_FAILED:
             return {
                 ...state,
                 isFetching: false,
-                error: true,
                 errorMessage: action.payload
             }
         case productActionTypes.FETCH_SINGLE_PRODUCT_START:
@@ -63,7 +59,7 @@ const productReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 error: true,
-                response: action.payload
+                errorMessage: action.payload
             }
         case productActionTypes.DELETE_PRODUCT_START:
             return {
@@ -122,26 +118,6 @@ const productReducer = (state = initialState, action) => {
                 error: true,
                 errorMessage: action.payload
             }
-        // case productActionTypes.FETCH_PAGES_START:
-        //     return {
-        //         ...state,
-        //         isFetching: true,
-        //         error: false
-        //     }
-        // case productActionTypes.FETCH_PAGES_SUCCESS:
-        //     return {
-        //         ...state,
-        //         isFetching: false,
-        //         error: false,
-        //         pageCount: action.payload
-        //     }
-        // case productActionTypes.FETCH_PAGES_FAILED:
-        //     return {
-        //         ...state,
-        //         isFetching: false,
-        //         error: true,
-        //         errorMessage: action.payload
-        //     }
         default:
             return state;
     }
