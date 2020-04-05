@@ -51,10 +51,47 @@ const ErrorContainer = styled('div')`
     color: ${colors.red};
 `;
 
+const PaginationWrapper = styled('div')`
+    display: flex;
+    justify-content: center;
+
+    ul {
+        display: flex;
+        padding: 0;
+        font-size: 1.1em;
+	    line-height: 1.8;
+        list-style-type: none;
+
+        a {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            text-align: center;
+        }
+
+        .active {
+            background-color: ${colors.sun};
+            border-radius: 50%;
+
+            .activePage {
+                color: ${colors.white};
+            }
+        }
+    }
+
+    .disabled-navigation a, 
+    .disabled-navigation a:hover {
+        cursor: not-allowed;
+        color: ${colors.lightGrey};
+    }
+    
+`;
+
 export {
     LabelComponent, 
     FormComponent, 
     ErrorContainer,
     ButtonsContainer,
-    MainContainer
+    MainContainer,
+    PaginationWrapper
 };

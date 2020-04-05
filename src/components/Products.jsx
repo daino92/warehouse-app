@@ -1,17 +1,17 @@
-import React, { Component} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 import styled from '@emotion/styled';
 import Pagination from "react-js-pagination";
 import {v4 as uuidv4} from 'uuid';
-import {initProducts, initPageCount} from '../redux/product/product.actions';
+import {initProducts} from '../redux/product/product.actions';
 import IndividualProduct from './IndividualProduct';
 import imagePlaceholder from '../assets/picture-not-available.jpg';
-import {dict, colors} from '../util/variables';
+import {dict} from '../util/variables';
 import Spinner from './Spinner';
-import {ErrorContainer, MainContainer} from './Common'
+import {ErrorContainer, PaginationWrapper} from './Common';
 
-const PageComponent = styled('section')`
+const ProductsWrapper = styled('section')`
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
@@ -20,56 +20,18 @@ const PageComponent = styled('section')`
     margin: auto; 
 `;
 
-const PaginationComponent = styled('div')`
-    display: flex;
-    justify-content: center;
-
-    ul {
-        display: flex;
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-
-        .active {
-            background-color: ${colors.sun};
-            border-radius: 50%;
-        }
-    }
-
-    a {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        text-align: center;
-    }
-
-    .disabled-navigation a, 
-    .disabled-navigation a:hover {
-        cursor: not-allowed;
-        color: ${colors.lightGrey};
-    }
-    
-`;
-
 class Products extends Component {
-    state = {
-        //selectedProductId: null,
-        //selected: false
-    }
 
     componentDidMount () {
-        const {match, initProducts, initPageCount} = this.props;
-        initProducts(match.params.address,  match.params.page);
-        initPageCount(match.params.address)
+        const {match, initProducts} = this.props;
+        initProducts(match.params.address, match.params.page);
 
         console.log("Products.jsx did mount: ", this.props);
     }
 
     productSelection = (path, id) => {
-        //this.setState({selectedProductId: stockId});
-        this.props.history.push({pathname: `/${path}/${id}`})
-        //this.setState({selected: true}) 
+        const {history} = this.props;
+        history.push({pathname: `/${path}/${id}`}); 
     }
 
     handlePageChange = page => {
@@ -81,11 +43,11 @@ class Products extends Component {
     }
 
     render () {
-        const {match, history, products, isFetching} = this.props;
-        const {error} = this.state;
+        const {match, history, products, isFetching, errorMessage} = this.props;
         const path = (history.location.pathname).split('/')[1];
 
-        if (error) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)
+        //if (errorMessage?.status === 404) return (<p style={{textAlign: 'center'}}>{dict.pageNotExist}</p>)
+        //if (errorMessage?.status === 400) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)
 
         if (isFetching) return <Spinner/>
 
@@ -101,34 +63,35 @@ class Products extends Component {
 
         return (
             <>
-                <PaginationComponent>
+                <PaginationWrapper>
                     <Pagination 
                         disabledClass={"disabled-navigation"}
-                        prevPageText={"<"} 
-                        nextPageText={">"}
+                        prevPageText={"«"} 
+                        nextPageText={"»"}
                         hideFirstLastPages 
                         activePage={activePage}
                         //itemsCountPerPage={maxItemsPerPage - totalItemsPerPage}
+                        activeLinkClass={'activePage'}
                         itemsCountPerPage={maxItemsPerPage}
                         totalItemsCount={totalItemsPerStore}
                         onChange={this.handlePageChange}
                     />
-                </PaginationComponent>
+                </PaginationWrapper>
                 
-                <PageComponent>
+                <ProductsWrapper>
                     {
                     sortedByProductCode.length ?
-                        sortedByProductCode.map(({imageUrl, ...otherProps}) => {
-                            const {id} = otherProps.stock;
+                        sortedByProductCode.map((product => {
+                            const {stock} = product;
                             return (
-                                <IndividualProduct key={uuidv4()} {...otherProps}
-                                    imageUrl={imageUrl ? imageUrl : imagePlaceholder} 
-                                    clicked={() => this.productSelection(path, id)} 
+                                <IndividualProduct key={uuidv4()} {...product}
+                                    imageUrl={stock.imageUrl ? stock.imageUrl : imagePlaceholder} 
+                                    clicked={() => this.productSelection(path, stock.id)} 
                                 />
                             )
-                        }) : (<ErrorContainer>{dict.productsNotFound}</ErrorContainer>)
+                        })) : (<ErrorContainer>{dict.productsNotFound}</ErrorContainer>)
                     }
-                </PageComponent>
+                </ProductsWrapper>
             </>
         )
     }
@@ -137,11 +100,11 @@ class Products extends Component {
 const mapStateToProps = state => ({
     products: state.product.products,
     isFetching: state.product.isFetching,
+    errorMessage: state.product.errorMessage
 })
 
 const mapDispatchToProps = dispatch => ({
-    initProducts: (address, page) => dispatch(initProducts(address, page)),
-    initPageCount: address => dispatch(initPageCount(address))
+    initProducts: (address, page) => dispatch(initProducts(address, page))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Products);
