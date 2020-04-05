@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import {colors} from '../util/variables';
-import {dict} from '../util/variables.js'
+import {dict} from '../util/variables.js';
+import imagePlaceholder from '../assets/picture-not-available.jpg';
 
 const ProductContainer = styled('div')`
     width: 250px;
@@ -68,11 +69,12 @@ const Product = ({clicked, imageUrl, title, product, stock}) => {
     const {price} = product || {};
     const {color, productId, quantity} = stock;
     const zeroQuantity = quantity === 0;
+    const imageURL = imageUrl ? imageUrl : imagePlaceholder
 
     return (
         <ProductContainer quantity={zeroQuantity} onClick={clicked}>
             {zeroQuantity ? (<Line/>) : null }
-            <img src={imageUrl} alt={title}/>
+            <img src={imageURL} alt={title}/>
             <h1>{title}</h1>
             <FlexContainer>
                 <PriceContainer>{price} €</PriceContainer>

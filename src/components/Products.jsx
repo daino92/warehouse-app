@@ -2,11 +2,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import orderBy from 'lodash/orderBy';
 import styled from '@emotion/styled';
-import Pagination from "react-js-pagination";
 import {v4 as uuidv4} from 'uuid';
+import Pagination from "react-js-pagination";
 import {initProducts} from '../redux/product/product.actions';
 import IndividualProduct from './IndividualProduct';
-import imagePlaceholder from '../assets/picture-not-available.jpg';
 import {dict} from '../util/variables';
 import Spinner from './Spinner';
 import {ErrorContainer, PaginationWrapper} from './Common';
@@ -81,15 +80,11 @@ class Products extends Component {
                 <ProductsWrapper>
                     {
                     sortedByProductCode.length ?
-                        sortedByProductCode.map((product => {
-                            const {stock} = product;
-                            return (
-                                <IndividualProduct key={uuidv4()} {...product}
-                                    imageUrl={stock.imageUrl ? stock.imageUrl : imagePlaceholder} 
-                                    clicked={() => this.productSelection(path, stock.id)} 
-                                />
-                            )
-                        })) : (<ErrorContainer>{dict.productsNotFound}</ErrorContainer>)
+                        sortedByProductCode.map((product => (
+                            <IndividualProduct key={uuidv4()} {...product}
+                                clicked={() => this.productSelection(path, product.stock.id)} 
+                            />
+                        ))) : (<ErrorContainer>{dict.productsNotFound}</ErrorContainer>)
                     }
                 </ProductsWrapper>
             </>
