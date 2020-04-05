@@ -9,13 +9,16 @@ const HeaderContainer = styled('header')`
     width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 25px;
+    margin-bottom: 2em;
+    padding: 20px 60px;
 `;
 
 const LogoContainer = styled(Link)`
+    display: flex;
+	align-items: center;
+	justify-content: center;
     height: 100%;
     width: 70px;
-    padding: 25px;
 `;
 
 const OptionsContainer = styled('div')`
