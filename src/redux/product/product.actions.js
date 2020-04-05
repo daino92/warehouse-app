@@ -94,7 +94,8 @@ export const initProducts = (address, page) => {
                 dispatch(fetchProductsSuccess(products))
             })
             .catch(error => {
-                dispatch(fetchProductsFailed(error.message))
+                console.log("Error: ", error)
+                dispatch(fetchProductsFailed(error))
             });
     }
 }
@@ -122,7 +123,7 @@ export const initDeleteProduct = stockId => {
                 console.log("Product deleted successfully: ", response);
                 dispatch(deleteProductSuccess(response))
             }).catch(error => {
-                dispatch(deleteProductFailed(error.message))
+                dispatch(deleteProductFailed(error))
             });
     }
 }
@@ -135,7 +136,7 @@ export const initAddProduct = product => {
                 console.log("Product added successfully: " , response);
                 dispatch(addProductSuccess(response))
             }).catch(error => {
-                dispatch(addProductFailed(error.message))
+                dispatch(addProductFailed(error))
             });
     }
 }
@@ -149,7 +150,7 @@ export const initHistory = () => {
                 dispatch(fetchHistorySuccess(products))
             })
             .catch(error => {
-                dispatch(fetchHistoryFailed(error.message))
+                dispatch(fetchHistoryFailed(error))
             });
     }
 }
@@ -163,7 +164,7 @@ export const initPageCount = address => {
                 dispatch(fetchPagesSuccess(pageCount))
             })
             .catch(error => {
-                dispatch(fetchPagesFailed(error.message))
+                dispatch(fetchPagesFailed(error))
             });
     }
 }

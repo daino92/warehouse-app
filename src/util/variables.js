@@ -52,6 +52,7 @@ const dict = {
     addNewProduct: 'Add new product',
     addNewCategory: 'Add new category',
     selectProduct: 'Please select a Post!',
+    pageNotExist: 'This page does not exist',
     errorUponProductAddition: 'Something went wrong adding that product!',
     errorUponCategoryAddition: 'Something went wrong adding that category!',
     errorUponProductDeletion: 'Something went wrong deleting that product!',
