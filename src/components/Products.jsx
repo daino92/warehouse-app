@@ -45,8 +45,8 @@ class Products extends Component {
         const {match, history, products, isFetching, errorMessage} = this.props;
         const path = (history.location.pathname).split('/')[1];
 
-        //if (errorMessage?.status === 404) return (<p style={{textAlign: 'center'}}>{dict.pageNotExist}</p>)
-        //if (errorMessage?.status === 400) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)
+        if (errorMessage?.status === 404) return (<p style={{textAlign: 'center'}}>{dict.pageNotExist}</p>)
+        if (errorMessage?.status === 400) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)
 
         if (isFetching) return <Spinner/>
 

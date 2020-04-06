@@ -118,6 +118,11 @@ const productReducer = (state = initialState, action) => {
                 error: true,
                 errorMessage: action.payload
             }
+        case productActionTypes.PAGE_UNLOADED:
+            return {
+                ...state,
+                errorMessage: ''
+            };
         default:
             return state;
     }

@@ -26,6 +26,8 @@ const productActionTypes = {
     FETCH_PAGES_START: 'FETCH_PAGES_START',
     FETCH_PAGES_SUCCESS: 'FETCH_PAGES_SUCCESS',
     FETCH_PAGES_FAILED: 'FETCH_PAGES_FAILED',
+
+    PAGE_UNLOADED: 'PAGE_UNLOADED'
 }
 
 export default productActionTypes;

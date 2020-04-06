@@ -83,6 +83,11 @@ class ProductDetails extends Component {
         console.log("Just a test for the edition of the product..")
     }
 
+    componentWillUnmount() {
+        const {onUnload} = this.props;
+        onUnload();
+    }
+
     deleteProductHandler = () => {
         const {initDeleteProduct, loadedProduct} = this.props;
         //console.log("loadedProduct props: ", loadedProduct.stock.id)
@@ -144,7 +149,8 @@ const mapStateToProps = state => ({
   
 const mapDispatchToProps = dispatch => ({
     initSingleProduct: stockId => dispatch(initSingleProduct(stockId)),
-    initDeleteProduct: stockId => dispatch(initDeleteProduct(stockId))
+    initDeleteProduct: stockId => dispatch(initDeleteProduct(stockId)),
+    onUnload: () => dispatch({type: 'PAGE_UNLOADED'})
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProductDetails));
