@@ -70,7 +70,7 @@ class ProductDetails extends Component {
 
     loadData() {
         const {match, initSingleProduct} = this.props;
-        initSingleProduct(match.params.stockId);
+        initSingleProduct(match.params.productId);
     }
 
     addProductHandler = () => {
@@ -103,30 +103,31 @@ class ProductDetails extends Component {
 
     render () {
         const {match, loadedProduct} = this.props;
+        const {snackBarOpen, snackBarMessage} = this.state;
 
         let product = <p style={{textAlign: 'center'}}>{dict.selectProduct}</p>;
-
-        if (match.params.stockId) product = <Spinner/>
+        
+        if (match.params.productId) product = <Spinner/>
 
         if (loadedProduct) {
             product = (
                 <MainContainer>
-                    <Snackbar snackBarOpen={this.state.snackBarOpen} snackBarMessage={this.state.snackBarMessage}/>
+                    <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
                     <ProductTitle>{loadedProduct.productcode}</ProductTitle>
                     <ProductBody>
                         <ul>
-                            <li>{dict.karats}: {loadedProduct.stock.karats}</li>
-                            <li>{dict.costDollars}: {loadedProduct.product.cost_usd}$</li>
-                            <li>{dict.costEuro}: {loadedProduct.product.cost_eu}€</li>
-                            <li>{dict.goldWeight}: {loadedProduct.stock.gold_weight}</li>
-                            <li>{dict.silverWeight}: {loadedProduct.stock.silver_weight}</li>
-                            <li>{dict.stoneWeight}: {loadedProduct.stock.stoneWeight}</li>
-                            <li>{dict.producerCode}: {loadedProduct.product.producer_code}</li>
-                            <li>{dict.description}: {loadedProduct.product.descr}</li>
-                            <li>{dict.stones}: {loadedProduct.product.stones}</li>
-                            <li>{dict.color}: {loadedProduct.stock.color}</li>
-                            <li>{dict.quantity}: {loadedProduct.stock.quantity}</li>
-                            <li>{dict.category}: {loadedProduct.product.category.kindOfCategory}</li>
+                            <li>{dict.karats}: {loadedProduct.karats}</li>
+                            <li>{dict.costDollars}: {loadedProduct.cost_usd}$</li>
+                            <li>{dict.costEuro}: {loadedProduct.cost_eu}€</li>
+                            <li>{dict.goldWeight}: {loadedProduct.gold_weight}</li>
+                            <li>{dict.silverWeight}: {loadedProduct.silver_weight}</li>
+                            <li>{dict.stoneWeight}: {loadedProduct.stoneWeight}</li>
+                            <li>{dict.producerCode}: {loadedProduct.producer.producer_code}</li>
+                            <li>{dict.description}: {loadedProduct.descr}</li>
+                            <li>{dict.stones}: {loadedProduct.other_stone}</li>
+                            <li>{dict.color}: {loadedProduct.color}</li>
+                            <li>{dict.quantity}: {loadedProduct.quantity}</li>
+                            <li>{dict.category}: {loadedProduct.category.kindOfCategory}</li>
                         </ul>
                     </ProductBody>
                     <ButtonsContainer>
@@ -148,7 +149,7 @@ const mapStateToProps = state => ({
 })
   
 const mapDispatchToProps = dispatch => ({
-    initSingleProduct: stockId => dispatch(initSingleProduct(stockId)),
+    initSingleProduct: productId => dispatch(initSingleProduct(productId)),
     initDeleteProduct: stockId => dispatch(initDeleteProduct(stockId)),
     onUnload: () => dispatch({type: 'PAGE_UNLOADED'})
 })

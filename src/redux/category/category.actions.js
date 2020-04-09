@@ -80,7 +80,7 @@ export const initCategories = () => {
                 dispatch(fetchCategoriesSuccess(categories))
             })
             .catch(error => {
-                dispatch(fetchCategoriesFailed(error.message))
+                dispatch(fetchCategoriesFailed(error))
             });
     }
 }
@@ -108,7 +108,7 @@ export const initDeleteCategory = id => {
                 console.log("Category deleted successfully: ", response);
                 dispatch(deleteCategorySuccess(response))
             }).catch(error => {
-                dispatch(deleteCategoryFailed(error.message))
+                dispatch(deleteCategoryFailed(error))
             });
     }
 }
@@ -121,7 +121,7 @@ export const initAddCategory = category => {
                 console.log("Category added successfully: " , response);
                 dispatch(addCategorySuccess(response))
             }).catch(error => {
-                dispatch(addCategoryFailed(error.message))
+                dispatch(addCategoryFailed(error))
             });
     }
 }

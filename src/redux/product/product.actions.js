@@ -85,10 +85,10 @@ export const fetchPagesFailed = errorMessage => ({
     payload: errorMessage 
 })
 
-export const initProducts = (address, page) => {
+export const initProducts = (address, page, limit) => {
     return dispatch => {
         dispatch(fetchProductsStart());
-        axiosInstance.get(`/pseudo/get/pseudoProducts?address=${address}&page=${page}`)
+        axiosInstance.get(`/product/all?address=${address}&page=${page}&limit=${limit}&categoryId=&producerId`)
             .then(response => {
                 const products = response.data;
                 dispatch(fetchProductsSuccess(products))
@@ -100,10 +100,10 @@ export const initProducts = (address, page) => {
     }
 }
 
-export const initSingleProduct = stockId => {
+export const initSingleProduct = productId => {
     return dispatch => {
         dispatch(fetchSingleProductStart());
-        axiosInstance.get(`/pseudo/get/${stockId}`)
+        axiosInstance.get(`/product/get?productId=${productId}`)
             .then(response => {
                 const product = response.data;
                 console.log("Data of individual product: ", response);

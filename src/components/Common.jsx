@@ -55,12 +55,18 @@ const PaginationWrapper = styled('div')`
     display: flex;
     justify-content: center;
 
+    > div {
+        width: initial;
+        padding: 0;
+    }
+
     ul {
         display: flex;
-        padding: 0;
         font-size: 1.1em;
 	    line-height: 1.8;
         list-style-type: none;
+        padding: 1em;
+        margin-bottom: 0;
 
         a {
             display: inline-block;

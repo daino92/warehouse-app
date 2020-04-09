@@ -65,9 +65,7 @@ const FlexContainer = styled('div')`
     justify-content: space-between;
 `;
 
-const Product = ({clicked, imageUrl, title, product, stock}) => {
-    const {price} = product || {};
-    const {color, productId, quantity} = stock;
+const Product = ({clicked, imageUrl, title, productcode, price, quantity, color}) => {
     const zeroQuantity = quantity === 0;
     const imageURL = imageUrl ? imageUrl : imagePlaceholder
 
@@ -80,7 +78,7 @@ const Product = ({clicked, imageUrl, title, product, stock}) => {
                 <PriceContainer>{price} €</PriceContainer>
                 <QuantityContainer>{zeroQuantity ? <>{dict.noStock}</> : quantity}</QuantityContainer>
                 <ColorContainer>{color}</ColorContainer>
-                <ProductIdContainer>{productId}</ProductIdContainer>
+                <ProductIdContainer>{productcode}</ProductIdContainer>
             </FlexContainer>
         </ProductContainer>
     )

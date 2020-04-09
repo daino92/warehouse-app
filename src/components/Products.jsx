@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import orderBy from 'lodash/orderBy';
+import flattenDeep from 'lodash/flattenDeep';
 import styled from '@emotion/styled';
 import {v4 as uuidv4} from 'uuid';
 import Pagination from "react-js-pagination";
 import {initProducts} from '../redux/product/product.actions';
 import IndividualProduct from './IndividualProduct';
-import {dict} from '../util/variables';
+import {colors, dict} from '../util/variables';
 import Spinner from './Spinner';
-import {ErrorContainer, PaginationWrapper} from './Common';
+import {ErrorContainer, PaginationWrapper, LabelComponent, FormComponent} from './Common';
 
 const ProductsWrapper = styled('section')`
     display: flex;
@@ -19,11 +20,42 @@ const ProductsWrapper = styled('section')`
     margin: auto; 
 `;
 
+const SelectComponent = styled('select')`
+    outline: none;
+    border: 1px solid ${colors.lightGrey};
+    font: inherit;
+    padding: 6px 10px;
+    display: block;
+    width: 56px;
+
+    &:focus {
+        outline: none;
+        border: 1px solid ${colors.sun};
+    }
+`;
+
 class Products extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            limitOptions: {
+                label: 'Choose limit',
+                value: '28',             
+                options: [
+                    { value: 12, displayValue: 12 }, 
+                    { value: 16, displayValue: 16 }, 
+                    { value: 20, displayValue: 20 }, 
+                    { value: 24, displayValue: 24 }, 
+                    { value: 28, displayValue: 28 }
+                ]
+            }
+        };
+    } 
 
     componentDidMount () {
-        const {match, initProducts} = this.props;
-        initProducts(match.params.address, match.params.page);
+        const {match, initProducts, limit} = this.props;
+        initProducts(match.params.address, match.params.page, limit);
 
         console.log("Products.jsx did mount: ", this.props);
     }
@@ -33,32 +65,63 @@ class Products extends Component {
         history.push({pathname: `/${path}/${id}`}); 
     }
 
+    limiSelection = event => {
+        const {history, initProducts} = this.props; 
+
+        let store = history.location.pathname.split('/')[2];
+        let page = history.location.pathname.split('/')[3];
+        let limit = event.target.value;
+
+        this.setState({ 
+            ...this.state,
+            limitOptions: {
+                ...this.state.limitOptions,
+                value: event.target.value
+            }
+        });
+        
+        initProducts(store, page, limit)
+    }
+
     handlePageChange = page => {
         const {history, initProducts} = this.props;
-        const store = (history.location.pathname).split('/')[2];
+        const {limitOptions} = this.state;
 
-        history.push({pathname: `/products/${store}/${page}`})
-        initProducts(store, page)
+        let limit = limitOptions.value;
+        let store = (history.location.pathname).split('/')[2];
+
+        history.push({pathname: `/products/${store}/${page}`});
+        initProducts(store, page, limit)
     }
 
     render () {
         const {match, history, products, isFetching, errorMessage} = this.props;
+        const {limitOptions} = this.state;
+
         const path = (history.location.pathname).split('/')[1];
 
         if (errorMessage?.status === 404) return (<p style={{textAlign: 'center'}}>{dict.pageNotExist}</p>)
         if (errorMessage?.status === 400) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)
-
+    
         if (isFetching) return <Spinner/>
 
         // TODO: fix name conventions
-        const sortedByProductCode = orderBy(products, ['productcode', 'stock.color'], ['asc', 'desc'])
-        //console.log("Sorted by productCode: ", sortedByProductCode)
+        const sortedByProductCode = orderBy(products[0], ['productcode', 'color'], ['asc', 'desc'])
+        console.log("Sorted by productCode: ", sortedByProductCode)
 
+        //var size = products[1]?.maxSize;
+        var maxSize = flattenDeep(products).slice(-1)[0]?.maxSize;
+        //var maxSize = size.map(({maxSize}) => { return maxSize });
+        
         // Pagination params
         const activePage = parseInt(match.params.page);
+        //const maxItemsPerPage = parseInt(limitOptions.value);
+        const maxItemsPerPage = 28;
+        const totalItemsPerStore = maxSize;
         //const totalItemsPerPage = sortedByProductCode.length;
-        const maxItemsPerPage = 32;
-        const totalItemsPerStore = 36;
+        //const totalItemsPerStore = 40;
+
+        console.log("totalItemsPerStore", totalItemsPerStore)
 
         return (
             <>
@@ -75,6 +138,16 @@ class Products extends Component {
                         totalItemsCount={totalItemsPerStore}
                         onChange={this.handlePageChange}
                     />
+                    <FormComponent>
+                        <LabelComponent>{limitOptions.label}</LabelComponent>
+                        <SelectComponent onChange={this.limiSelection} value={limitOptions.value}>
+                            {limitOptions.options.map(option => (
+                                <option key={uuidv4()} value={option.value}>
+                                    {option.value}
+                                </option>
+                            ))}
+                        </SelectComponent>
+                    </FormComponent>
                 </PaginationWrapper>
                 
                 <ProductsWrapper>
@@ -82,7 +155,7 @@ class Products extends Component {
                     sortedByProductCode.length ?
                         sortedByProductCode.map((product => (
                             <IndividualProduct key={uuidv4()} {...product}
-                                clicked={() => this.productSelection(path, product.stock.id)} 
+                                clicked={() => this.productSelection(path, product.id)} 
                             />
                         ))) : (<ErrorContainer>{dict.productsNotFound}</ErrorContainer>)
                     }
@@ -95,11 +168,12 @@ class Products extends Component {
 const mapStateToProps = state => ({
     products: state.product.products,
     isFetching: state.product.isFetching,
+    limit: state.product.limit,
     errorMessage: state.product.errorMessage
 })
 
 const mapDispatchToProps = dispatch => ({
-    initProducts: (address, page) => dispatch(initProducts(address, page))
+    initProducts: (address, page, limit) => dispatch(initProducts(address, page, limit))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Products);

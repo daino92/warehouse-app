@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import styled from "@emotion/styled";
+import {v4 as uuidv4} from 'uuid';
 import {initHistory} from '../redux/product/product.actions';
 import {colors, dict} from '../util/variables';
 import Spinner from '../components/Spinner';
@@ -55,38 +56,49 @@ class History extends Component {
         return (
             <>
                 <HistoryContainer>
-                    {products.map(({id, timestamp, stock: {color, productId, quantity, gold_weight, stoneWeight, karats, silver_weight}}) => (
-                        <ProductHistoryContainer key={id.toString()}>
-                            <AttributesColumn>
-                                <Attributes>
-                                    <label>{dict.time}: </label> {timestamp}
-                                </Attributes>
-                                <Attributes>
-                                    <label>{dict.color}: </label> {color}
-                                </Attributes>
-                                <Attributes>
-                                    <label>{dict.productID}: </label> {productId}
-                                </Attributes>
-                                <Attributes>
-                                    <label>{dict.quantity}: </label> {quantity > 0 ? quantity : <>{dict.noStock}</> }
-                                </Attributes>
-                            </AttributesColumn>
-                            <AttributesColumn>
-                                <Attributes>
-                                    <label>{dict.goldWeight}: </label> {gold_weight}
-                                </Attributes>
-                                <Attributes>
-                                    <label>{dict.silverWeight}: </label> {silver_weight}
-                                </Attributes>
-                                <Attributes>
-                                    <label>{dict.stoneWeight}: </label> {stoneWeight}
-                                </Attributes>
-                                <Attributes>
-                                    <label>{dict.karats}: </label> {karats}
-                                </Attributes>
-                            </AttributesColumn> 
-                        </ProductHistoryContainer>
-                    ))}
+                    {products.map(({id, timestamp, product}) => {
+                        const {productcode, color, quantity, category, karats, gold_weight, silver_weight, diamond_weight, other_stoneWeight} = product || {}
+                        const {kindOfCategory} = category || {}
+
+                        return (
+                            <ProductHistoryContainer key={uuidv4()}>
+                                <AttributesColumn>
+                                    <Attributes>
+                                        <label>{dict.time}: </label> {timestamp}
+                                    </Attributes>
+                                    <Attributes>
+                                        <label>{dict.productCode}: </label> {productcode}
+                                    </Attributes>
+                                    <Attributes>
+                                        <label>{dict.color}: </label> {color}
+                                    </Attributes>
+                                    <Attributes>
+                                        <label>{dict.quantity}: </label> {quantity > 0 ? quantity : <>{dict.noStock}</> }
+                                    </Attributes>
+                                    <Attributes>
+                                        <label>{dict.category}: </label> {kindOfCategory}
+                                    </Attributes>
+                                </AttributesColumn>
+                                <AttributesColumn>
+                                    <Attributes>
+                                        <label>{dict.karats}: </label> {karats}
+                                    </Attributes>
+                                    <Attributes>
+                                        <label>{dict.goldWeight}: </label> {gold_weight}
+                                    </Attributes>
+                                    <Attributes>
+                                        <label>{dict.silverWeight}: </label> {silver_weight}
+                                    </Attributes>
+                                    <Attributes>
+                                        <label>{dict.diamondWeight}: </label> {diamond_weight}
+                                    </Attributes>
+                                    <Attributes>
+                                        <label>{dict.stoneWeight}: </label> {other_stoneWeight}
+                                    </Attributes>
+                                </AttributesColumn> 
+                            </ProductHistoryContainer>
+                        )})
+                    } 
                 </HistoryContainer>
             </>
         );
