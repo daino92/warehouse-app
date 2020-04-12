@@ -108,26 +108,38 @@ class ProductDetails extends Component {
         let product = <p style={{textAlign: 'center'}}>{dict.selectProduct}</p>;
         
         if (match.params.productId) product = <Spinner/>
-
         if (loadedProduct) {
+            const currentProduct = loadedProduct[0][0];
+            const otherStock1 = loadedProduct[1][0][0]?.other;
+            const otherStock2 = loadedProduct[1][0][1]?.other;
+            const zeroQuantity =  currentProduct.quantity || otherStock1?.quantity || otherStock2?.quantity === 0;
+
             product = (
                 <MainContainer>
                     <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
                     <ProductTitle>{loadedProduct.productcode}</ProductTitle>
                     <ProductBody>
                         <ul>
-                            <li>{dict.karats}: {loadedProduct.karats}</li>
-                            <li>{dict.costDollars}: {loadedProduct.cost_usd}$</li>
-                            <li>{dict.costEuro}: {loadedProduct.cost_eu}€</li>
-                            <li>{dict.goldWeight}: {loadedProduct.gold_weight}</li>
-                            <li>{dict.silverWeight}: {loadedProduct.silver_weight}</li>
-                            <li>{dict.stoneWeight}: {loadedProduct.stoneWeight}</li>
-                            <li>{dict.producerCode}: {loadedProduct.producer.producer_code}</li>
-                            <li>{dict.description}: {loadedProduct.descr}</li>
-                            <li>{dict.stones}: {loadedProduct.other_stone}</li>
-                            <li>{dict.color}: {loadedProduct.color}</li>
-                            <li>{dict.quantity}: {loadedProduct.quantity}</li>
-                            <li>{dict.category}: {loadedProduct.category.kindOfCategory}</li>
+                            <li>{dict.karats}: {currentProduct.karats}</li>
+                            <li>{dict.costDollars}: {currentProduct.cost_usd}$</li>
+                            <li>{dict.costEuro}: {currentProduct.cost_eu}€</li>
+                            <li>{dict.goldWeight}: {currentProduct.gold_weight}</li>
+                            <li>{dict.silverWeight}: {currentProduct.silver_weight}</li>
+                            <li>{dict.stoneWeight}: {currentProduct.other_stoneWeight}</li>
+                            <li>{dict.producerCode}: {currentProduct.producer.producerCode}</li>
+                            <li>{dict.description}: {currentProduct.descr}</li>
+                            <li>{dict.stones}: {currentProduct.other_stone}</li>
+                            <li>{dict.color}: {currentProduct.color}</li>
+                            <li>{dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : currentProduct.quantity}</li>
+                            <li>{dict.category}: {currentProduct.category.kindOfCategory}</li>
+                            {   
+                            otherStock1 && otherStock2 &&
+                                <ul>   
+                                    Other Shops:
+                                    <li>{otherStock1.address} : {dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : otherStock1.quantity}</li>
+                                    <li>{otherStock2.address} : {dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : otherStock2.quantity}</li>
+                                </ul>
+                            }
                         </ul>
                     </ProductBody>
                     <ButtonsContainer>
