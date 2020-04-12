@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import orderBy from 'lodash/orderBy';
-import flattenDeep from 'lodash/flattenDeep';
+import get from 'lodash/get';
 import styled from '@emotion/styled';
 import {v4 as uuidv4} from 'uuid';
 import Pagination from "react-js-pagination";
@@ -35,27 +35,49 @@ const SelectComponent = styled('select')`
 `;
 
 class Products extends Component {
-    constructor(props) {
-        super(props);
+    state = {
+        limitOptions: {
+            label: 'Choose limit',
+            value: 28,             
+            options: [
+                { value: 12, displayValue: 12 }, 
+                { value: 16, displayValue: 16 }, 
+                { value: 20, displayValue: 20 }, 
+                { value: 24, displayValue: 24 }, 
+                { value: 28, displayValue: 28 }
+            ]
+        }
+    };
 
-        this.state = {
-            limitOptions: {
-                label: 'Choose limit',
-                value: '28',             
-                options: [
-                    { value: 12, displayValue: 12 }, 
-                    { value: 16, displayValue: 16 }, 
-                    { value: 20, displayValue: 20 }, 
-                    { value: 24, displayValue: 24 }, 
-                    { value: 28, displayValue: 28 }
-                ]
-            }
-        };
-    } 
+    componentDidUpdate(prevProps) {
+        const {products, history, initProducts} = this.props;
+        const {limitOptions} = this.state;
+
+        const store = history.location.pathname.split('/')[2];
+        const totalItemsPerStore = get(products, '[1][0].maxSize', 0);
+        const limit = limitOptions.value;
+
+        const numberOfPages = Math.ceil(totalItemsPerStore / limit);
+
+        if ((prevProps.products[0] !== products[0]) && products[0].length === 0) {
+            history.push({pathname: `/products/${store}/${numberOfPages}`});
+            initProducts(store, numberOfPages, limitOptions.value);
+        }
+    }
+
+    shouldComponentUpdate(nextProps) {
+        if (this.props.products !== nextProps.products) {
+            return true;
+        }
+        if (this.props.products === nextProps.products) {
+            return <Spinner/>
+        }
+        return false
+    }
 
     componentDidMount () {
-        const {match, initProducts, limit} = this.props;
-        initProducts(match.params.address, match.params.page, limit);
+        const {match, initProducts, limitOptions} = this.props;
+        initProducts(match.params.address, match.params.page, limitOptions.value);
 
         console.log("Products.jsx did mount: ", this.props);
     }
@@ -68,9 +90,9 @@ class Products extends Component {
     limiSelection = event => {
         const {history, initProducts} = this.props; 
 
-        let store = history.location.pathname.split('/')[2];
-        let page = history.location.pathname.split('/')[3];
-        let limit = event.target.value;
+        const store = history.location.pathname.split('/')[2];
+        const page = history.location.pathname.split('/')[3];
+        const limit = event.target.value;
 
         this.setState({ 
             ...this.state,
@@ -79,16 +101,17 @@ class Products extends Component {
                 value: event.target.value
             }
         });
-        
-        initProducts(store, page, limit)
+
+        history.push({pathname: `/products/${store}/${page}`});
+        initProducts(store, page, limit)   
     }
 
     handlePageChange = page => {
         const {history, initProducts} = this.props;
         const {limitOptions} = this.state;
 
-        let limit = limitOptions.value;
-        let store = (history.location.pathname).split('/')[2];
+        const limit = limitOptions.value;
+        const store = (history.location.pathname).split('/')[2];
 
         history.push({pathname: `/products/${store}/${page}`});
         initProducts(store, page, limit)
@@ -107,21 +130,12 @@ class Products extends Component {
 
         // TODO: fix name conventions
         const sortedByProductCode = orderBy(products[0], ['productcode', 'color'], ['asc', 'desc'])
-        console.log("Sorted by productCode: ", sortedByProductCode)
-
-        //var size = products[1]?.maxSize;
-        var maxSize = flattenDeep(products).slice(-1)[0]?.maxSize;
-        //var maxSize = size.map(({maxSize}) => { return maxSize });
+        //console.log("Sorted by productCode: ", sortedByProductCode)
         
         // Pagination params
         const activePage = parseInt(match.params.page);
-        //const maxItemsPerPage = parseInt(limitOptions.value);
-        const maxItemsPerPage = 28;
-        const totalItemsPerStore = maxSize;
-        //const totalItemsPerPage = sortedByProductCode.length;
-        //const totalItemsPerStore = 40;
-
-        console.log("totalItemsPerStore", totalItemsPerStore)
+        const maxItemsPerPage = parseInt(limitOptions.value);
+        const totalItemsPerStore = get(products, '[1][0].maxSize', 0);
 
         return (
             <>
@@ -132,7 +146,6 @@ class Products extends Component {
                         nextPageText={"»"}
                         hideFirstLastPages 
                         activePage={activePage}
-                        //itemsCountPerPage={maxItemsPerPage - totalItemsPerPage}
                         activeLinkClass={'activePage'}
                         itemsCountPerPage={maxItemsPerPage}
                         totalItemsCount={totalItemsPerStore}
@@ -168,7 +181,7 @@ class Products extends Component {
 const mapStateToProps = state => ({
     products: state.product.products,
     isFetching: state.product.isFetching,
-    limit: state.product.limit,
+    limitOptions: state.product.limitOptions,
     errorMessage: state.product.errorMessage
 })
 

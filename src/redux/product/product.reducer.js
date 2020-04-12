@@ -3,18 +3,17 @@ import productActionTypes from './product.types';
 const initialState = {
     loadedProduct: null,
     products: [],
-    limit: 28,
-    // limitOptions: {
-    //     label: 'Choose limit',
-    //     value: 28,             
-    //     options: [
-    //         { value: 12, displayValue: 12 }, 
-    //         { value: 16, displayValue: 16 }, 
-    //         { value: 20, displayValue: 20 }, 
-    //         { value: 24, displayValue: 24 }, 
-    //         { value: 28, displayValue: 28 }
-    //     ]
-    // },
+    limitOptions: {
+        label: 'Choose limit',
+        value: 28,             
+        options: [
+            { value: 12, displayValue: 12 }, 
+            { value: 16, displayValue: 16 }, 
+            { value: 20, displayValue: 20 }, 
+            { value: 24, displayValue: 24 }, 
+            { value: 28, displayValue: 28 }
+        ]
+    },
     isFetching: false,
     response: null,
     errorMessage: undefined,
@@ -37,6 +36,10 @@ const productReducer = (state = initialState, action) => {
                 products: action.payload,
                 page: action.page,
                 address: action.address,
+                // limitOptions: {
+                //     ...action.limitOptions,
+                //     value: event.target.value
+                // }
                 // products: [
                 //     ...state.products,
                 //     ...action.payload,
