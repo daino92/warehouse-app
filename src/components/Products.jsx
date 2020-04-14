@@ -5,11 +5,12 @@ import get from 'lodash/get';
 import styled from '@emotion/styled';
 import {v4 as uuidv4} from 'uuid';
 import Pagination from "react-js-pagination";
-import {initProducts} from '../redux/product/product.actions';
+import {initProducts, limitUpdate} from '../redux/product/product.actions';
 import IndividualProduct from './IndividualProduct';
-import {colors, dict} from '../util/variables';
+import {dict} from '../util/variables';
 import Spinner from './Spinner';
-import {ErrorContainer, PaginationWrapper, LabelComponent, FormComponent} from './Common';
+import Select from '../components/forms/Select';
+import {ErrorContainer, PaginationWrapper} from './Common';
 
 const ProductsWrapper = styled('section')`
     display: flex;
@@ -20,38 +21,10 @@ const ProductsWrapper = styled('section')`
     margin: auto; 
 `;
 
-const SelectComponent = styled('select')`
-    outline: none;
-    border: 1px solid ${colors.lightGrey};
-    font: inherit;
-    padding: 6px 10px;
-    display: block;
-    width: 56px;
-
-    &:focus {
-        outline: none;
-        border: 1px solid ${colors.sun};
-    }
-`;
-
 class Products extends Component {
-    state = {
-        limitOptions: {
-            label: 'Choose limit',
-            value: 28,             
-            options: [
-                { value: 12, displayValue: 12 }, 
-                { value: 16, displayValue: 16 }, 
-                { value: 20, displayValue: 20 }, 
-                { value: 24, displayValue: 24 }, 
-                { value: 28, displayValue: 28 }
-            ]
-        }
-    };
 
     componentDidUpdate(prevProps) {
-        const {products, history, initProducts} = this.props;
-        const {limitOptions} = this.state;
+        const {products, history, initProducts, limitOptions} = this.props;
 
         const store = history.location.pathname.split('/')[2];
         const totalItemsPerStore = get(products, '[1][0].maxSize', 0);
@@ -88,27 +61,20 @@ class Products extends Component {
     }
 
     limiSelection = event => {
-        const {history, initProducts} = this.props; 
+        const {history, initProducts, limitUpdate} = this.props; 
 
         const store = history.location.pathname.split('/')[2];
         const page = history.location.pathname.split('/')[3];
         const limit = event.target.value;
 
-        this.setState({ 
-            ...this.state,
-            limitOptions: {
-                ...this.state.limitOptions,
-                value: event.target.value
-            }
-        });
+        limitUpdate(limit);
 
         history.push({pathname: `/products/${store}/${page}`});
         initProducts(store, page, limit)   
     }
 
     handlePageChange = page => {
-        const {history, initProducts} = this.props;
-        const {limitOptions} = this.state;
+        const {history, initProducts, limitOptions} = this.props;
 
         const limit = limitOptions.value;
         const store = (history.location.pathname).split('/')[2];
@@ -118,8 +84,7 @@ class Products extends Component {
     }
 
     render () {
-        const {match, history, products, isFetching, errorMessage} = this.props;
-        const {limitOptions} = this.state;
+        const {match, history, products, isFetching, errorMessage, limitOptions} = this.props;
 
         const path = (history.location.pathname).split('/')[1];
 
@@ -151,16 +116,9 @@ class Products extends Component {
                         totalItemsCount={totalItemsPerStore}
                         onChange={this.handlePageChange}
                     />
-                    <FormComponent>
-                        <LabelComponent>{limitOptions.label}</LabelComponent>
-                        <SelectComponent onChange={this.limiSelection} value={limitOptions.value}>
-                            {limitOptions.options.map(option => (
-                                <option key={uuidv4()} value={option.value}>
-                                    {option.value}
-                                </option>
-                            ))}
-                        </SelectComponent>
-                    </FormComponent>
+                    <Select name="limitOptions"
+                        label={limitOptions.label} options={limitOptions.options}
+                        value={limitOptions.value} onChange={this.limiSelection} />
                 </PaginationWrapper>
                 
                 <ProductsWrapper>
@@ -186,7 +144,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    initProducts: (address, page, limit) => dispatch(initProducts(address, page, limit))
+    initProducts: (address, page, limit) => dispatch(initProducts(address, page, limit)),
+    limitUpdate: limit => dispatch(limitUpdate(limit))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Products);
