@@ -85,6 +85,11 @@ export const fetchPagesFailed = errorMessage => ({
     payload: errorMessage 
 })
 
+export const limitUpdate = limit => ({
+    type: productActionTypes.LIMIT_UPDATE,
+    payload: limit 
+})
+
 export const initProducts = (address, page, limit) => {
     return dispatch => {
         dispatch(fetchProductsStart());

@@ -35,20 +35,7 @@ const productReducer = (state = initialState, action) => {
                 errorMessage: undefined,
                 products: action.payload,
                 page: action.page,
-                address: action.address,
-                // limitOptions: {
-                //     ...action.limitOptions,
-                //     value: event.target.value
-                // }
-                // products: [
-                //     ...state.products,
-                //     ...action.payload,
-
-                // ],
-                // data: [
-                //     ...state.data,
-                //     {[action.page]: action.payload}
-                // ],
+                address: action.address
             }
         case productActionTypes.FETCH_PRODUCTS_FAILED:
             return {
@@ -137,6 +124,14 @@ const productReducer = (state = initialState, action) => {
             return {
                 ...state,
                 errorMessage: ''
+            };
+        case productActionTypes.LIMIT_UPDATE:
+            return {
+                ...state,
+                limitOptions: {
+                    ...state.limitOptions,
+                    value: action.payload
+                }
             };
         default:
             return state;
