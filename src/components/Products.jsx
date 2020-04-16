@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 import {v4 as uuidv4} from 'uuid';
 import Pagination from "react-js-pagination";
 import {initProducts, limitUpdate} from '../redux/product/product.actions';
+import {initCategories, categoryUpdate} from '../redux/category/category.actions';
 import IndividualProduct from './IndividualProduct';
 import {dict} from '../util/variables';
 import Spinner from './Spinner';
@@ -24,17 +25,18 @@ const ProductsWrapper = styled('section')`
 class Products extends Component {
 
     componentDidUpdate(prevProps) {
-        const {products, history, initProducts, limitOptions} = this.props;
+        const {products, history, initProducts, limitOptions, categoryOptions} = this.props;
 
         const store = history.location.pathname.split('/')[2];
         const totalItemsPerStore = get(products, '[1][0].maxSize', 0);
         const limit = limitOptions.value;
+        const category = categoryOptions.value;
 
         const numberOfPages = Math.ceil(totalItemsPerStore / limit);
 
         if ((prevProps.products[0] !== products[0]) && products[0].length === 0) {
             history.push({pathname: `/products/${store}/${numberOfPages}`});
-            initProducts(store, numberOfPages, limitOptions.value);
+            initProducts(store, numberOfPages, limit, category);
         }
     }
 
@@ -49,8 +51,10 @@ class Products extends Component {
     }
 
     componentDidMount () {
-        const {match, initProducts, limitOptions} = this.props;
-        initProducts(match.params.address, match.params.page, limitOptions.value);
+        const {match, initProducts, initCategories, limitOptions, categoryOptions} = this.props;
+
+        initCategories();
+        initProducts(match.params.address, match.params.page, limitOptions.value, categoryOptions.value);
 
         console.log("Products.jsx did mount: ", this.props);
     }
@@ -61,30 +65,56 @@ class Products extends Component {
     }
 
     limiSelection = event => {
-        const {history, initProducts, limitUpdate} = this.props; 
+        const {history, initProducts, limitUpdate, categoryOptions} = this.props; 
 
         const store = history.location.pathname.split('/')[2];
         const page = history.location.pathname.split('/')[3];
+        const category = categoryOptions.value;
         const limit = event.target.value;
 
         limitUpdate(limit);
 
-        history.push({pathname: `/products/${store}/${page}`});
-        initProducts(store, page, limit)   
+        if (page == 0)  {
+            history.push({pathname: `/products/${store}/1`});
+            initProducts(store, 1, limit, '')  
+        } else {
+            history.push({pathname: `/products/${store}/${page}`});
+            initProducts(store, page, limit, category)   
+        }  
+    }
+
+    categorySelection = event => {
+        const {history, initProducts, limitOptions, categoryUpdate} = this.props; 
+
+        const store = history.location.pathname.split('/')[2];
+        const page = history.location.pathname.split('/')[3];
+        const limit = limitOptions.value; 
+        const category = event.target.value;
+
+        categoryUpdate(category);
+
+        if (page == 0)  {
+            history.push({pathname: `/products/${store}/1`});
+            initProducts(store, 1, limit, category)  
+        } else {
+            history.push({pathname: `/products/${store}/${page}`});
+            initProducts(store, page, limit, category)
+        }   
     }
 
     handlePageChange = page => {
-        const {history, initProducts, limitOptions} = this.props;
+        const {history, initProducts, limitOptions, categoryOptions} = this.props;
 
         const limit = limitOptions.value;
         const store = (history.location.pathname).split('/')[2];
+        const category = categoryOptions.value;
 
         history.push({pathname: `/products/${store}/${page}`});
-        initProducts(store, page, limit)
+        initProducts(store, page, limit, category)
     }
 
     render () {
-        const {match, history, products, isFetching, errorMessage, limitOptions} = this.props;
+        const {match, history, products, isFetching, errorMessage, limitOptions, categoryOptions} = this.props;
 
         const path = (history.location.pathname).split('/')[1];
 
@@ -93,8 +123,7 @@ class Products extends Component {
     
         if (isFetching) return <Spinner/>
 
-        // TODO: fix name conventions
-        const sortedByProductCode = orderBy(products[0], ['productcode', 'color'], ['asc', 'desc'])
+        const sortedByProductCode = orderBy(products[0], ['productCode', 'color'], ['asc', 'desc'])
         //console.log("Sorted by productCode: ", sortedByProductCode)
         
         // Pagination params
@@ -119,6 +148,10 @@ class Products extends Component {
                     <Select name="limitOptions"
                         label={limitOptions.label} options={limitOptions.options}
                         value={limitOptions.value} onChange={this.limiSelection} />
+
+                    <Select name="categoryOptions"
+                        label={categoryOptions.label} options={categoryOptions.options}
+                        value={categoryOptions.value} onChange={this.categorySelection} />
                 </PaginationWrapper>
                 
                 <ProductsWrapper>
@@ -140,11 +173,14 @@ const mapStateToProps = state => ({
     products: state.product.products,
     isFetching: state.product.isFetching,
     limitOptions: state.product.limitOptions,
-    errorMessage: state.product.errorMessage
+    errorMessage: state.product.errorMessage,
+    categoryOptions: state.category.categoryOptions
 })
 
 const mapDispatchToProps = dispatch => ({
-    initProducts: (address, page, limit) => dispatch(initProducts(address, page, limit)),
+    initProducts: (address, page, limit, category) => dispatch(initProducts(address, page, limit, category)),
+    initCategories: () => dispatch(initCategories()),
+    categoryUpdate: categoryId => dispatch(categoryUpdate(categoryId)),
     limitUpdate: limit => dispatch(limitUpdate(limit))
 })
 
