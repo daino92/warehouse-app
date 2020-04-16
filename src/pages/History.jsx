@@ -4,27 +4,32 @@ import styled from "@emotion/styled";
 import {v4 as uuidv4} from 'uuid';
 import {initHistory} from '../redux/product/product.actions';
 import {colors, dict} from '../util/variables';
+import mq from '../util/mediaQueries.js';
 import Spinner from '../components/Spinner';
 
-const HistoryContainer = styled("section")`
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    width: 80%;
-    margin: auto;
-`;
+const HistoryContainer = styled("section")({
+    display: "flex",
+    flexFlow: "row wrap",
+    justifyContent: "center",
+    margin: "auto"
+},
+mq({
+    width: ["95%", "80%"],
+}));
 
-const ProductHistoryContainer = styled("div")`
-    display: flex;
-    justify-content: space-between;
-    margin: 10px;
-    padding: 1em;
-    width: 48%;
-    border: 1px solid ${colors.whisper};
-	border-radius: .5em;
-    box-shadow: 0 2px 3px ${colors.lightGrey};
-    background-color: ${colors.solitude};
-`;
+const ProductHistoryContainer = styled("div")({
+    display: "flex",
+    justifyContent: "space-between",
+    margin: "10px",
+    padding: "1em",
+    border: "1px solid " + colors.whisper,
+	borderRadius: ".5em",
+    boxShadow: "0 2px 3px " + colors.lightGrey,
+    backgroundColor: colors.solitude
+},
+mq({
+    width: ["100%", "100%", "48%"],
+}));  
 
 const AttributesColumn = styled("div")`
 
@@ -57,8 +62,8 @@ class History extends Component {
             <>
                 <HistoryContainer>
                     {products.map(({id, timestamp, product}) => {
-                        const {productcode, color, quantity, category, karats, gold_weight, silver_weight, diamond_weight, other_stoneWeight} = product || {}
-                        const {kindOfCategory} = category || {}
+                        const {productcode, color, quantity, category, karats, goldWeight, silverWeight, diamondWeight, otherStoneWeight} = product || {}
+                        const {value} = category || {}
 
                         return (
                             <ProductHistoryContainer key={uuidv4()}>
@@ -76,7 +81,7 @@ class History extends Component {
                                         <label>{dict.quantity}: </label> {quantity > 0 ? quantity : <>{dict.noStock}</> }
                                     </Attributes>
                                     <Attributes>
-                                        <label>{dict.category}: </label> {kindOfCategory}
+                                        <label>{dict.category}: </label> {value}
                                     </Attributes>
                                 </AttributesColumn>
                                 <AttributesColumn>
@@ -84,16 +89,16 @@ class History extends Component {
                                         <label>{dict.karats}: </label> {karats}
                                     </Attributes>
                                     <Attributes>
-                                        <label>{dict.goldWeight}: </label> {gold_weight}
+                                        <label>{dict.goldWeight}: </label> {goldWeight}
                                     </Attributes>
                                     <Attributes>
-                                        <label>{dict.silverWeight}: </label> {silver_weight}
+                                        <label>{dict.silverWeight}: </label> {silverWeight}
                                     </Attributes>
                                     <Attributes>
-                                        <label>{dict.diamondWeight}: </label> {diamond_weight}
+                                        <label>{dict.diamondWeight}: </label> {diamondWeight}
                                     </Attributes>
                                     <Attributes>
-                                        <label>{dict.stoneWeight}: </label> {other_stoneWeight}
+                                        <label>{dict.stoneWeight}: </label> {otherStoneWeight}
                                     </Attributes>
                                 </AttributesColumn> 
                             </ProductHistoryContainer>
