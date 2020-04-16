@@ -121,17 +121,17 @@ class ProductDetails extends Component {
                     <ProductBody>
                         <ul>
                             <li>{dict.karats}: {currentProduct.karats}</li>
-                            <li>{dict.costDollars}: {currentProduct.cost_usd}$</li>
-                            <li>{dict.costEuro}: {currentProduct.cost_eu}€</li>
-                            <li>{dict.goldWeight}: {currentProduct.gold_weight}</li>
-                            <li>{dict.silverWeight}: {currentProduct.silver_weight}</li>
-                            <li>{dict.stoneWeight}: {currentProduct.other_stoneWeight}</li>
+                            <li>{dict.costDollars}: {currentProduct.costUSD}$</li>
+                            <li>{dict.costEuro}: {currentProduct.costEU}€</li>
+                            <li>{dict.goldWeight}: {currentProduct.goldWeight}</li>
+                            <li>{dict.silverWeight}: {currentProduct.silverWeight}</li>
+                            <li>{dict.stoneWeight}: {currentProduct.otherStoneWeight}</li>
                             <li>{dict.producerCode}: {currentProduct.producer.producerCode}</li>
-                            <li>{dict.description}: {currentProduct.descr}</li>
-                            <li>{dict.stones}: {currentProduct.other_stone}</li>
+                            <li>{dict.description}: {currentProduct.description}</li>
+                            <li>{dict.stones}: {currentProduct.otherStone}</li>
                             <li>{dict.color}: {currentProduct.color}</li>
                             <li>{dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : currentProduct.quantity}</li>
-                            <li>{dict.category}: {currentProduct.category.kindOfCategory}</li>
+                            <li>{dict.category}: {currentProduct.category.value}</li>
                             {   
                             otherStock1 && otherStock2 &&
                                 <ul>   

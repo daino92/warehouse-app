@@ -45,9 +45,9 @@ const Category = ({categories, isFetching, clicked, onAddCategory, onEditCategor
             <MainContainer>
                 <CategoryTitle>{dict.categories}</CategoryTitle>
                 <CategoryBody>
-                    { categories.map(({id, kindOfCategory}) => (
+                    { categories.map(({id, value}) => (
                         <CategoryBody key={id.toString()} onClick={() => clicked(id)}>
-                            {capitalize(kindOfCategory)}
+                            {capitalize(value)}
                         </CategoryBody>
                     ))}
                 </CategoryBody>

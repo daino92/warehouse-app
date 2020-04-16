@@ -101,7 +101,7 @@ class CategoryDetails extends Component {
                 <MainContainer>
                     <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
                     <CategoryTitle>{dict.category}</CategoryTitle>
-                    <div>{capitalize(loadedCategory.kindOfCategory)}</div>
+                    <div>{capitalize(loadedCategory.value)}</div>
                     <ButtonsContainer>
                         <Button btnType="edit"      disabled={false} onClick={this.editCategoryHandler}>{dict.edit}</Button>
                         <Button btnType="danger"    disabled={false} onClick={this.deleteCategoryHandler}>{dict.delete}</Button>
