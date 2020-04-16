@@ -5,10 +5,15 @@ const initialState = {
     response: null,
     errorMessage: undefined,
     categories: [],
+    categoryOptions: {
+        label: 'Choose a category',
+        value: '',             
+        options: []
+    },
     submitted: false,
     selectedCategoryId: null,
     loadedCategory: null,
-    error: false
+    error: false,
 }
 
 const categoryReducer = (state = initialState, action) => {
@@ -24,7 +29,14 @@ const categoryReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 error: false,
-                categories: action.payload
+                categories: action.payload,
+                categoryOptions: {
+                    ...state.categoryOptions,
+                    options: [
+                        state.categoryOptions.options,
+                        ...action.payload
+                    ]
+                }
             }
         case categoryActionTypes.FETCH_CATEGORIES_FAILED:
             return {
@@ -92,6 +104,14 @@ const categoryReducer = (state = initialState, action) => {
                 submitted: false,
                 response: action.payload
             }
+            case categoryActionTypes.CATEGORY_UPDATE:
+                return {
+                    ...state,
+                    categoryOptions: {
+                        ...state.categoryOptions,
+                        value: action.payload
+                    }        
+                }   
         default:
             return state;
     }

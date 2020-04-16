@@ -7,11 +7,11 @@ const initialState = {
         label: 'Choose limit',
         value: 28,             
         options: [
-            { value: 12, displayValue: 12 }, 
-            { value: 16, displayValue: 16 }, 
-            { value: 20, displayValue: 20 }, 
-            { value: 24, displayValue: 24 }, 
-            { value: 28, displayValue: 28 }
+            { id: 12, value: 12 }, 
+            { id: 16, value: 16 }, 
+            { id: 20, value: 20 }, 
+            { id: 24, value: 24 }, 
+            { id: 28, value: 28 }
         ]
     },
     isFetching: false,

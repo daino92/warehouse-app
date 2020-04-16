@@ -90,10 +90,10 @@ export const limitUpdate = limit => ({
     payload: limit 
 })
 
-export const initProducts = (address, page, limit) => {
+export const initProducts = (address, page, limit, category) => {
     return dispatch => {
         dispatch(fetchProductsStart());
-        axiosInstance.get(`/product/all?address=${address}&page=${page}&limit=${limit}&categoryId=&producerId`)
+        axiosInstance.get(`/product/all?address=${address}&page=${page}&limit=${limit}&categoryId=${category}&producerId`)
             .then(response => {
                 const products = response.data;
                 dispatch(fetchProductsSuccess(products))

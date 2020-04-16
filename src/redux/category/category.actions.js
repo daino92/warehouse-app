@@ -71,6 +71,11 @@ export const updateCategoryFailed = errorMessage => ({
     payload: errorMessage 
 })
 
+export const categoryUpdate = categoryId => ({
+    type: categoryActionTypes.CATEGORY_UPDATE,
+    payload: categoryId 
+})
+
 export const initCategories = () => {
     return dispatch => {
         dispatch(fetchCategoriesStart());
