@@ -23,12 +23,12 @@ const Select = ({value, onChange, name, label, ...props}) => (
     <FormComponent>
         <LabelComponent>{label}</LabelComponent>
         <SelectComponent value={value} onChange={onChange} name={name}>
-            {props.options.map(({value, kindOfCategory, displayValue}) => {
-                const capitalizedValue = capitalize(kindOfCategory)
+            {props.options.map(({id, value, address}) => {
+                const capitalizedValue = capitalize(value || address)
 
                 return (
-                    <option key={uuidv4()} value={capitalizedValue}>
-                    {capitalizedValue} {displayValue}
+                    <option key={uuidv4()} value={id}>
+                        {capitalizedValue}
                     </option>
                 )})
             }
