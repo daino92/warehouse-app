@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import mq from '../util/mediaQueries.js';
 import {colors} from '../util/variables';
 
 const LabelComponent = styled('label')`
@@ -17,7 +18,7 @@ const FormComponent = styled('div')`
     }
 
     &:nth-of-type(2n+2) {
-        padding-right: 1em
+        padding-right: 1em;
     }
 `;
 
@@ -51,47 +52,58 @@ const ErrorContainer = styled('div')`
     color: ${colors.red};
 `;
 
-const PaginationWrapper = styled('div')`
-    display: flex;
-    justify-content: center;
+const PaginationWrapper = styled('div')({
+    display: "flex",
+    justifyContent: "center",
 
-    > div {
-        width: initial;
-        padding: 0;
-    }
+    "> div": {
+        maxWidth: "360px"
+    },
 
-    ul {
-        display: flex;
-        font-size: 1.1em;
-	    line-height: 1.8;
-        list-style-type: none;
-        padding: 1em;
-        margin-bottom: 0;
+    "ul": {
+        display: "flex",
+        fontSize: "1.1em",
+	    lineHeight: 1.8,
+        listStyleType: "none",
+        padding: "1em",
+        justifyContent: "center",
 
-        a {
-            display: inline-block;
-            width: 35px;
-            height: 35px;
-            text-align: center;
-        }
+        "a": {
+            display: "inline-block",
+            width: "35px",
+            height: "35px",
+            textAlign: "center",
+        },
 
-        .active {
-            background-color: ${colors.sun};
-            border-radius: 50%;
+        ".active": {
+            backgroundColor: colors.sun,
+            borderRadius: "50%",
 
-            .activePage {
-                color: ${colors.white};
+            ".activePage": {
+                color: colors.white
             }
         }
-    }
+    },
 
-    .disabled-navigation a, 
-    .disabled-navigation a:hover {
-        cursor: not-allowed;
-        color: ${colors.lightGrey};
+    ".disabled-navigation a, .disabled-navigation a:hover": {
+        cursor: "not-allowed",
+        color: colors.lightGrey
     }
-    
-`;
+},
+mq({
+    flexDirection: ["column", "row"],
+    marginBottom: ["1em", 0],
+
+    "> div": {
+        padding: ["0 1em 1em", "0 .5em .5em"],
+        margin: ["0 auto", "initial"],
+        width: ["100%", "initial"]
+    },
+
+    "ul": {
+        margin: [0, "17.6px 0"]
+    }
+}));
 
 export {
     LabelComponent, 

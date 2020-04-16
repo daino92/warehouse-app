@@ -2,16 +2,19 @@ import React from 'react';
 import styled from '@emotion/styled';
 import {Link} from 'react-router-dom';
 import {NavLink} from 'react-router-dom';
+import mq from '../util/mediaQueries.js';
 import {colors, dict} from '../util/variables';
 
-const HeaderContainer = styled('header')`
-    height: 70px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 2em;
-    padding: 20px 60px;
-`;
+const HeaderContainer = styled('header')({
+    display: "flex",
+    justifyContent: "space-between",
+    height: "70px",
+    width: "100%",
+},
+mq({
+    padding: ["10px", "20px 40px", "20px 60px"],
+    marginBottom: ["1em", "2em"],
+}))
 
 const LogoContainer = styled(Link)`
     display: flex;
