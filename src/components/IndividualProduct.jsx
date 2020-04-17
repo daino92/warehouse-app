@@ -22,7 +22,7 @@ const ProductContainer = styled('div')`
     &:hover,
     &:active {
         /* background-color: ${colors.pattensBlue}; */
-        box-shadow: rgba(${colors.black}, .8) 0 1px 8px;
+        box-shadow: rgba(${colors.blackAlt}, .8) 0 1px 8px;
         transform: scale(1.03);
         transition: all .3s;
         z-index: 2;
@@ -65,7 +65,7 @@ const FlexContainer = styled('div')`
     justify-content: space-between;
 `;
 
-const Product = ({clicked, imageUrl, title, productCode, price, quantity, color}) => {
+const Product = ({clicked, imageUrl, title, sku, price, quantity, color}) => {
     const zeroQuantity = quantity === 0;
     const imageURL = imageUrl ? imageUrl : imagePlaceholder
 
@@ -78,7 +78,7 @@ const Product = ({clicked, imageUrl, title, productCode, price, quantity, color}
                 <PriceContainer>{price} €</PriceContainer>
                 <QuantityContainer>{zeroQuantity ? <>{dict.noStock}</> : quantity}</QuantityContainer>
                 <ColorContainer>{color}</ColorContainer>
-                <ProductIdContainer>{productCode}</ProductIdContainer>
+                <ProductIdContainer>{sku}</ProductIdContainer>
             </FlexContainer>
         </ProductContainer>
     )

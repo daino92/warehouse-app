@@ -123,7 +123,7 @@ class Products extends Component {
     
         if (isFetching) return <Spinner/>
 
-        const sortedByProductCode = orderBy(products[0], ['productCode', 'color'], ['asc', 'desc'])
+        const sortedByProductCode = orderBy(products[0], ['sku', 'color'], ['asc', 'desc'])
         //console.log("Sorted by productCode: ", sortedByProductCode)
         
         // Pagination params

@@ -117,12 +117,12 @@ class ProductDetails extends Component {
             product = (
                 <MainContainer>
                     <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
-                    <ProductTitle>{loadedProduct.productcode}</ProductTitle>
+                    <ProductTitle>{currentProduct.sku}</ProductTitle>
                     <ProductBody>
                         <ul>
                             <li>{dict.karats}: {currentProduct.karats}</li>
-                            <li>{dict.costDollars}: {currentProduct.costUSD}$</li>
-                            <li>{dict.costEuro}: {currentProduct.costEU}€</li>
+                            <li>{dict.costDollars}: {currentProduct.costUsd}$</li>
+                            <li>{dict.costEuro}: {currentProduct.costEu}€</li>
                             <li>{dict.goldWeight}: {currentProduct.goldWeight}</li>
                             <li>{dict.silverWeight}: {currentProduct.silverWeight}</li>
                             <li>{dict.stoneWeight}: {currentProduct.otherStoneWeight}</li>
