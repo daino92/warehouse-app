@@ -6,7 +6,7 @@ import {validations} from '../util/validations';
 import TextInput from '../components/forms/TextInput';
 import Button from '../components/Button';
 import {dict} from '../util/variables';
-import {ErrorContainer, ButtonsContainer, MainContainer} from '../components/Common';
+import {ButtonsContainer, MainContainer} from '../components/Common';
 import {initAddCategory} from '../redux/category/category.actions.js';
 import {Snackbar} from '../components/Snackbar';
 import Spinner from '../components/Spinner';
@@ -15,7 +15,7 @@ const getInitialState = () => {
     return ({
         formIsValid: false,
         categoryForm: {
-            kindOfCategory: {
+            value: {
                 label: 'Category name',
                 params: {
                     placeholder: 'Category name',
@@ -52,6 +52,11 @@ class NewCategory extends Component {
                 this.redirectBack()
             }
         }
+    }
+
+    componentWillUnmount() {
+        const {onUnload} = this.props;
+        onUnload();
     }
 
     showSnackbarHandler = () => {
@@ -124,18 +129,16 @@ class NewCategory extends Component {
     }
 
     render () {
-        const {error, isFetching, response} = this.props;
+        const {isFetching} = this.props;
         const {formIsValid, snackBarOpen, snackBarMessage} = this.state;
-        const {params, label, value, touched, valid} = this.state.categoryForm.kindOfCategory;
-        console.log("lalala", response)
-        //if (error) return <ErrorContainer>{dict.errorUponProductAddition}</ErrorContainer>
+        const {params, label, value, touched, valid} = this.state.categoryForm.value;
 
         if (isFetching) return <Spinner/>
 
         let form = (
             <>
                 <form>
-                    <TextInput name="kindOfCategory" type={params.type}
+                    <TextInput name="value" type={params.type}
                         placeholder={params.placeholder} label={label}
                         value={value} valid={valid} touched={touched}
                         onChange={this.changeHandler} />
@@ -143,7 +146,7 @@ class NewCategory extends Component {
                     <ButtonsContainer>
                         <Button btnType="success"   disabled={!formIsValid} onClick={this.formSubmitHandler} >{dict.submit}</Button>
                         <Button btnType="danger"    disabled={false}        onClick={this.handleClearForm}>{dict.clear}</Button>
-                        <Button btnType='success'   disabled={false}        onClick={this.redirectBack}>{dict.back}</Button>
+                        <Button btnType="success"   disabled={false}        onClick={this.redirectBack}>{dict.back}</Button>
                     </ButtonsContainer> 
                 </form> 
             </>
@@ -166,7 +169,8 @@ const mapStateToProps = state => ({
 })
   
 const mapDispatchToProps = dispatch => ({
-    initAddCategory: category => dispatch(initAddCategory(category))
+    initAddCategory: category => dispatch(initAddCategory(category)),
+    onUnload: () => dispatch({type: 'PAGE_UNLOADED'})
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NewCategory));

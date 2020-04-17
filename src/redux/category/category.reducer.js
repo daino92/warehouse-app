@@ -11,7 +11,6 @@ const initialState = {
         options: []
     },
     submitted: false,
-    selectedCategoryId: null,
     loadedCategory: null,
     error: false,
 }
@@ -21,14 +20,12 @@ const categoryReducer = (state = initialState, action) => {
         case categoryActionTypes.FETCH_CATEGORIES_START:
             return {
                 ...state,
-                isFetching: true,
-                error: false
+                isFetching: true
             }
         case categoryActionTypes.FETCH_CATEGORIES_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
-                error: false,
                 categories: action.payload,
                 categoryOptions: {
                     ...state.categoryOptions,
@@ -41,22 +38,19 @@ const categoryReducer = (state = initialState, action) => {
         case categoryActionTypes.FETCH_CATEGORIES_FAILED:
             return {
                 ...state,
-                isFetching: false,
                 error: true,
+                isFetching: false,
                 errorMessage: action.payload
             }
         case categoryActionTypes.FETCH_SINGLE_CATEGORY_START:
             return {
                 ...state,
-                isFetching: true,
-                error: false
+                isFetching: true
             }
         case categoryActionTypes.FETCH_SINGLE_CATEGORY_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
-                error: false,
-                selectedCategoryId: action.payload,
                 loadedCategory: action.payload
             }
         case categoryActionTypes.FETCH_SINGLE_CATEGORY_FAILED:
@@ -74,7 +68,6 @@ const categoryReducer = (state = initialState, action) => {
         case categoryActionTypes.DELETE_CATEGORY_SUCCESS:
             return {
                 ...state,
-                error: false,
                 response: action.payload
             }
         case categoryActionTypes.DELETE_CATEGORY_FAILED:
@@ -86,13 +79,11 @@ const categoryReducer = (state = initialState, action) => {
          case categoryActionTypes.ADD_CATEGORY_START:
             return {
                 ...state,
-                error: false,
                 submitted: false
             }
         case categoryActionTypes.ADD_CATEGORY_SUCCESS:
             return {
                 ...state,
-                error: false,
                 submitted: true,
                 response: action.payload,
                 addedProduct: action.payload
@@ -104,14 +95,19 @@ const categoryReducer = (state = initialState, action) => {
                 submitted: false,
                 response: action.payload
             }
-            case categoryActionTypes.CATEGORY_UPDATE:
-                return {
-                    ...state,
-                    categoryOptions: {
-                        ...state.categoryOptions,
-                        value: action.payload
-                    }        
-                }   
+        case categoryActionTypes.PAGE_UNLOADED:
+            return {
+                ...state,
+                response: ''
+            };
+        case categoryActionTypes.CATEGORY_UPDATE:
+            return {
+                ...state,
+                categoryOptions: {
+                    ...state.categoryOptions,
+                    value: action.payload
+                }        
+            }   
         default:
             return state;
     }

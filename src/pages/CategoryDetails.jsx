@@ -48,6 +48,11 @@ class CategoryDetails extends Component {
         this.loadData();
     }
 
+    componentWillUnmount() {
+        const {onUnload} = this.props;
+        onUnload();
+    }
+
     componentDidUpdate(prevProps, prevState) {
         const {category, match, response} = this.props;
         console.log("ProductDetails.jsx did update: ", this.props);
@@ -121,7 +126,8 @@ const mapStateToProps = state => ({
   
 const mapDispatchToProps = dispatch => ({
     initSingleCategory:  id => dispatch(initSingleCategory(id)),
-    initDeleteCategory: id => dispatch(initDeleteCategory(id))
+    initDeleteCategory: id => dispatch(initDeleteCategory(id)),
+    onUnload: () => dispatch({type: 'PAGE_UNLOADED'})
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CategoryDetails));
