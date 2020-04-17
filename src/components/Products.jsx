@@ -68,15 +68,15 @@ class Products extends Component {
         const {history, initProducts, limitUpdate, categoryOptions} = this.props; 
 
         const store = history.location.pathname.split('/')[2];
-        const page = history.location.pathname.split('/')[3];
+        const page = parseInt(history.location.pathname.split('/')[3]);
         const category = categoryOptions.value;
         const limit = event.target.value;
 
         limitUpdate(limit);
 
-        if (page == 0)  {
+        if (page === 0)  {
             history.push({pathname: `/products/${store}/1`});
-            initProducts(store, 1, limit, '')  
+            initProducts(store, 1, limit, categoryOptions.value = '')  
         } else {
             history.push({pathname: `/products/${store}/${page}`});
             initProducts(store, page, limit, category)   
@@ -87,13 +87,13 @@ class Products extends Component {
         const {history, initProducts, limitOptions, categoryUpdate} = this.props; 
 
         const store = history.location.pathname.split('/')[2];
-        const page = history.location.pathname.split('/')[3];
+        const page = parseInt(history.location.pathname.split('/')[3]);
         const limit = limitOptions.value; 
         const category = event.target.value;
-
+        
         categoryUpdate(category);
 
-        if (page == 0)  {
+        if (page === 0)  {
             history.push({pathname: `/products/${store}/1`});
             initProducts(store, 1, limit, category)  
         } else {
