@@ -5,10 +5,6 @@ import {initCategories} from '../redux/category/category.actions';
 import IndividualCategory from '../components/IndividualCategory';
 
 class CategoryPage extends Component {
-    state = {
-        selectedCategoryId: null,
-        selected: false
-    }
 
     componentDidMount () {
         const {initCategories} = this.props;
@@ -24,25 +20,25 @@ class CategoryPage extends Component {
 
     addCategoryHandler = () => {
         const {history} = this.props;
-        const path = (history.location.pathname).split('/')[1];
+        const path = history.location.pathname.split('/')[1];
         history.push({pathname: `/${path}/new-category`})
     }
 
-    categorySelection = id => {
-        this.setState({selectedCategoryId: id});
-        this.props.history.push({pathname: '/categories/' + id})
-        this.setState({selected: true}) 
+    categorySelection =  (path, id) => {
+        const {history} = this.props;
+        history.push({pathname: `/${path}/${id}`}); 
     }
 
     render() {
-        const {categories, isFetching} = this.props;
+        const {history, categories, isFetching} = this.props;
+        const path = (history.location.pathname).split('/')[1];
  
         return (
             <IndividualCategory categories={categories} 
                 isFetching={isFetching} 
                 onGoBack={this.redirectBack}
                 onAddCategory={this.addCategoryHandler}
-                clicked={(id) => this.categorySelection(id)} 
+                clicked={(id) => this.categorySelection(path, id)} 
             />
         );
     }
@@ -50,8 +46,7 @@ class CategoryPage extends Component {
 
 const mapStateToProps = state => ({
     categories: state.category.categories,
-    isFetching: state.category.isFetching,
-    selectedCategoryId: state.category.selectedCategoryId
+    isFetching: state.category.isFetching
 })
   
 const mapDispatchToProps = dispatch => ({
