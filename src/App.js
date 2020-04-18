@@ -39,7 +39,7 @@ class App extends Component {
       <div className="App">
         <Header/>
           <Switch>
-            { auth ? <Route exact path="/products/new-product" component={AsyncNewProduct} /> : null }
+            { auth ? <Route exact path="/product/new-product" component={AsyncNewProduct} /> : null }
             { auth ? <Route exact path="/categories" component={asyncCategory} /> : null }
             { auth ? <Route path="/categories/new-category" component={AsyncNewCategory} /> : null }
             { auth ? <Route path={`/categories/:id`} component={asyncCategoryDetails} /> : null }
