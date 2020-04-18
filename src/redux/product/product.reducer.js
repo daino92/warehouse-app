@@ -123,7 +123,8 @@ const productReducer = (state = initialState, action) => {
         case productActionTypes.PAGE_UNLOADED:
             return {
                 ...state,
-                errorMessage: ''
+                errorMessage: '',
+                submitted: false
             };
         case productActionTypes.LIMIT_UPDATE:
             return {

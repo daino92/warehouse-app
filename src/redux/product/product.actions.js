@@ -136,7 +136,7 @@ export const initDeleteProduct = stockId => {
 export const initAddProduct = product => {
     return dispatch => {
         dispatch(addProductStart());
-        axiosInstance.post('/posts/', product)
+        axiosInstance.post('/product/create/', product)
             .then(response => {
                 console.log("Product added successfully: " , response);
                 dispatch(addProductSuccess(response))
