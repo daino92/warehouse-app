@@ -1,0 +1,7 @@
+const storeActionTypes = {
+    FETCH_STORES_START: 'FETCH_STORES_START',
+    FETCH_STORES_SUCCESS: 'FETCH_STORES_SUCCESS',
+    FETCH_STORES_FAILED: 'FETCH_STORES_FAILED',
+}
+
+export default storeActionTypes;
