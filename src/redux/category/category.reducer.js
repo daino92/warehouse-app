@@ -3,6 +3,7 @@ import categoryActionTypes from './category.types';
 const initialState = {
     isFetching: false,
     response: null,
+    updated: null,
     errorMessage: undefined,
     categories: [],
     categoryOptions: {
@@ -76,7 +77,7 @@ const categoryReducer = (state = initialState, action) => {
                 error: true,
                 errorMessage: action.payload
             }
-         case categoryActionTypes.ADD_CATEGORY_START:
+        case categoryActionTypes.ADD_CATEGORY_START:
             return {
                 ...state,
                 submitted: false
@@ -85,8 +86,7 @@ const categoryReducer = (state = initialState, action) => {
             return {
                 ...state,
                 submitted: true,
-                response: action.payload,
-                addedProduct: action.payload
+                response: action.payload
             }
         case categoryActionTypes.ADD_CATEGORY_FAILED:
             return {
@@ -95,10 +95,28 @@ const categoryReducer = (state = initialState, action) => {
                 submitted: false,
                 response: action.payload
             }
+        case categoryActionTypes.UPDATE_CATEGORY_START:
+            return {
+                ...state,
+                submitted: false
+            }
+        case categoryActionTypes.UPDATE_CATEGORY_SUCCESS:
+            return {
+                ...state,
+                submitted: true,
+                updated: action.payload
+            }
+        case categoryActionTypes.UPDATE_CATEGORY_FAILED:
+            return {
+                ...state,
+                error: true,
+                submitted: false
+            }
         case categoryActionTypes.PAGE_UNLOADED:
             return {
                 ...state,
-                response: ''
+                response: '',
+                updated: null
             };
         case categoryActionTypes.CATEGORY_UPDATE:
             return {

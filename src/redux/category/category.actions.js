@@ -131,10 +131,10 @@ export const initAddCategory = category => {
     }
 }
 
-export const initUpdateCategory = id => {
+export const initUpdateCategory = category => {
     return dispatch => {
         dispatch(updateCategoryStart());
-        axiosInstance.patch(`/category/update/${id}`)
+        axiosInstance.patch('/category/update/', category)
             .then(response => {
                 console.log("Category updated successfully: " , response);
                 dispatch(updateCategorySuccess(response))

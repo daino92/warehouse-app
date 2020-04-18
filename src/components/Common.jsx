@@ -105,11 +105,17 @@ mq({
     }
 }));
 
+const FlexCentered = styled('div')({
+    display: "flex",
+	justifyContent: "center"
+});
+
 export {
     LabelComponent, 
     FormComponent, 
     ErrorContainer,
     ButtonsContainer,
     MainContainer,
-    PaginationWrapper
+    PaginationWrapper,
+    FlexCentered
 };
