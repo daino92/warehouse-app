@@ -116,7 +116,7 @@ class Products extends Component {
     render () {
         const {match, history, products, isFetching, errorMessage, limitOptions, categoryOptions} = this.props;
 
-        const path = (history.location.pathname).split('/')[1];
+        const path = (history.location.pathname).split('/')[1].slice(0, -1);
 
         if (errorMessage?.status === 404) return (<p style={{textAlign: 'center'}}>{dict.pageNotExist}</p>)
         if (errorMessage?.status === 400) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)

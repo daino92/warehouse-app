@@ -45,8 +45,8 @@ class App extends Component {
             { auth ? <Route path={`/categories/:id`} component={asyncCategoryDetails} /> : null }
             { auth ? <Route path="/history" component={asyncHistory} /> : null }
             {/* <Route exact path="/products" component={HomePage} /> */}
-            <Route path={`/products/:address/:page`} component={Products} />
-            <Route path={`/products/:productId`} component={ProductDetails} />
+            <Route path={`/products/:address/:page?`} component={Products} />
+            <Route path={`/product/:productId`} component={ProductDetails} />
             <Redirect exact from="/" to="/products/Kifisia/1"/>
             <Route render={() => <Page404 />}/>
           </Switch>
