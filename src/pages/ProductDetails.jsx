@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import styled from '@emotion/styled';
-import {initSingleProduct, initDeleteProduct} from '../redux/product/product.actions';
+import {initSingleProduct, initDeleteProduct, initDisableProduct} from '../redux/product/product.actions';
 import {dict} from '../util/variables';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
@@ -83,6 +83,16 @@ class ProductDetails extends Component {
         console.log("Just a test for the edition of the product..")
     }
 
+    disableProductHandler = () => {
+        const {match, initDisableProduct} = this.props;
+
+        let formData = {}
+        formData.id = match.params.productId;
+        
+        window.confirm("Are you sure you wish to disable this product?") &&
+            initDisableProduct(formData)
+    }
+
     componentWillUnmount() {
         const {onUnload} = this.props;
         onUnload();
@@ -145,6 +155,7 @@ class ProductDetails extends Component {
                     <ButtonsContainer>
                         <Button btnType="add"       disabled={false}    onClick={this.addProductHandler}>{dict.add}</Button>
                         <Button btnType='edit'      disabled={false}    onClick={this.editProductHandler}>{dict.edit}</Button>
+                        <Button btnType='edit'      disabled={false}    onClick={this.disableProductHandler}>Disable</Button>
                         <Button btnType='danger'    disabled={false}    onClick={this.deleteProductHandler}>{dict.delete}</Button>
                         <Button btnType='success'   disabled={false}    onClick={this.redirectBack}>{dict.back}</Button>
                     </ButtonsContainer>
@@ -163,6 +174,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     initSingleProduct: productId => dispatch(initSingleProduct(productId)),
     initDeleteProduct: stockId => dispatch(initDeleteProduct(stockId)),
+    initDisableProduct: productId => dispatch(initDisableProduct(productId)),
     onUnload: () => dispatch({type: 'PAGE_UNLOADED'})
 })
 

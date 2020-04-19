@@ -57,6 +57,20 @@ export const addProductFailed = errorMessage => ({
     payload: errorMessage 
 })
 
+export const disableProductStart = () => ({
+    type: productActionTypes.DISABLE_PRODUCT_START
+})
+
+export const disableProductSuccess = product => ({
+    type: productActionTypes.DISABLE_PRODUCT_SUCCESS,
+    payload: product
+})
+
+export const disableProductFailed = errorMessage => ({
+    type: productActionTypes.DISABLE_PRODUCT_FAILED,
+    payload: errorMessage 
+})
+
 export const fetchHistoryStart = () => ({
     type: productActionTypes.FETCH_HISTORY_START
 })
@@ -111,7 +125,6 @@ export const initSingleProduct = productId => {
         axiosInstance.get(`/product/get?productId=${productId}`)
             .then(response => {
                 const product = response.data;
-                console.log("Data of individual product: ", response);
                 dispatch(fetchSingleProductSuccess(product))
             })
             .catch(error => {
@@ -125,7 +138,6 @@ export const initDeleteProduct = stockId => {
         dispatch(deleteProductStart());
         axiosInstance.delete(`/stock/delete/${stockId}`)
             .then(response => {
-                console.log("Product deleted successfully: ", response);
                 dispatch(deleteProductSuccess(response))
             }).catch(error => {
                 dispatch(deleteProductFailed(error))
@@ -138,10 +150,21 @@ export const initAddProduct = product => {
         dispatch(addProductStart());
         axiosInstance.post('/product/create/', product)
             .then(response => {
-                console.log("Product added successfully: " , response);
                 dispatch(addProductSuccess(response))
             }).catch(error => {
                 dispatch(addProductFailed(error))
+            });
+    }
+}
+
+export const initDisableProduct = product => {
+    return dispatch => {
+        dispatch(disableProductStart());
+        axiosInstance.patch('/product/disable/', product)
+            .then(response => {
+                dispatch(disableProductSuccess(response))
+            }).catch(error => {
+                dispatch(disableProductFailed(error))
             });
     }
 }
