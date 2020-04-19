@@ -256,6 +256,9 @@ class NewProduct extends Component {
         //if(prevProps.categories === categories) return;
         if(prevProps.stores === stores) return;
 
+        /* Tweak store response because we actually want the address and not the id */
+        let updatedStores = stores.map(store => { return {...store, id: store.address }});
+
         this.setState({
             ...this.state,
             productForm: {
@@ -271,7 +274,7 @@ class NewProduct extends Component {
                     ...this.state.productForm.address,
                     options: [
                         this.state.productForm.address.options,
-                        ...stores
+                        ...updatedStores
                     ]
                 },
             }
