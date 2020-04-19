@@ -5,19 +5,24 @@ import {v4 as uuidv4} from 'uuid';
 import {LabelComponent, FormComponent} from '../Common';
 import {colors} from '../../util/variables';
 
-const SelectComponent = styled('select')`
-    outline: none;
-    border: 1px solid ${colors.lightGrey};
-    font: inherit;
-    padding: 6px 10px;
-    display: block;
-    width: 100%;
+const SelectComponent = styled('select')({
+	display: "flex",
+	alignItems: "center",
+	position: "relative",
+    width: "100%",
+    padding: ".4em 1em",
+    font: "inherit",
+    borderWidth: "1px",
+    borderStyle: "solid",
+	borderRadius: ".25em",
+    outline: "none",
+	transition: "all .2s ease 0s",
 
-    &:focus {
-        outline: none;
-        border: 1px solid ${colors.sun};
+    "&:focus": {
+        boxShadow: colors.curiousBlue + ' 0 0 0 1px',
+        borderColor: colors.curiousBlue
     }
-`;
+});
 
 const Select = ({value, onChange, name, label, ...props}) => (
     <FormComponent>

@@ -3,20 +3,28 @@ import styled from '@emotion/styled';
 import {LabelComponent, FormComponent} from '../Common';
 import {colors} from '../../util/variables';
 
-const InputComponent = styled('input')`
-    outline: none;
-    font: inherit;
-    padding: 6px 10px;
-    display: block;
-    width: 100%;
+const InputComponent = styled('input')({
+	display: "flex",
+	alignItems: "center",
+	position: "relative",
+    width: "100%",
+    padding: ".4em 1em",
+    font: "inherit",
+    borderWidth: "1px",
+    borderStyle: "solid",
+	borderRadius: ".25em",
+    outline: "none",
+	transition: "all .2s ease 0s",
+},
+props => ({
+    boxShadow: !props.valid && props.touched ? colors.cinnabar + ' 0 0 0 1px' : '',
+    borderColor: !props.valid && props.touched ? colors.cinnabar : colors.lightGrey,
 
-    border: ${props => !props.valid && props.touched ? '1px solid ' + colors.red : '1px solid ' + colors.lightGrey};
-
-    &:focus {
-        outline: none;
-        border: 1px solid ${colors.sun};
+    "&:focus": {
+        boxShadow: !props.valid && props.touched ? colors.cinnabar + ' 0 0 0 1px' : colors.curiousBlue + ' 0 0 0 1px',
+        borderColor: !props.valid && props.touched ? colors.cinnabar : colors.curiousBlue
     }
-`;
+}));
 
 const TextInput = ({value, onChange, touched, valid, label, maxLength, type, ...props}) => (
     <FormComponent>

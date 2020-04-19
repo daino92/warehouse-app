@@ -9,33 +9,37 @@ const LabelComponent = styled('label')`
     text-align: left;
 `;
 
-const FormComponent = styled('div')`
-    width: 50%;
-    padding: 10px;
+const FormComponent = styled('div')({
+    padding: "10px",
+},
+mq({
+    width: ["100%", "50%"],
 
-    &:nth-of-type(2n+1) {
-        padding-left: 1em;
+    "&:nth-of-type(2n+1)": {
+        paddingLeft: ["10px", "initial", "1em"]
+    },
+
+    "&:nth-of-type(2n+2)": {
+        paddingRight: ["10px", "initial", "1em"]
     }
+}));
 
-    &:nth-of-type(2n+2) {
-        padding-right: 1em;
+const MainContainer = styled('div')({
+    margin: "20px auto",
+    paddingBottom: ".5em",
+    border: `1px solid ${colors.whisper}`,
+    boxShadow: `0 2px 3px ${colors.lightGrey}`,
+    textAlign: "center",
+
+    "form": {
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "flex-start",
     }
-`;
-
-const MainContainer = styled('div')`
-    width: 80%;
-    margin: 20px auto;
-    padding-bottom: .5em;
-    border: 1px solid ${colors.whisper};
-    box-shadow: 0 2px 3px ${colors.lightGrey};
-    text-align: center;
-
-    form {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-    }
-`;
+},
+mq({
+    width: ["95%", "80%"],
+}));
 
 const ButtonsContainer = styled('div')`
     margin: 0 auto;
@@ -95,7 +99,7 @@ mq({
     marginBottom: ["1em", 0],
 
     "> div": {
-        padding: ["0 1em 1em", "0 .5em .5em"],
+        padding: ["0 10px 10px", "0 .5em .5em"],
         margin: ["0 auto", "initial"],
         width: ["100%", "initial"]
     },

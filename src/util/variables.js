@@ -9,6 +9,7 @@ const colors = {
     harleyDavidsonOrange: "#DF290C",
     sun: "#FA923F",
     red: "#FF0000",
+    cinnabar: "#E53E3E",
     whisper: '#EEE',
     solitude: '#E9EDF0',
     pattensBlue: '#C0DDF5',
@@ -18,6 +19,7 @@ const colors = {
     nevada: '#636767',
     silver: '195, 195, 195',
     neonBlue: '#5C5CFB',
+    curiousBlue: '#3182CE',
     persianBlue: '#2424AE',
 }
 
