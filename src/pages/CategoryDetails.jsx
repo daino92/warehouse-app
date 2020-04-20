@@ -3,6 +3,8 @@ import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import styled from '@emotion/styled';
 import capitalize from 'lodash/capitalize';
+import {Modal} from "react-responsive-modal";
+import "react-responsive-modal/styles.css";
 import {initSingleCategory, initDeleteCategory, initUpdateCategory} from '../redux/category/category.actions.js';
 import { dict} from '../util/variables';
 import Spinner from '../components/Spinner';
@@ -11,7 +13,7 @@ import {Snackbar} from '../components/Snackbar';
 import TextInput from '../components/forms/TextInput';
 import {updateObject} from '../util/utilities';
 import {validations} from '../util/validations';
-import {MainContainer, ButtonsContainer, FlexCentered} from '../components/Common';
+import {MainContainer, FlexCentered, ModalWarning} from '../components/Common';
 
 const CategoryTitle = styled('h1')`
     line-height: 1.2;
@@ -40,8 +42,17 @@ class CategoryDetails extends Component {
         },
         snackBarOpen: false,
         snackBarMessage: '',
-        editable: false
+        editable: false,
+        openModal: false
     }
+
+    onOpenModal = () => {
+        this.setState({ openModal: true });
+    };
+
+    onCloseModal = () => {
+        this.setState({ openModal: false });
+    };
     
     componentDidMount () {
         console.log("ProductDetails.jsx did mount: ", this.props)
@@ -126,10 +137,7 @@ class CategoryDetails extends Component {
 
     deleteCategoryHandler = () => {
         const {initDeleteCategory, loadedCategory} = this.props;
-        console.log("loadedCategory props: ", loadedCategory.id)
-        
-        window.confirm("Are you sure you wish to delete this category?") &&
-            initDeleteCategory(loadedCategory.id);
+        initDeleteCategory(loadedCategory.id);
     }
 
     changeHandler = event => {
@@ -179,7 +187,7 @@ class CategoryDetails extends Component {
 
     render () {
         const {match, loadedCategory, response} = this.props;
-        const {snackBarOpen, snackBarMessage, editable, formIsValid} = this.state;
+        const {snackBarOpen, snackBarMessage, editable, formIsValid, openModal} = this.state;
         const {params, value, touched, valid} = this.state.categoryForm.value;
 
         let category;
@@ -192,6 +200,15 @@ class CategoryDetails extends Component {
             const capitalizedValue = capitalize(loadedCategory.value);
             category = (
                 <MainContainer>
+                    <Modal center open={openModal} onClose={this.onCloseModal}>
+                        <ModalWarning>{dict.categoryDeletionMessage}</ModalWarning>   
+                        <FlexCentered>
+                            <Button btnType="danger"    disabled={false}  onClick={() => {
+                                    this.onCloseModal()
+                                    this.deleteCategoryHandler()}}>{dict.yes}</Button>
+                            <Button btnType="edit"      disabled={false} onClick={this.onCloseModal}>{dict.no}</Button>
+                        </FlexCentered> 
+                    </Modal>
                     <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
                     <CategoryTitle>{dict.category}</CategoryTitle>
                     { editable ? 
@@ -204,13 +221,14 @@ class CategoryDetails extends Component {
                         </FlexCentered> :
                         <CategoryName>{capitalizedValue}</CategoryName>
                          }
-                    <ButtonsContainer>
+                    <FlexCentered>
+                        <Button btnType="edit"      disabled={false} onClick={this.editCategoryHandler}>{dict.edit}</Button>
                     { editable ? 
                         <Button btnType="success"   disabled={!formIsValid} onClick={this.formSubmitHandler} >{dict.submit}</Button> : null }
-                        <Button btnType="edit"      disabled={false} onClick={this.editCategoryHandler}>{dict.edit}</Button>
-                        <Button btnType="danger"    disabled={false} onClick={this.deleteCategoryHandler}>{dict.delete}</Button>
+                    { !editable ?   
+                        <Button btnType="danger"    disabled={false} onClick={this.onOpenModal}>{dict.delete}</Button> : null }
                         <Button btnType="success"   disabled={false} onClick={this.redirectBack}>{dict.back}</Button>
-                    </ButtonsContainer>
+                    </FlexCentered>
                 </MainContainer>
             );
         }

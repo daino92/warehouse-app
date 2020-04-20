@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import {colors, dict} from '../util/variables';
 import Spinner from './Spinner';
 import Button from '../components/Button';
-import {ErrorContainer, ButtonsContainer, MainContainer} from './Common'
+import {ErrorContainer, FlexCentered, MainContainer} from './Common'
 
 const CategoryTitle = styled('h1')`
     line-height: 1.2;
@@ -51,10 +51,10 @@ const Category = ({categories, isFetching, clicked, onAddCategory, onEditCategor
                         </CategoryBody>
                     ))}
                 </CategoryBody>
-                <ButtonsContainer>
+                <FlexCentered>
                     <Button btnType="add"       disabled={false} onClick={onAddCategory}>{dict.add}</Button>
                     <Button btnType="success"   disabled={false} onClick={onGoBack}>{dict.back}</Button>
-                </ButtonsContainer>
+                </FlexCentered>
             </MainContainer>
         );
     } else {

@@ -84,6 +84,7 @@ const productReducer = (state = initialState, action) => {
             return {
                 ...state,
                 error: false,
+                isFetching: true,
                 submitted: false
             }
         case productActionTypes.ADD_PRODUCT_SUCCESS:
@@ -91,6 +92,7 @@ const productReducer = (state = initialState, action) => {
                 ...state,
                 error: false,
                 submitted: true,
+                isFetching: false,
                 addedProduct: action.payload
             }
         case productActionTypes.ADD_PRODUCT_FAILED:
@@ -98,6 +100,7 @@ const productReducer = (state = initialState, action) => {
                 ...state,
                 error: true,
                 submitted: false,
+                isFetching: false,
                 errorMessage: action.payload
             }
         case productActionTypes.FETCH_HISTORY_START:

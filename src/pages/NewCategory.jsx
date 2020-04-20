@@ -6,7 +6,7 @@ import {validations} from '../util/validations';
 import TextInput from '../components/forms/TextInput';
 import Button from '../components/Button';
 import {dict} from '../util/variables';
-import {ButtonsContainer, MainContainer, FlexCentered} from '../components/Common';
+import {MainContainer, FlexCentered} from '../components/Common';
 import {initAddCategory} from '../redux/category/category.actions.js';
 import {Snackbar} from '../components/Snackbar';
 import Spinner from '../components/Spinner';
@@ -26,7 +26,8 @@ const getInitialState = () => {
                 touched: false,
                 validationRules: {
                     isRequired: true
-                }
+                },
+                validationMessage: 'This field is required.'
             }
         },
         snackBarOpen: false,
@@ -131,7 +132,7 @@ class NewCategory extends Component {
     render () {
         const {isFetching} = this.props;
         const {formIsValid, snackBarOpen, snackBarMessage} = this.state;
-        const {params, label, value, touched, valid} = this.state.categoryForm.value;
+        const {params, label, value, touched, valid, validationMessage} = this.state.categoryForm.value;
 
         if (isFetching) return <Spinner/>
 
@@ -141,14 +142,15 @@ class NewCategory extends Component {
                     <TextInput name="value" type={params.type}
                         placeholder={params.placeholder} label={label}
                         value={value} valid={valid} touched={touched}
-                        onChange={this.changeHandler} />
+                        onChange={this.changeHandler}
+                        validationMessage={validationMessage} />
                 </FlexCentered>
 
-                <ButtonsContainer>
+                <FlexCentered>
                     <Button btnType="success"   disabled={!formIsValid} onClick={this.formSubmitHandler} >{dict.submit}</Button>
                     <Button btnType="danger"    disabled={false}        onClick={this.handleClearForm}>{dict.clear}</Button>
                     <Button btnType="success"   disabled={false}        onClick={this.redirectBack}>{dict.back}</Button>
-                </ButtonsContainer>  
+                </FlexCentered>  
             </>
         );  
 

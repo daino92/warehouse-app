@@ -7,7 +7,7 @@ import {dict} from '../util/variables';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
 import {Snackbar} from '../components/Snackbar';
-import {MainContainer, ButtonsContainer} from '../components/Common';
+import {MainContainer, FlexCentered} from '../components/Common';
 
 const ProductTitle = styled('h1')`
     line-height: 1.2;
@@ -152,13 +152,13 @@ class ProductDetails extends Component {
                             }
                         </ul>
                     </ProductBody>
-                    <ButtonsContainer>
+                    <FlexCentered>
                         <Button btnType="add"       disabled={false}    onClick={this.addProductHandler}>{dict.add}</Button>
                         <Button btnType='edit'      disabled={false}    onClick={this.editProductHandler}>{dict.edit}</Button>
                         <Button btnType='edit'      disabled={false}    onClick={this.disableProductHandler}>Disable</Button>
                         <Button btnType='danger'    disabled={false}    onClick={this.deleteProductHandler}>{dict.delete}</Button>
                         <Button btnType='success'   disabled={false}    onClick={this.redirectBack}>{dict.back}</Button>
-                    </ButtonsContainer>
+                    </FlexCentered>
                 </MainContainer>
             );
         }

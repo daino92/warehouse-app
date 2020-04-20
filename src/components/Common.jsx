@@ -14,14 +14,6 @@ const FormComponent = styled('div')({
 },
 mq({
     width: ["100%", "50%"],
-
-    "&:nth-of-type(2n+1)": {
-        paddingLeft: ["10px", "initial", "1em"]
-    },
-
-    "&:nth-of-type(2n+2)": {
-        paddingRight: ["10px", "initial", "1em"]
-    }
 }));
 
 const MainContainer = styled('div')({
@@ -41,11 +33,6 @@ mq({
     width: ["95%", "80%"],
 }));
 
-const ButtonsContainer = styled('div')`
-    margin: 0 auto;
-    width: 100%;
-`;
-
 const ErrorContainer = styled('div')`
     display: block;
     font-style: italic;
@@ -55,6 +42,15 @@ const ErrorContainer = styled('div')`
     padding: 1.5em;
     color: ${colors.red};
 `;
+
+const ValidationComponent = styled('div')({
+    display: "flex",
+	justifyContent: "center",
+	padding: ".5em",
+	fontWeight: 700,
+    color: colors.cinnabar,
+	fontStyle: "italic",
+});
 
 const PaginationWrapper = styled('div')({
     display: "flex",
@@ -111,15 +107,26 @@ mq({
 
 const FlexCentered = styled('div')({
     display: "flex",
-	justifyContent: "center"
+	justifyContent: "center",
+    flexWrap: "wrap",
+    width: "100%"
 });
+
+const ModalWarning = styled('div')({
+    fontStyle: "italic"
+},
+mq({
+    padding: ["1.4em .4em", "2em"],
+    fontSize: ["1.2em", "1.4em"]
+}));
 
 export {
     LabelComponent, 
     FormComponent, 
+    ValidationComponent,
     ErrorContainer,
-    ButtonsContainer,
     MainContainer,
     PaginationWrapper,
-    FlexCentered
+    FlexCentered,
+    ModalWarning
 };

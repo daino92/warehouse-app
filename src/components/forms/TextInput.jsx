@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import {LabelComponent, FormComponent} from '../Common';
+import {LabelComponent, FormComponent, ValidationComponent} from '../Common';
 import {colors} from '../../util/variables';
 
 const InputComponent = styled('input')({
@@ -26,10 +26,12 @@ props => ({
     }
 }));
 
-const TextInput = ({value, onChange, touched, valid, label, maxLength, type, ...props}) => (
+const TextInput = ({value, onChange, touched, valid, label, maxLength, type, validationMessage, ...props}) => (
     <FormComponent>
         <LabelComponent>{label}</LabelComponent>
         <InputComponent type={type} touched={touched} valid={valid} maxLength={maxLength} value={value} onChange={onChange} {...props} />
+        { !valid && touched ? 
+            <ValidationComponent>{validationMessage}</ValidationComponent> : null }
     </FormComponent>
 );
 

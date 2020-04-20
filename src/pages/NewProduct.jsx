@@ -9,7 +9,7 @@ import Select from '../components/forms/Select';
 import Radio from '../components/forms/RadioButton';
 import Button from '../components/Button';
 import {dict} from '../util/variables';
-import {ErrorContainer, MainContainer, ButtonsContainer} from '../components/Common';
+import {ErrorContainer, MainContainer, FlexCentered} from '../components/Common';
 import {initCategories} from '../redux/category/category.actions';
 import {initAddProduct} from '../redux/product/product.actions';
 import {initStores} from '../redux/store/store.actions';
@@ -32,7 +32,8 @@ const getInitialState = () => {
                     minLength: 5,
                     maxLength: 7,
                     isRequired: true
-                }
+                },
+                validationMessage: 'SKU should have at least 5 letters'
             },
             goldWeight: {
                 label: 'Gold weight',
@@ -47,13 +48,14 @@ const getInitialState = () => {
                     minLength: 1,
                     maxLength: 5,
                     isRequired: true,
-                    isNumeric: true
-                }
+                    isNumeric: true,
+                },
+                validationMessage: 'This field is required and it should have 1-5 letters'
             },
             silverWeight: {
-                label: 'Gold weight',
+                label: 'Silver weight',
                 params: {
-                    placeholder: 'Gold weight',
+                    placeholder: 'Silver weight',
                     type: 'input'
                 },
                 value: '',
@@ -338,12 +340,11 @@ class NewProduct extends Component {
 
     render () {
         let redirect = null;
-        const {submitted, error, isFetching, history} = this.props;
+        const {submitted, error, isFetching} = this.props;
         const {formIsValid} = this.state;
         const {sku, description, price, quantity, costEu, costUsd, karats, categoryId, address, color, goldWeight, silverWeight, otherStoneWeight, diamondWeight, otherStone} = this.state.productForm;
 
-        //if (submitted) redirect = <Redirect to="/products"/>;
-        if (submitted) history.push('/');
+        if (submitted) redirect = <Redirect to="/"/>;
 
         if (error) return <ErrorContainer>{dict.errorUponProductAddition}</ErrorContainer>
 
@@ -364,7 +365,8 @@ class NewProduct extends Component {
                 <TextInput name="sku" type={sku.params.type}
                     placeholder={sku.params.placeholder} label={sku.label}
                     value={sku.value} valid={sku.valid} touched={sku.touched}
-                    maxLength={sku.validationRules.maxLength} onChange={this.changeHandler} />
+                    maxLength={sku.validationRules.maxLength} onChange={this.changeHandler}
+                    validationMessage={sku.validationMessage} />
 
                 <TextArea name="description"
                     placeholder={description.params.placeholder} label={description.label}
@@ -374,7 +376,8 @@ class NewProduct extends Component {
                 <TextInput name="goldWeight" type={goldWeight.params.type}
                     placeholder={goldWeight.params.placeholder} label={goldWeight.label}
                     value={goldWeight.value} valid={goldWeight.valid} touched={goldWeight.touched}
-                    maxLength={goldWeight.validationRules.maxLength} onChange={this.changeHandler} />
+                    maxLength={goldWeight.validationRules.maxLength} onChange={this.changeHandler}
+                    validationMessage={goldWeight.validationMessage} />
 
                 <TextInput name="silverWeight" type={silverWeight.params.type}
                     placeholder={silverWeight.params.placeholder} label={silverWeight.label}
@@ -436,11 +439,11 @@ class NewProduct extends Component {
                     value={color.value} valid={color.valid} touched={color.touched}
                     onChange={this.changeHandler} />
 
-                <ButtonsContainer>
+                <FlexCentered>
                     <Button btnType="success"   disabled={!formIsValid} onClick={this.formSubmitHandler} >{dict.submit}</Button>
                     <Button btnType="danger"    disabled={false}        onClick={this.handleClearForm}>{dict.clear}</Button>
                     <Button btnType='success'   disabled={false}        onClick={this.redirectBack}>{dict.back}</Button>
-                </ButtonsContainer> 
+                </FlexCentered> 
             </form>
         );  
 

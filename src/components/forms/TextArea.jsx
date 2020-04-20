@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import {LabelComponent, FormComponent} from '../Common';
+import {LabelComponent, FormComponent, ValidationComponent} from '../Common';
 import {colors} from '../../util/variables';
 
 const TextAreaComponent = styled('textarea')({
@@ -26,10 +26,12 @@ props => ({
     }
 }));
 
-const TextArea = ({value, onChange, touched, valid, label, rows, ...props}) => (
+const TextArea = ({value, onChange, touched, valid, label, rows, validationMessage, ...props}) => (
     <FormComponent>
         <LabelComponent>{label}</LabelComponent>
         <TextAreaComponent rows={rows ? rows : 3} touched={touched} valid={valid} value={value} onChange={onChange} {...props} />
+        { !valid && touched ? 
+            <ValidationComponent>{validationMessage}</ValidationComponent> : null }
     </FormComponent>
 );
 
