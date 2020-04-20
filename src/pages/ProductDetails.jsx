@@ -2,12 +2,14 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import styled from '@emotion/styled';
+import {Modal} from "react-responsive-modal";
+import "react-responsive-modal/styles.css";
 import {initSingleProduct, initDeleteProduct, initDisableProduct} from '../redux/product/product.actions';
 import {dict} from '../util/variables';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
 import {Snackbar} from '../components/Snackbar';
-import {MainContainer, FlexCentered} from '../components/Common';
+import {MainContainer, FlexCentered, ModalWarning} from '../components/Common';
 
 const ProductTitle = styled('h1')`
     line-height: 1.2;
@@ -23,7 +25,9 @@ class ProductDetails extends Component {
 
         this.state = {
             snackBarOpen: false,
-            snackBarMessage: ''
+            snackBarMessage: '',
+            openModalDisable: false,
+            openModalDelete: false
         }
     }
 
@@ -68,6 +72,22 @@ class ProductDetails extends Component {
         }
     }
 
+    onOpenModalDisable = () => {
+        this.setState({ openModalDisable: true });
+    };
+
+    onCloseModalDisable = () => {
+        this.setState({ openModalDisable: false });
+    };
+
+    onOpenModalDelete = () => {
+        this.setState({ openModalDelete: true });
+    };
+
+    onCloseModalDelete = () => {
+        this.setState({ openModalDelete: false });
+    };
+
     loadData() {
         const {match, initSingleProduct} = this.props;
         initSingleProduct(match.params.productId);
@@ -84,13 +104,8 @@ class ProductDetails extends Component {
     }
 
     disableProductHandler = () => {
-        const {match, initDisableProduct} = this.props;
-
-        let formData = {}
-        formData.id = match.params.productId;
-        
-        window.confirm("Are you sure you wish to disable this product?") &&
-            initDisableProduct(formData)
+        const {initDisableProduct, loadedProduct} = this.props;
+        initDisableProduct(loadedProduct[0][0])
     }
 
     componentWillUnmount() {
@@ -98,12 +113,11 @@ class ProductDetails extends Component {
         onUnload();
     }
 
+    /* Temporarily API not working */
     deleteProductHandler = () => {
         const {initDeleteProduct, loadedProduct} = this.props;
-        //console.log("loadedProduct props: ", loadedProduct.stock.id)
-        
-        window.confirm("Are you sure you wish to delete this product?") &&
-            initDeleteProduct(loadedProduct.stock.id);
+        console.log("loadedProduct props: ", loadedProduct.stock.id)
+        initDeleteProduct(loadedProduct.stock.id);
     }
 
     redirectBack = () => {
@@ -113,7 +127,7 @@ class ProductDetails extends Component {
 
     render () {
         const {match, loadedProduct} = this.props;
-        const {snackBarOpen, snackBarMessage} = this.state;
+        const {snackBarOpen, snackBarMessage, openModalDisable, openModalDelete} = this.state;
 
         let product = <p style={{textAlign: 'center'}}>{dict.selectProduct}</p>;
         
@@ -126,6 +140,24 @@ class ProductDetails extends Component {
 
             product = (
                 <MainContainer>
+                    <Modal center open={openModalDisable} onClose={this.onCloseModalDisable}>
+                        <ModalWarning>{dict.productDisableMessage}</ModalWarning>   
+                        <FlexCentered>
+                            <Button btnType="danger"    disabled={false}  onClick={() => {
+                                    this.onCloseModalDisable()
+                                    this.disableProductHandler()}}>{dict.yes}</Button>
+                            <Button btnType="edit"      disabled={false} onClick={this.onCloseModalDisable}>{dict.no}</Button>
+                        </FlexCentered> 
+                    </Modal>
+                    <Modal center open={openModalDelete} onClose={this.onCloseModalDelete}>
+                        <ModalWarning>{dict.productDeleteMessage}</ModalWarning>   
+                        <FlexCentered>
+                            <Button btnType="danger"    disabled={false}  onClick={() => {
+                                    this.onCloseModalDelete()
+                                    this.deleteProductHandler()}}>{dict.yes}</Button>
+                            <Button btnType="edit"      disabled={false} onClick={this.onCloseModalDelete}>{dict.no}</Button>
+                        </FlexCentered> 
+                    </Modal>
                     <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
                     <ProductTitle>{currentProduct.sku}</ProductTitle>
                     <ProductBody>
@@ -155,8 +187,8 @@ class ProductDetails extends Component {
                     <FlexCentered>
                         <Button btnType="add"       disabled={false}    onClick={this.addProductHandler}>{dict.add}</Button>
                         <Button btnType='edit'      disabled={false}    onClick={this.editProductHandler}>{dict.edit}</Button>
-                        <Button btnType='edit'      disabled={false}    onClick={this.disableProductHandler}>Disable</Button>
-                        <Button btnType='danger'    disabled={false}    onClick={this.deleteProductHandler}>{dict.delete}</Button>
+                        <Button btnType='danger'    disabled={false}    onClick={this.onOpenModalDisable}>{dict.disable}</Button>
+                        {/* <Button btnType='danger'    disabled={false}    onClick={this.onOpenModalDelete}>{dict.delete}</Button> */}
                         <Button btnType='success'   disabled={false}    onClick={this.redirectBack}>{dict.back}</Button>
                     </FlexCentered>
                 </MainContainer>
