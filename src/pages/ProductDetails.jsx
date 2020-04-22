@@ -9,15 +9,64 @@ import {dict} from '../util/variables';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
 import {Snackbar} from '../components/Snackbar';
+import imagePlaceholder from '../assets/picture-not-available.jpg';
+import mq from '../util/mediaQueries.js';
 import {MainContainer, FlexCentered, ModalWarning} from '../components/Common';
 
-const ProductTitle = styled('h1')`
-    line-height: 1.2;
-`;
+const ProductTitle = styled('h1')({
+    fontSize: "2.4em"
+});
 
-const ProductBody = styled('div')`
-    padding: 1.5em .5em;
-`;
+const ProductBody = styled('div')({
+    display: "flex",
+    flexWrap: "wrap"
+},
+mq({
+    padding: ["1em", "4em"]
+}));
+
+const ProductImage = styled('div')({
+    display: "flex",
+    justifyContent: "center"
+},
+mq({
+    width: ["100%", "100%", "50%"]
+}));
+
+const ImageComponent = styled('img')({
+    width: "100%",
+    height: "auto",
+    maxWidth: "90%",
+    borderRadius: "1em"
+});
+
+const ProductInformation = styled('div')({
+    display: "flex",
+    flexWrap: "wrap"
+},
+mq({
+    width: ["100%", "100%", "50%"]
+}));
+
+const AttributesColumn = styled("div")({
+    "> div": {
+        padding: ".2em"
+    }
+},
+mq({
+    width: ["100%", "100%", "50%"]
+}));
+
+const InformationTitle = styled('div')({
+    fontSize: "2em",
+    width: "100%",
+    fontWeight: 700,
+    padding: ".4em"
+});
+
+const OtherShops = styled('div')({
+    margin: "0 auto"
+});
 
 class ProductDetails extends Component {
     constructor(props) {
@@ -137,6 +186,8 @@ class ProductDetails extends Component {
             const otherStock1 = loadedProduct[1][0][0]?.other;
             const otherStock2 = loadedProduct[1][0][1]?.other;
             const zeroQuantity =  currentProduct.quantity || otherStock1?.quantity || otherStock2?.quantity === 0;
+            console.log("imageUrl",currentProduct.imageUrl)
+            const imageSource = currentProduct.imageUrl === "" ? imagePlaceholder : currentProduct.imageUrl;
 
             product = (
                 <MainContainer>
@@ -161,28 +212,38 @@ class ProductDetails extends Component {
                     <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
                     <ProductTitle>{currentProduct.sku}</ProductTitle>
                     <ProductBody>
-                        <ul>
-                            <li>{dict.karats}: {currentProduct.karats}</li>
-                            <li>{dict.costDollars}: {currentProduct.costUsd}$</li>
-                            <li>{dict.costEuro}: {currentProduct.costEu}€</li>
-                            <li>{dict.goldWeight}: {currentProduct.goldWeight}</li>
-                            <li>{dict.silverWeight}: {currentProduct.silverWeight}</li>
-                            <li>{dict.stoneWeight}: {currentProduct.otherStoneWeight}</li>
-                            <li>{dict.producerCode}: {currentProduct.producer.producerCode}</li>
-                            <li>{dict.description}: {currentProduct.description}</li>
-                            <li>{dict.stones}: {currentProduct.otherStone}</li>
-                            <li>{dict.color}: {currentProduct.color}</li>
-                            <li>{dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : currentProduct.quantity}</li>
-                            <li>{dict.category}: {currentProduct.category.value}</li>
-                            {   
-                            otherStock1 && otherStock2 &&
-                                <ul>   
-                                    Other Shops:
-                                    <li>{otherStock1.address} : {dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : otherStock1.quantity}</li>
-                                    <li>{otherStock2.address} : {dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : otherStock2.quantity}</li>
-                                </ul>
+                        <ProductImage>
+                            <ImageComponent src={imageSource} alt={currentProduct.description}/>
+                        </ProductImage>
+                        <ProductInformation>
+                            <InformationTitle>Product Information</InformationTitle>
+                            <AttributesColumn>
+                                <div>{dict.producerCode}: {currentProduct.producer.producerCode}</div>
+                                <div>{dict.description}: {currentProduct.description}</div>
+                                <div>{dict.karats}: {currentProduct.karats}</div>
+                                <div>{dict.color}: {currentProduct.color}</div>
+                                <div>{dict.costDollars}: {currentProduct.costUsd}$</div>
+                                <div>{dict.costEuro}: {currentProduct.costEu}€</div>
+                            </AttributesColumn>
+                            <AttributesColumn>
+                                <div>{dict.stones}: {currentProduct.otherStone}</div>
+                                <div>{dict.goldWeight}: {currentProduct.goldWeight}</div>
+                                <div>{dict.silverWeight}: {currentProduct.silverWeight}</div>
+                                <div>{dict.stoneWeight}: {currentProduct.otherStoneWeight}</div>
+                                <div>{dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : currentProduct.quantity}</div>
+                                <div>{dict.category}: {currentProduct.category.value}</div>
+                            </AttributesColumn>
+
+                            {otherStock1 && otherStock2 &&
+                                <OtherShops>  
+                                    <InformationTitle>Other Shops:</InformationTitle> 
+                                    <div>{otherStock1.address} : {dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : otherStock1.quantity}</div>
+                                    <div>{otherStock2.address} : {dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : otherStock2.quantity}</div>
+                                </OtherShops>
                             }
-                        </ul>
+                        </ProductInformation>
+                            
+                      
                     </ProductBody>
                     <FlexCentered>
                         <Button btnType="add"       disabled={false}    onClick={this.addProductHandler}>{dict.add}</Button>
