@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Switch, Route, Redirect} from 'react-router-dom';
+import {Switch, Route} from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './pages/Homepage';
 import Page404 from './pages/404';
@@ -35,6 +35,7 @@ class App extends Component {
   
   render() {
     const {auth} = this.state;
+    
     return (
       <div className="App">
         <Header/>
@@ -44,10 +45,10 @@ class App extends Component {
             { auth ? <Route path="/categories/new-category" component={AsyncNewCategory} /> : null }
             { auth ? <Route path={`/categories/:id`} component={asyncCategoryDetails} /> : null }
             { auth ? <Route path="/history" component={asyncHistory} /> : null }
-            {/* <Route exact path="/products" component={HomePage} /> */}
             <Route path={`/products/:address/:page?`} component={Products} />
             <Route path={`/product/:productId`} component={ProductDetails} />
-            <Redirect exact from="/" to="/products/Kifisia/1"/>
+            <Route exact path="/" component={HomePage} />
+            {/* <Redirect exact from="/" to="/products/Kifisia/1"/> */}
             <Route render={() => <Page404 />}/>
           </Switch>
       </div>

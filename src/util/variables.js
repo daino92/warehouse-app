@@ -31,6 +31,7 @@ const dict = {
     submit: 'Submit',
     back: 'Go back',
     products: 'Products',
+    stores: 'Stores',
     color: 'Color',
     stones: 'Stones',
     category: 'Category',
@@ -78,6 +79,7 @@ const dict = {
     categoryAlreadyExists: 'Category Already Exists',
     categoriesNotFound: 'Didn\'t find any categories',
     productsNotFound: 'Didn\'t find any products',
+    storesNotFound: 'Didn\'t find any stores',
     productNotExist: 'Sorry, the product does not exist.'
 }
 
