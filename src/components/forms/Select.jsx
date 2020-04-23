@@ -17,6 +17,7 @@ const SelectComponent = styled('select')({
 	borderRadius: ".25em",
     outline: "none",
 	transition: "all .2s ease 0s",
+    borderColor: colors.lightGrey,
 
     "&:focus": {
         boxShadow: colors.curiousBlue + ' 0 0 0 1px',
