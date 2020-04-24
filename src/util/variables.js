@@ -13,6 +13,7 @@ const colors = {
     whisper: '#EEE',
     solitude: '#E9EDF0',
     pattensBlue: '#C0DDF5',
+    pattensBlueAlt: '192, 221, 245',
     nightRider: '#333333',
     westSide : '#F08238',
     atomicTangerine: '#FFA263',
@@ -21,6 +22,8 @@ const colors = {
     neonBlue: '#5C5CFB',
     curiousBlue: '#3182CE',
     persianBlue: '#2424AE',
+    whiteSmoke: '#FAF2F2',
+    whiteSmokeAlt: '250, 242, 242'
 }
 
 const dict = {

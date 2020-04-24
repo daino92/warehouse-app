@@ -13,14 +13,14 @@ import Spinner from './Spinner';
 import Select from '../components/forms/Select';
 import {ErrorContainer, PaginationWrapper} from './Common';
 
-const ProductsWrapper = styled('section')`
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    width: 80%;
-    max-width: 1080px;
-    margin: auto; 
-`;
+const ProductsWrapper = styled('section')({
+    display: "flex",
+    flexFlow: "row wrap",
+    justifyContent: "center",
+    width: "100%",
+    maxWidth: "1200px",
+    margin: "auto" 
+});
 
 class Products extends Component {
 
