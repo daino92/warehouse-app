@@ -59,6 +59,8 @@ const dict = {
     noStock: 'Out of stock',
     stoneWeight: 'Stone weight',
     productCode: 'Product Code',
+    productInfo: 'Product Information',
+    otherShops: 'Other Shops:',
     pageNotFound: 'The page you were trying to get was not found',
     unexpectedError: 'Something went wrong!',
     addNewProduct: 'Add new product',
