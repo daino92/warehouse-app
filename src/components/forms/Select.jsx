@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import capitalize from 'lodash/capitalize';
+import truncate from 'lodash/truncate';
 import {v4 as uuidv4} from 'uuid';
 import {LabelComponent, FormComponent} from '../Common';
 import {colors} from '../../util/variables';
@@ -30,11 +31,14 @@ const Select = ({value, onChange, name, label, ...props}) => (
         <LabelComponent>{label}</LabelComponent>
         <SelectComponent value={value} onChange={onChange} name={name}>
             {props.options.map(({id, value, address}) => {
-                const capitalizedValue = capitalize(value || address)
+                const finalValue = truncate(capitalize(value || address), {
+                    'length': 12,
+                    'omission': '...'
+                })
 
                 return (
                     <option key={uuidv4()} value={id}>
-                        {capitalizedValue}
+                        {finalValue}
                     </option>
                 )})
             }
