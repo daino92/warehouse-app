@@ -133,10 +133,10 @@ export const initSingleProduct = productId => {
     }
 }
 
-export const initDeleteProduct = stockId => {
+export const initDeleteProduct = sku => {
     return dispatch => {
         dispatch(deleteProductStart());
-        axiosInstance.delete(`/stock/delete/${stockId}`)
+        axiosInstance.delete(`/product/delete?sku=${sku}`)
             .then(response => {
                 dispatch(deleteProductSuccess(response))
             }).catch(error => {
