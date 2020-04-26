@@ -74,7 +74,7 @@ const dict = {
     errorUponProductDeletion: 'Something went wrong deleting that product!',
     errorUponCategoryDeletion: 'Something went wrong deleting that category!',
     productDisableMessage: 'Are you sure you want to disable this product?',
-    productDeleteMessage: 'Are you sure you want to delete this product?',
+    productDeleteMessage: 'Are you sure you want to continue? This action will delete all 4 colors of this product!',
     categoryDeletionMessage: 'Are you sure you want to delete this category?',
     successfulProductAddition: 'Product added successfully!',
     successfulProductDeletion: 'Product deleted successfully!',
