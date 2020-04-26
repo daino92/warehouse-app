@@ -5,11 +5,14 @@ import styled from '@emotion/styled';
 import {Modal} from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import {initSingleProduct, initDeleteProduct, initDisableProduct} from '../redux/product/product.actions';
+import {initCategories, initSingleCategory} from '../redux/category/category.actions';
+import {initProducers, initSingleProducer} from '../redux/producer/producer.actions';
 import {dict} from '../util/variables';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
 import {Snackbar} from '../components/Snackbar';
-import imagePlaceholder from '../assets/picture-not-available.jpg';
+//import imagePlaceholder from '../assets/picture-not-available.jpg';
+import imagePlaceholder from '../assets/no-image-icon.png';
 import mq from '../util/mediaQueries.js';
 import {MainContainer, FlexCentered, ModalWarning} from '../components/Common';
 
@@ -33,12 +36,19 @@ mq({
     width: ["100%", "100%", "50%"]
 }));
 
-const ImageComponent = styled('img')({
-    width: "100%",
-    height: "auto",
+const ImageComponent = styled('div')({
+    //height: "150px",
+    //height: "100%",
+	width: "100%",
     maxWidth: "90%",
-    borderRadius: "1em"
-});
+    borderRadius: "1em",
+    backgroundSize: "contain",
+	backgroundRepeat: "no-repeat",
+	backgroundPosition: "center",
+},
+mq({
+    height: ["150px", "230px", "100%"]
+}));
 
 const ProductInformation = styled('div')({
     display: "flex",
@@ -69,15 +79,11 @@ const OtherShops = styled('div')({
 });
 
 class ProductDetails extends Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            snackBarOpen: false,
-            snackBarMessage: '',
-            openModalDisable: false,
-            openModalDelete: false
-        }
+    state = {
+        snackBarOpen: false,
+        snackBarMessage: '',
+        openModalDisable: false,
+        openModalDelete: false
     }
 
     showSnackbarHandler = () => {
@@ -137,8 +143,16 @@ class ProductDetails extends Component {
         this.setState({ openModalDelete: false });
     };
 
-    loadData() {
-        const {match, initSingleProduct} = this.props;
+    loadData = () => {
+        const {match, history, initSingleProduct, initCategories, initProducers, initSingleProducer, initSingleCategory} = this.props;
+
+        if (history.location.state) {
+            initSingleProducer(history.location.state?.producerId);
+            initSingleCategory(history.location.state?.categoryId);
+        } else {
+            initCategories();
+            initProducers();
+        }
         initSingleProduct(match.params.productId);
     }
 
@@ -162,11 +176,9 @@ class ProductDetails extends Component {
         onUnload();
     }
 
-    /* Temporarily API not working */
     deleteProductHandler = () => {
         const {initDeleteProduct, loadedProduct} = this.props;
-        console.log("loadedProduct props: ", loadedProduct.stock.id)
-        initDeleteProduct(loadedProduct.stock.id);
+        initDeleteProduct(loadedProduct[0][0].sku);
     }
 
     redirectBack = () => {
@@ -175,19 +187,42 @@ class ProductDetails extends Component {
     }
 
     render () {
-        const {match, loadedProduct} = this.props;
+        const {match, loadedProduct, categories, producers, loadedproducer, loadedCategory} = this.props;
         const {snackBarOpen, snackBarMessage, openModalDisable, openModalDelete} = this.state;
 
         let product = <p style={{textAlign: 'center'}}>{dict.selectProduct}</p>;
         
         if (match.params.productId) product = <Spinner/>
+
         if (loadedProduct) {
             const currentProduct = loadedProduct[0][0];
             const otherStock1 = loadedProduct[1][0][0]?.other;
             const otherStock2 = loadedProduct[1][0][1]?.other;
-            const zeroQuantity =  currentProduct.quantity || otherStock1?.quantity || otherStock2?.quantity === 0;
-            console.log("imageUrl",currentProduct.imageUrl)
+            const zeroQuantity =  currentProduct.quantity  === 0;
+            const zeroQuantityOtherShops =  otherStock1?.quantity || otherStock2?.quantity === 0;
+
             const imageSource = currentProduct.imageUrl === "" ? imagePlaceholder : currentProduct.imageUrl;
+
+            let categoryId = loadedProduct[0][0].categoryId;
+            let producerId = loadedProduct[0][0].producerId;
+
+            let category = categories.find(cat => cat.id === categoryId)
+            let producer = producers.find(prod => prod.id === producerId)
+
+            let producerValue = "";
+            let categoryValue = "";
+
+            if (loadedproducer?.value) {
+                producerValue = loadedproducer?.value
+            } else {
+                producerValue = producer?.value
+            }
+
+            if (loadedCategory?.value) {
+                categoryValue = loadedCategory?.value
+            } else {
+                categoryValue = category?.value
+            }
 
             product = (
                 <MainContainer>
@@ -213,12 +248,12 @@ class ProductDetails extends Component {
                     <ProductTitle>{currentProduct.sku}</ProductTitle>
                     <ProductBody>
                         <ProductImage>
-                            <ImageComponent src={imageSource} alt={currentProduct.description}/>
+                            <ImageComponent alt={currentProduct.description} style={{backgroundImage: `url(${imageSource})`}}/>
                         </ProductImage>
                         <ProductInformation>
-                            <InformationTitle>Product Information</InformationTitle>
+                            <InformationTitle>{dict.productInfo}</InformationTitle>
                             <AttributesColumn>
-                                <div>{dict.producerCode}: {currentProduct.producer.producerCode}</div>
+                                <div>{dict.producerCode}: {producerValue}</div>
                                 <div>{dict.description}: {currentProduct.description}</div>
                                 <div>{dict.karats}: {currentProduct.karats}</div>
                                 <div>{dict.color}: {currentProduct.color}</div>
@@ -231,25 +266,23 @@ class ProductDetails extends Component {
                                 <div>{dict.silverWeight}: {currentProduct.silverWeight}</div>
                                 <div>{dict.stoneWeight}: {currentProduct.otherStoneWeight}</div>
                                 <div>{dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : currentProduct.quantity}</div>
-                                <div>{dict.category}: {currentProduct.category.value}</div>
+                                <div>{dict.category}: {categoryValue}</div>
                             </AttributesColumn>
 
                             {otherStock1 && otherStock2 &&
                                 <OtherShops>  
-                                    <InformationTitle>Other Shops:</InformationTitle> 
-                                    <div>{otherStock1.address} : {dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : otherStock1.quantity}</div>
-                                    <div>{otherStock2.address} : {dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : otherStock2.quantity}</div>
+                                    <InformationTitle>{dict.otherShops}</InformationTitle> 
+                                    <div>{otherStock1.address} : {dict.quantity}: {zeroQuantityOtherShops ? <>{dict.noStock}</> : otherStock1.quantity}</div>
+                                    <div>{otherStock2.address} : {dict.quantity}: {zeroQuantityOtherShops ? <>{dict.noStock}</> : otherStock2.quantity}</div>
                                 </OtherShops>
                             }
                         </ProductInformation>
-                            
-                      
                     </ProductBody>
                     <FlexCentered>
                         <Button btnType="add"       disabled={false}    onClick={this.addProductHandler}>{dict.add}</Button>
                         <Button btnType='edit'      disabled={false}    onClick={this.editProductHandler}>{dict.edit}</Button>
                         <Button btnType='danger'    disabled={false}    onClick={this.onOpenModalDisable}>{dict.disable}</Button>
-                        {/* <Button btnType='danger'    disabled={false}    onClick={this.onOpenModalDelete}>{dict.delete}</Button> */}
+                        <Button btnType='danger'    disabled={false}    onClick={this.onOpenModalDelete}>{dict.delete}</Button>
                         <Button btnType='success'   disabled={false}    onClick={this.redirectBack}>{dict.back}</Button>
                     </FlexCentered>
                 </MainContainer>
@@ -261,13 +294,21 @@ class ProductDetails extends Component {
 
 const mapStateToProps = state => ({
     loadedProduct: state.product.loadedProduct,
-    response: state.product.response
+    response: state.product.response,
+    categories: state.category.categories,
+    producers: state.producer.producers,
+    loadedCategory: state.category.loadedCategory,
+    loadedproducer: state.producer.loadedproducer
 })
   
 const mapDispatchToProps = dispatch => ({
     initSingleProduct: productId => dispatch(initSingleProduct(productId)),
-    initDeleteProduct: stockId => dispatch(initDeleteProduct(stockId)),
+    initDeleteProduct: productId => dispatch(initDeleteProduct(productId)),
     initDisableProduct: productId => dispatch(initDisableProduct(productId)),
+    initCategories: () => dispatch(initCategories()),
+    initProducers: () => dispatch(initProducers()),
+    initSingleCategory: (categoryId) => dispatch(initSingleCategory(categoryId)),
+    initSingleProducer: (producerId) => dispatch(initSingleProducer(producerId)),
     onUnload: () => dispatch({type: 'PAGE_UNLOADED'})
 })
 

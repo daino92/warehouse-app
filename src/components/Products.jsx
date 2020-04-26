@@ -59,9 +59,15 @@ class Products extends Component {
         console.log("Products.jsx did mount: ", this.props);
     }
 
-    productSelection = (path, id) => {
+    productSelection = (path, id, categoryId, producerId) => {
         const {history} = this.props;
-        history.push({pathname: `/${path}/${id}`}); 
+        history.push({
+            pathname: `/${path}/${id}`, 
+            state: {
+                categoryId: categoryId, 
+                producerId: producerId
+            }
+        }); 
     }
 
     limiSelection = event => {
@@ -124,7 +130,7 @@ class Products extends Component {
         if (isFetching) return <Spinner/>
 
         const sortedByProductCode = orderBy(products[0], ['sku', 'color'], ['asc', 'desc'])
-        //console.log("Sorted by productCode: ", sortedByProductCode)
+        console.log("Sorted by productCode: ", sortedByProductCode)
         
         // Pagination params
         const activePage = parseInt(match.params.page);
@@ -159,7 +165,7 @@ class Products extends Component {
                     sortedByProductCode.length ?
                         sortedByProductCode.map((product => (
                             <IndividualProduct key={uuidv4()} {...product}
-                                clicked={() => this.productSelection(path, product.id)} 
+                                clicked={() => this.productSelection(path, product.id, product.categoryId, product.producerId)} 
                             />
                         ))) : (<ErrorContainer>{dict.productsNotFound}</ErrorContainer>)
                     }
