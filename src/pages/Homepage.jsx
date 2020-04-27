@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {withRouter, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import styled from '@emotion/styled';
+import mq from '../util/mediaQueries.js';
 import {initStores} from '../redux/store/store.actions';
 import {v4 as uuidv4} from 'uuid';
 import {ErrorContainer, MainContainer} from '../components/Common';
@@ -18,22 +19,6 @@ const StoreTitle = styled('h1')({
     lineHeight: 1.2
 });
 
-const IndividualStore = styled(Link)({
-    padding: "1em",
-    fontSize: "1.2em",
-    lineHeight: 1,
-    margin: ".8em .5em",
-    width: "8em",
-    flex: "1 0 25%",
-    boxShadow: `0 3px 3px ${colors.lightGrey}`,
-
-    "&:hover": {
-        backgroundColor: colors.pattensBlue,
-        cursor: "pointer"
-        
-    }
-});
-
 const StoreWrapper = styled('div')({
     padding: "1.5em .5em",
     display: "flex",
@@ -42,6 +27,26 @@ const StoreWrapper = styled('div')({
     width: "80%",
 	margin: "0 auto"
 });
+
+const IndividualStore = styled(Link)({
+    padding: "1em",
+    fontSize: "1.2em",
+    lineHeight: 1,
+    margin: ".8em .5em",
+    boxShadow: `0 3px 3px ${colors.lightGrey}`,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+
+    "&:hover": {
+        backgroundColor: colors.pattensBlue,
+        cursor: "pointer"
+    }
+},
+mq({
+    width: ["100%", "8em"],
+    flex: ["1 0 100%", "1 0 33%", "1 0 25%"]
+}));
+
 
 class HomePage extends Component {
 
@@ -58,7 +63,6 @@ class HomePage extends Component {
         if (isFetching) return <Spinner/>
 
         return (
-   
             <MainContainer>
                 <StoreTitle>{dict.stores}</StoreTitle>
                 <StoreWrapper>
@@ -71,9 +75,7 @@ class HomePage extends Component {
                         )) : (<ErrorContainer>{dict.storesNotFound}</ErrorContainer>)
                     }
                 </StoreWrapper>
-
-            </MainContainer>
-            
+            </MainContainer> 
         )
     }
 }

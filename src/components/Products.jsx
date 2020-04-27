@@ -7,6 +7,7 @@ import {v4 as uuidv4} from 'uuid';
 import Pagination from "react-js-pagination";
 import {initProducts, limitUpdate} from '../redux/product/product.actions';
 import {initCategories, categoryUpdate} from '../redux/category/category.actions';
+import {initProducers, producerUpdate} from '../redux/producer/producer.actions';
 import IndividualProduct from './IndividualProduct';
 import {dict} from '../util/variables';
 import Spinner from './Spinner';
@@ -25,18 +26,18 @@ const ProductsWrapper = styled('section')({
 class Products extends Component {
 
     componentDidUpdate(prevProps) {
-        const {products, history, initProducts, limitOptions, categoryOptions} = this.props;
+        const {products, history, initProducts, limitOptions, categoryOptions, producersOptions} = this.props;
 
         const store = history.location.pathname.split('/')[2];
-        const totalItemsPerStore = get(products, '[1][0].maxSize', 0);
         const limit = limitOptions.value;
         const category = categoryOptions.value;
-
+        const producer = producersOptions.value;
+        const totalItemsPerStore = get(products, '[1][0].maxSize', 0);
         const numberOfPages = Math.ceil(totalItemsPerStore / limit);
 
         if ((prevProps.products[0] !== products[0]) && products[0].length === 0) {
             history.push({pathname: `/products/${store}/${numberOfPages}`});
-            initProducts(store, numberOfPages, limit, category);
+            initProducts(store, numberOfPages, limit, category, producer);
         }
     }
 
@@ -51,10 +52,11 @@ class Products extends Component {
     }
 
     componentDidMount () {
-        const {match, initProducts, initCategories, limitOptions, categoryOptions} = this.props;
+        const {match, initProducts, initCategories, initProducers, limitOptions, categoryOptions, producersOptions} = this.props;
 
         initCategories();
-        initProducts(match.params.address, match.params.page, limitOptions.value, categoryOptions.value);
+        initProducers();
+        initProducts(match.params.address, match.params.page, limitOptions.value, categoryOptions.value, producersOptions.value);
 
         console.log("Products.jsx did mount: ", this.props);
     }
@@ -71,56 +73,84 @@ class Products extends Component {
     }
 
     limiSelection = event => {
-        const {history, initProducts, limitUpdate, categoryOptions} = this.props; 
+        const {history, initProducts, limitUpdate, categoryOptions, producersOptions} = this.props; 
 
         const store = history.location.pathname.split('/')[2];
-        const page = history.location.pathname.split('/')[3];
-        const category = categoryOptions.value;
+        const page  = history.location.pathname.split('/')[3];
         const limit = event.target.value;
+        const category = categoryOptions.value;
+        const producer = producersOptions.value;
 
         limitUpdate(limit);
 
         if (page === '0' || page === '') {
             history.push({pathname: `/products/${store}/1`});
-            initProducts(store, 1, limit, categoryOptions.value = '')  
+            initProducts(store, 1, limit, categoryOptions.value = '', producer)  
         } else {
             history.push({pathname: `/products/${store}/${page}`});
-            initProducts(store, page, limit, category)   
+            initProducts(store, page, limit, category, producer)   
         }  
     }
 
     categorySelection = event => {
-        const {history, initProducts, limitOptions, categoryUpdate} = this.props; 
+        const {history, initProducts, limitOptions, producersOptions, categoryUpdate} = this.props; 
 
         const store = history.location.pathname.split('/')[2];
-        const page = history.location.pathname.split('/')[3];
+        const page  = history.location.pathname.split('/')[3];
         const limit = limitOptions.value; 
         const category = event.target.value;
+        const producer = producersOptions.value;
         
         categoryUpdate(category);
 
         if (page === '0' || page === '') {
             history.push({pathname: `/products/${store}/1`});
-            initProducts(store, 1, limit, category)  
+            initProducts(store, 1, limit, category, producersOptions.value = '')  
         } else {
             history.push({pathname: `/products/${store}/${page}`});
-            initProducts(store, page, limit, category)
+            initProducts(store, page, limit, category, producer)
+        }   
+    }
+
+    producerSelection = event => {
+        const {history, initProducts, limitOptions, categoryOptions, producerUpdate} = this.props; 
+
+        const store = history.location.pathname.split('/')[2];
+        const page = history.location.pathname.split('/')[3];
+        const limit = limitOptions.value; 
+        const category = categoryOptions.value;
+        const producer = event.target.value;
+
+        producerUpdate(producer)
+
+        if (page === '0' || page === '') {
+            history.push({pathname: `/products/${store}/1`});
+            initProducts(store, 1, limit, category, categoryOptions.value = '', producer)  
+        } else {
+            history.push({pathname: `/products/${store}/${page}`});
+            initProducts(store, page, limit, category, producer)
         }   
     }
 
     handlePageChange = page => {
-        const {history, initProducts, limitOptions, categoryOptions} = this.props;
+        const {history, initProducts, limitOptions, categoryOptions, producersOptions} = this.props;
 
         const limit = limitOptions.value;
-        const store = (history.location.pathname).split('/')[2];
+        const store = history.location.pathname.split('/')[2];
         const category = categoryOptions.value;
+        const producer = producersOptions.value;
 
-        history.push({pathname: `/products/${store}/${page}`});
-        initProducts(store, page, limit, category)
+        if (page === '0' || page === '') {
+            history.push({pathname: `/products/${store}/1`});
+            initProducts(store, 1, limit, category, categoryOptions.value = '', producersOptions.value = '')  
+        } else {
+            history.push({pathname: `/products/${store}/${page}`});
+            initProducts(store, page, limit, category, producer)
+        }
     }
 
     render () {
-        const {match, history, products, isFetching, errorMessage, limitOptions, categoryOptions} = this.props;
+        const {match, history, products, producersOptions, isFetching, errorMessage, limitOptions, categoryOptions} = this.props;
 
         const path = (history.location.pathname).split('/')[1].slice(0, -1);
 
@@ -130,7 +160,7 @@ class Products extends Component {
         if (isFetching) return <Spinner/>
 
         const sortedByProductCode = orderBy(products[0], ['sku', 'color'], ['asc', 'desc'])
-        console.log("Sorted by productCode: ", sortedByProductCode)
+        //console.log("Sorted by productCode: ", sortedByProductCode)
         
         // Pagination params
         const activePage = parseInt(match.params.page);
@@ -158,6 +188,10 @@ class Products extends Component {
                     <Select name="categoryOptions"
                         label={categoryOptions.label} options={categoryOptions.options}
                         value={categoryOptions.value} onChange={this.categorySelection} />
+
+                    <Select name="producerSelection"
+                        label={producersOptions.label} options={producersOptions.options}
+                        value={producersOptions.value} onChange={this.producerSelection} />
                 </PaginationWrapper>
                 
                 <ProductsWrapper>
@@ -180,13 +214,17 @@ const mapStateToProps = state => ({
     isFetching: state.product.isFetching,
     limitOptions: state.product.limitOptions,
     errorMessage: state.product.errorMessage,
+    producers: state.producer.producers,
+    producersOptions: state.producer.producersOptions,
     categoryOptions: state.category.categoryOptions
 })
 
 const mapDispatchToProps = dispatch => ({
-    initProducts: (address, page, limit, category) => dispatch(initProducts(address, page, limit, category)),
+    initProducts: (address, page, limit, category, producerId) => dispatch(initProducts(address, page, limit, category, producerId)),
     initCategories: () => dispatch(initCategories()),
+    initProducers: () => dispatch(initProducers()),
     categoryUpdate: categoryId => dispatch(categoryUpdate(categoryId)),
+    producerUpdate: producerId => dispatch(producerUpdate(producerId)),
     limitUpdate: limit => dispatch(limitUpdate(limit))
 })
 

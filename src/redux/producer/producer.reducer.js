@@ -6,6 +6,11 @@ const initialState = {
     updated: null,
     errorMessage: undefined,
     producers: [],
+    producersOptions: {
+        label: 'Choose a producer',
+        value: '',             
+        options: []
+    },
     submitted: false,
     loadedproducer: null,
     error: false,
@@ -22,7 +27,14 @@ const producerReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isFetching: false,
-                producers: action.payload
+                producers: action.payload,
+                producersOptions: {
+                    ...state.producersOptions,
+                    options: [
+                        state.producersOptions.options,
+                        ...action.payload
+                    ]
+                }
             }
         case producerActionTypes.FETCH_PRODUCERS_FAILED:
             return {
@@ -100,6 +112,14 @@ const producerReducer = (state = initialState, action) => {
                 error: true,
                 submitted: false
             }
+        case producerActionTypes.PRODUCER_UPDATE:
+            return {
+                ...state,    
+                producersOptions: {
+                    ...state.producersOptions,
+                    value: action.payload
+                }    
+            } 
         default:
             return state;
     }

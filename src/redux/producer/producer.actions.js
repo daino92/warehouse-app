@@ -71,6 +71,11 @@ export const updateProducerFailed = errorMessage => ({
     payload: errorMessage 
 })
 
+export const producerUpdate = producerId => ({
+    type: ProducerActionTypes.PRODUCER_UPDATE,
+    payload: producerId 
+})
+
 export const initProducers = () => {
     return dispatch => {
         dispatch(fetchProducersStart());
