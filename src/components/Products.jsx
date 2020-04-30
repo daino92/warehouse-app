@@ -5,13 +5,14 @@ import get from 'lodash/get';
 import styled from '@emotion/styled';
 import {v4 as uuidv4} from 'uuid';
 import Pagination from "react-js-pagination";
-import {initProducts, limitUpdate} from '../redux/product/product.actions';
+import {initProducts, limitUpdate, pageUpdate} from '../redux/product/product.actions';
 import {initCategories, categoryUpdate} from '../redux/category/category.actions';
 import {initProducers, producerUpdate} from '../redux/producer/producer.actions';
 import IndividualProduct from './IndividualProduct';
 import {dict} from '../util/variables';
 import Spinner from './Spinner';
 import Select from '../components/forms/Select';
+import Select2 from './forms/Select2';
 import {ErrorContainer, PaginationWrapper} from './Common';
 
 const ProductsWrapper = styled('section')({
@@ -25,20 +26,21 @@ const ProductsWrapper = styled('section')({
 
 class Products extends Component {
 
-    componentDidUpdate(prevProps) {
-        const {products, history, initProducts, limitOptions, categoryOptions, producersOptions} = this.props;
+    componentDidUpdate(prevProps, prevState) {
+        const {history, initProducts, limitOptions, categoryOptions, producersOptions, page} = this.props;
 
         const store = history.location.pathname.split('/')[2];
         const limit = limitOptions.value;
         const category = categoryOptions.value;
         const producer = producersOptions.value;
-        const totalItemsPerStore = get(products, '[1][0].maxSize', 0);
-        const numberOfPages = Math.ceil(totalItemsPerStore / limit);
 
-        if ((prevProps.products[0] !== products[0]) && products[0].length === 0) {
-            history.push({pathname: `/products/${store}/${numberOfPages}`});
-            initProducts(store, numberOfPages, limit, category, producer);
-        }
+        if ((prevProps.limitOptions.value === limit) 
+            && (prevProps.categoryOptions.value === category) 
+            && (prevProps.producersOptions.value === producer) 
+            && (prevProps.page === page)) return
+
+        history.push({pathname: `/products/${store}/${page}`});
+        initProducts(store, page, limit, category, producer);        
     }
 
     shouldComponentUpdate(nextProps) {
@@ -73,80 +75,32 @@ class Products extends Component {
     }
 
     limiSelection = event => {
-        const {history, initProducts, limitUpdate, categoryOptions, producersOptions} = this.props; 
-
-        const store = history.location.pathname.split('/')[2];
-        const page  = history.location.pathname.split('/')[3];
-        const limit = event.target.value;
-        const category = categoryOptions.value;
-        const producer = producersOptions.value;
+        const {limitUpdate} = this.props; 
+        const limit = event.target.value; 
 
         limitUpdate(limit);
-
-        if (page === '0' || page === '') {
-            history.push({pathname: `/products/${store}/1`});
-            initProducts(store, 1, limit, categoryOptions.value = '', producer)  
-        } else {
-            history.push({pathname: `/products/${store}/${page}`});
-            initProducts(store, page, limit, category, producer)   
-        }  
     }
 
     categorySelection = event => {
-        const {history, initProducts, limitOptions, producersOptions, categoryUpdate} = this.props; 
-
-        const store = history.location.pathname.split('/')[2];
-        const page  = history.location.pathname.split('/')[3];
-        const limit = limitOptions.value; 
+        const {categoryUpdate} = this.props; 
         const category = event.target.value;
-        const producer = producersOptions.value;
-        
-        categoryUpdate(category);
 
-        if (page === '0' || page === '') {
-            history.push({pathname: `/products/${store}/1`});
-            initProducts(store, 1, limit, category, producersOptions.value = '')  
-        } else {
-            history.push({pathname: `/products/${store}/${page}`});
-            initProducts(store, page, limit, category, producer)
-        }   
+        categoryUpdate(category);
     }
 
     producerSelection = event => {
-        const {history, initProducts, limitOptions, categoryOptions, producerUpdate} = this.props; 
-
-        const store = history.location.pathname.split('/')[2];
-        const page = history.location.pathname.split('/')[3];
-        const limit = limitOptions.value; 
-        const category = categoryOptions.value;
-        const producer = event.target.value;
+        const {producerUpdate} = this.props; 
+        const producer = {
+            value: event.value,
+            label: event.label
+        }
 
         producerUpdate(producer)
-
-        if (page === '0' || page === '') {
-            history.push({pathname: `/products/${store}/1`});
-            initProducts(store, 1, limit, category, categoryOptions.value = '', producer)  
-        } else {
-            history.push({pathname: `/products/${store}/${page}`});
-            initProducts(store, page, limit, category, producer)
-        }   
     }
 
     handlePageChange = page => {
-        const {history, initProducts, limitOptions, categoryOptions, producersOptions} = this.props;
-
-        const limit = limitOptions.value;
-        const store = history.location.pathname.split('/')[2];
-        const category = categoryOptions.value;
-        const producer = producersOptions.value;
-
-        if (page === '0' || page === '') {
-            history.push({pathname: `/products/${store}/1`});
-            initProducts(store, 1, limit, category, categoryOptions.value = '', producersOptions.value = '')  
-        } else {
-            history.push({pathname: `/products/${store}/${page}`});
-            initProducts(store, page, limit, category, producer)
-        }
+        const {pageUpdate} = this.props;
+        pageUpdate(page)
     }
 
     render () {
@@ -161,7 +115,7 @@ class Products extends Component {
 
         const sortedByProductCode = orderBy(products[0], ['sku', 'color'], ['asc', 'desc'])
         //console.log("Sorted by productCode: ", sortedByProductCode)
-        
+    
         // Pagination params
         const activePage = parseInt(match.params.page);
         const maxItemsPerPage = parseInt(limitOptions.value);
@@ -189,9 +143,13 @@ class Products extends Component {
                         label={categoryOptions.label} options={categoryOptions.options}
                         value={categoryOptions.value} onChange={this.categorySelection} />
 
-                    <Select name="producerSelection"
-                        label={producersOptions.label} options={producersOptions.options}
-                        value={producersOptions.value} onChange={this.producerSelection} />
+                    <Select2
+                        label={producersOptions.label}
+                        //autoFocus 
+                        placeholder={producersOptions.displayValue ? producersOptions.displayValue : "Select..."}
+                        onChange={this.producerSelection}
+                        options={producersOptions.options}
+                    />
                 </PaginationWrapper>
                 
                 <ProductsWrapper>
@@ -214,15 +172,17 @@ const mapStateToProps = state => ({
     isFetching: state.product.isFetching,
     limitOptions: state.product.limitOptions,
     errorMessage: state.product.errorMessage,
+    page: state.product.page,
     producers: state.producer.producers,
     producersOptions: state.producer.producersOptions,
-    categoryOptions: state.category.categoryOptions
+    categoryOptions: state.category.categoryOptions,
 })
 
 const mapDispatchToProps = dispatch => ({
     initProducts: (address, page, limit, category, producerId) => dispatch(initProducts(address, page, limit, category, producerId)),
     initCategories: () => dispatch(initCategories()),
     initProducers: () => dispatch(initProducers()),
+    pageUpdate: page => dispatch(pageUpdate(page)),
     categoryUpdate: categoryId => dispatch(categoryUpdate(categoryId)),
     producerUpdate: producerId => dispatch(producerUpdate(producerId)),
     limitUpdate: limit => dispatch(limitUpdate(limit))
