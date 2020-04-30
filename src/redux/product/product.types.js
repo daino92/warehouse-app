@@ -34,7 +34,8 @@ const productActionTypes = {
 
     PAGE_UNLOADED: 'PAGE_UNLOADED',
 
-    LIMIT_UPDATE: 'LIMIT_UPDATE'
+    LIMIT_UPDATE: 'LIMIT_UPDATE',
+    PAGE_UPDATE: 'PAGE_UPDATE'
 }
 
 export default productActionTypes;

@@ -5,7 +5,7 @@ const initialState = {
     products: [],
     limitOptions: {
         label: 'Choose limit',
-        value: 28,             
+        value: 12,             
         options: [
             { id: 12, value: 12 }, 
             { id: 16, value: 16 }, 
@@ -14,6 +14,7 @@ const initialState = {
             { id: 28, value: 28 }
         ]
     },
+    page: "1",
     isFetching: false,
     response: null,
     errorMessage: undefined,
@@ -33,9 +34,7 @@ const productReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 errorMessage: undefined,
-                products: action.payload,
-                page: action.page,
-                address: action.address
+                products: action.payload
             }
         case productActionTypes.FETCH_PRODUCTS_FAILED:
             return {
@@ -136,6 +135,11 @@ const productReducer = (state = initialState, action) => {
                     ...state.limitOptions,
                     value: action.payload
                 }
+            };
+        case productActionTypes.PAGE_UPDATE:
+            return {
+                ...state,
+                page: action.payload
             };
         default:
             return state;

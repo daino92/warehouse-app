@@ -104,6 +104,11 @@ export const limitUpdate = limit => ({
     payload: limit 
 })
 
+export const pageUpdate = page => ({
+    type: productActionTypes.PAGE_UPDATE,
+    payload: page 
+})
+
 export const initProducts = (address, page, limit, category, producerId) => {
     return dispatch => {
         dispatch(fetchProductsStart());
