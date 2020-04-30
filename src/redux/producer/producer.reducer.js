@@ -8,7 +8,8 @@ const initialState = {
     producers: [],
     producersOptions: {
         label: 'Choose a producer',
-        value: '',             
+        value: '',     
+        displayValue: '',        
         options: []
     },
     submitted: false,
@@ -24,6 +25,9 @@ const producerReducer = (state = initialState, action) => {
                 isFetching: true
             }
         case producerActionTypes.FETCH_PRODUCERS_SUCCESS:
+            // tweak reducer response for react-select lib
+            let newProducers = action.payload.map(({ id: value, value: label, ...rest }) => ({ value, label, ...rest })); 
+
             return {
                 ...state,
                 isFetching: false,
@@ -32,7 +36,8 @@ const producerReducer = (state = initialState, action) => {
                     ...state.producersOptions,
                     options: [
                         state.producersOptions.options,
-                        ...action.payload
+                        ...newProducers
+                        //...action.payload
                     ]
                 }
             }
@@ -113,13 +118,20 @@ const producerReducer = (state = initialState, action) => {
                 submitted: false
             }
         case producerActionTypes.PRODUCER_UPDATE:
+            /* Necessary check because empty selection returns undefined in react-select lib */
+            if (action.payload.value === undefined && action.payload.label === undefined) {
+                action.payload.value = "";
+                action.payload.label = "Select...";
+            }
+
             return {
                 ...state,    
                 producersOptions: {
                     ...state.producersOptions,
-                    value: action.payload
+                    value: action.payload.value,
+                    displayValue: action.payload.label
                 }    
-            } 
+            }
         default:
             return state;
     }
