@@ -2,18 +2,18 @@ import styled from '@emotion/styled';
 import mq from '../util/mediaQueries.js';
 import {colors} from '../util/variables';
 
-const LabelComponent = styled('label')`
-    font-weight: bold;
-    display: block;
-    margin: 8px auto;
-    text-align: left;
-`;
+const LabelComponent = styled('label')({
+    fontWeight: "bold",
+    display: "block",
+    margin: "8px auto",
+    textAlign: "left"
+});
 
 const FormComponent = styled('div')({
-    padding: "10px",
+    padding: "10px"
 },
 mq({
-    width: ["100%", "50%"],
+    width: ["100%", "50%"]
 }));
 
 const MainContainer = styled('div')({
@@ -26,22 +26,22 @@ const MainContainer = styled('div')({
     "form": {
         display: "flex",
         flexWrap: "wrap",
-        justifyContent: "flex-start",
+        justifyContent: "flex-start"
     }
 },
 mq({
-    width: ["95%", "80%"],
+    width: ["95%", "80%"]
 }));
 
-const ErrorContainer = styled('div')`
-    display: block;
-    font-style: italic;
-    text-align: center;
-    font-size: 1.3em;
-    line-height: 1.1;
-    padding: 1.5em;
-    color: ${colors.red};
-`;
+const ErrorContainer = styled('div')({
+    display: "block",
+    fontStyle: "italic",
+    textAlign: "center",
+    fontSize: "1.3em",
+    lineHeight: 1.1,
+    padding: "1.5em",
+    color: colors.red
+});
 
 const ValidationComponent = styled('div')({
     display: "flex",
@@ -49,7 +49,7 @@ const ValidationComponent = styled('div')({
 	padding: ".5em",
 	fontWeight: 700,
     color: colors.cinnabar,
-	fontStyle: "italic",
+	fontStyle: "italic"
 });
 
 const PaginationWrapper = styled('div')({
@@ -57,7 +57,8 @@ const PaginationWrapper = styled('div')({
     justifyContent: "center",
 
     "> div": {
-        maxWidth: "360px"
+        maxWidth: "250px",
+        width: "100%"
     },
 
     "ul": {
@@ -72,7 +73,7 @@ const PaginationWrapper = styled('div')({
             display: "inline-block",
             width: "35px",
             height: "35px",
-            textAlign: "center",
+            textAlign: "center"
         },
 
         ".active": {
@@ -97,7 +98,10 @@ mq({
     "> div": {
         padding: ["0 10px 10px", "0 .5em .5em"],
         margin: ["0 auto", "initial"],
-        width: ["100%", "initial"]
+
+        "&:first-of-type": {
+            width: ["100%", "100%", "initial"]
+        }
     },
 
     "ul": {

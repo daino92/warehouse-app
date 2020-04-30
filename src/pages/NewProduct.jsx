@@ -6,6 +6,7 @@ import {validations} from '../util/validations';
 import TextInput from '../components/forms/TextInput';
 import TextArea from '../components/forms/TextArea';
 import Select from '../components/forms/Select';
+import Select2 from '../components/forms/Select2';
 import Radio from '../components/forms/RadioButton';
 import Button from '../components/Button';
 import {dict} from '../util/variables';
@@ -13,6 +14,7 @@ import {ErrorContainer, MainContainer, FlexCentered} from '../components/Common'
 import {initCategories} from '../redux/category/category.actions';
 import {initAddProduct} from '../redux/product/product.actions';
 import {initStores} from '../redux/store/store.actions';
+import {initProducers} from '../redux/producer/producer.actions';
 import Spinner from '../components/Spinner';
 
 const getInitialState = () => {
@@ -209,6 +211,16 @@ const getInitialState = () => {
                     isRequired: true
                 }
             },
+            producerId: {
+                label: 'Producer Category',
+                value: '',
+                valid: false,   
+                touched: false,           
+                options: [],
+                validationRules: {
+                    isRequired: true
+                }
+            },
             address: {
                 label: 'Shop availability',
                 value: '',
@@ -245,21 +257,25 @@ class NewProduct extends Component {
     state = getInitialState();
 
     componentDidMount () {
-        const {initCategories, initStores} = this.props;
+        const {initCategories, initStores, initProducers} = this.props;
         initStores();
         initCategories();
+        initProducers();
 
         console.log("NewProduct.jsx did mount: ", this.props);
     }
 
     componentDidUpdate(prevProps) {
-        const {categories, stores} = this.props;
+        const {categories, stores, producers} = this.props;
 
         //if(prevProps.categories === categories) return;
         if(prevProps.stores === stores) return;
 
         /* Tweak store response because we actually want the address and not the id */
         let updatedStores = stores.map(store => { return {...store, id: store.address }});
+
+        /* Tweak producer response because react-select lib works with value/label keys  */
+        let updatedProducers = producers.map(({ id: value, value: label, ...rest }) => ({ value, label, ...rest })); 
 
         this.setState({
             ...this.state,
@@ -279,15 +295,34 @@ class NewProduct extends Component {
                         ...updatedStores
                     ]
                 },
+                producerId: {
+                    ...this.state.productForm.producerId,
+                    options: [
+                        //this.state.productForm.producerId.options,
+                        ...updatedProducers
+                    ]
+                }
             }
         });
     }
 
+    /* Helper function to send info to changeHandler for react-select library */
+    changeSelect2Handler = name => ({value, label}) => {
+        this.changeHandler({
+            target: {
+                name,
+                value
+            }
+        })
+    }
+
     changeHandler = event => {
         const {productForm} = this.state;
+
         const name = event.target.name;
+
         const value = event.target.type === "checkbox" 
-            ? event.target.checked : event.target.value;
+             ? event.target.checked : event.target.value;
 
         const updatedFormElement = updateObject(productForm[name], {
             value: value,
@@ -330,9 +365,8 @@ class NewProduct extends Component {
         /* Add necessary nonProduce flag set to false */
         formData.nonProduce = false;
 
-        /* For the time being, we set those below to constant values */
+        /* For the time being, we set the image to empty string */
         formData.imageUrl = "";
-        formData.producerId = "5e8237f8216bc20ca4c48aef";
 
         console.log("Data inserted: ", formData)
         initAddProduct(formData);
@@ -342,7 +376,7 @@ class NewProduct extends Component {
         let redirect = null;
         const {submitted, error, isFetching} = this.props;
         const {formIsValid} = this.state;
-        const {sku, description, price, quantity, costEu, costUsd, karats, categoryId, address, color, goldWeight, silverWeight, otherStoneWeight, diamondWeight, otherStone} = this.state.productForm;
+        const {sku, description, price, quantity, costEu, costUsd, karats, categoryId, producerId, address, color, goldWeight, silverWeight, otherStoneWeight, diamondWeight, otherStone} = this.state.productForm;
 
         if (submitted) redirect = <Redirect to="/"/>;
 
@@ -434,6 +468,11 @@ class NewProduct extends Component {
                     value={address.value} valid={address.valid} touched={address.touched}
                     onChange={this.changeHandler} />
 
+                <Select2 name="producerId"
+                    placeholder={producerId.value ? producerId.value : "Select..."}
+                    label={producerId.label} valid={producerId.valid} touched={producerId.touched} 
+                    options={producerId.options} onChange={this.changeSelect2Handler("producerId")} />
+
                 <Radio name="color"
                     label={color.label} options={color.options} type={color.params.type}
                     value={color.value} valid={color.valid} touched={color.touched}
@@ -462,12 +501,14 @@ const mapStateToProps = state => ({
     error: state.product.error,
     stores: state.store.stores,
     categories: state.category.categories,
+    producers: state.producer.producers,
     isFetching: state.product.isFetching
 })
   
 const mapDispatchToProps = dispatch => ({
     initAddProduct: product => dispatch(initAddProduct(product)),
     initCategories: () => dispatch(initCategories()),
+    initProducers: () => dispatch(initProducers()),
     initStores: () => dispatch(initStores())
 })
 

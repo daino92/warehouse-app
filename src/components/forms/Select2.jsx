@@ -1,16 +1,13 @@
 import React, {Component} from 'react';
 import Select from 'react-select';
 import {LabelComponent, FormComponent} from '../Common';
-import mq from '../../util/mediaQueries.js';
 
 const customStyles = {
-    control: base => [{
+    control: base => ({
         ...base,
-        fontSize: ".9em"
-    },
-    mq({
-        width: ["100%", "150px"]
-    })],
+        fontSize: ".9em",
+        width: "100%"
+    }),
     menuList: base => ({
         ...base,
         maxHeight: '15em'
