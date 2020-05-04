@@ -4,9 +4,9 @@ import {info} from '../src/util/env';
 // Get the info from env.js
 const username = info.username;
 const password = info.password;
-const url = info.baseAPI ? info.baseAPI : info.fauxAPI;
+const url = info.baseAPI;
 
-export const source = axios.CancelToken.source();
+const source = axios.CancelToken.source();
 
 const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64')
 
@@ -42,3 +42,4 @@ axiosInstance.interceptors.response.use(response => {
 });
 
 export default axiosInstance;
+export {url as baseUrl, token, source};

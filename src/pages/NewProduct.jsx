@@ -12,14 +12,16 @@ import Button from '../components/Button';
 import {dict} from '../util/variables';
 import {ErrorContainer, MainContainer, FlexCentered} from '../components/Common';
 import {initCategories} from '../redux/category/category.actions';
-import {initAddProduct} from '../redux/product/product.actions';
+import {initAddProduct, initImage} from '../redux/product/product.actions';
 import {initStores} from '../redux/store/store.actions';
 import {initProducers} from '../redux/producer/producer.actions';
 import Spinner from '../components/Spinner';
+import DropZone from '../components/Dropzone-uploader'
 
 const getInitialState = () => {
     return ({
         formIsValid: false,
+        imageUrl: "",
         productForm: {
             sku: {
                 label: 'Product SKU',
@@ -351,10 +353,16 @@ class NewProduct extends Component {
         event.preventDefault();
         this.setState(getInitialState());
     }
+
+    /* callback to get fileUrl from DropZone component */
+    getFileURL = fileUrl => {
+        this.setState({imageUrl: fileUrl})
+    }
     
     formSubmitHandler = event => {
         event.preventDefault();
         const {initAddProduct} = this.props;
+        const imageUrl = this.state.imageUrl;
 
         const formData = {};
         const {productForm} = this.state;
@@ -362,11 +370,8 @@ class NewProduct extends Component {
             formData[formElementId] = productForm[formElementId].value
         }
 
-        /* Add necessary nonProduce flag set to false */
         formData.nonProduce = false;
-
-        /* For the time being, we set the image to empty string */
-        formData.imageUrl = "";
+        formData.imageUrl = imageUrl;
 
         console.log("Data inserted: ", formData)
         initAddProduct(formData);
@@ -478,6 +483,11 @@ class NewProduct extends Component {
                     value={color.value} valid={color.valid} touched={color.touched}
                     onChange={this.changeHandler} />
 
+                <DropZone 
+                    label="Upload Image" maxFiles={1}
+                    minSize={0} maxSize={1048576}
+                    fileDestinaton={this.getFileURL} />
+
                 <FlexCentered>
                     <Button btnType="success"   disabled={!formIsValid} onClick={this.formSubmitHandler} >{dict.submit}</Button>
                     <Button btnType="danger"    disabled={false}        onClick={this.handleClearForm}>{dict.clear}</Button>
@@ -509,7 +519,8 @@ const mapDispatchToProps = dispatch => ({
     initAddProduct: product => dispatch(initAddProduct(product)),
     initCategories: () => dispatch(initCategories()),
     initProducers: () => dispatch(initProducers()),
-    initStores: () => dispatch(initStores())
+    initStores: () => dispatch(initStores()),
+    initImage: image => dispatch(initImage(image))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NewProduct));
