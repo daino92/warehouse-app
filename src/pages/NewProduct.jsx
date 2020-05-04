@@ -5,7 +5,6 @@ import {updateObject} from '../util/utilities';
 import {validations} from '../util/validations';
 import TextInput from '../components/forms/TextInput';
 import TextArea from '../components/forms/TextArea';
-import Select from '../components/forms/Select';
 import Select2 from '../components/forms/Select2';
 import Radio from '../components/forms/RadioButton';
 import Button from '../components/Button';
@@ -273,11 +272,10 @@ class NewProduct extends Component {
         //if(prevProps.categories === categories) return;
         if(prevProps.stores === stores) return;
 
-        /* Tweak store response because we actually want the address and not the id */
-        let updatedStores = stores.map(store => { return {...store, id: store.address }});
-
-        /* Tweak producer response because react-select lib works with value/label keys  */
+        /* Tweak store, producer and category response because react-select lib works with value/label keys  */
+        let updatedStores = stores.map(({ id: value, address: label }) => ({ value: label, label }));
         let updatedProducers = producers.map(({ id: value, value: label, ...rest }) => ({ value, label, ...rest })); 
+        let updatedCategories = categories.map(({ id: value, value: label }) => ({ value, label })); 
 
         this.setState({
             ...this.state,
@@ -286,21 +284,18 @@ class NewProduct extends Component {
                 categoryId: {
                     ...this.state.productForm.categoryId,
                     options: [
-                        this.state.productForm.categoryId.options,
-                        ...categories
+                        ...updatedCategories
                     ]
                 },
                 address: {
                     ...this.state.productForm.address,
                     options: [
-                        this.state.productForm.address.options,
                         ...updatedStores
                     ]
                 },
                 producerId: {
                     ...this.state.productForm.producerId,
                     options: [
-                        //this.state.productForm.producerId.options,
                         ...updatedProducers
                     ]
                 }
@@ -362,7 +357,7 @@ class NewProduct extends Component {
     formSubmitHandler = event => {
         event.preventDefault();
         const {initAddProduct} = this.props;
-        const imageUrl = this.state.imageUrl;
+        const {imageUrl} = this.state;
 
         const formData = {};
         const {productForm} = this.state;
@@ -463,15 +458,15 @@ class NewProduct extends Component {
                     value={costUsd.value} valid={costUsd.valid} touched={costUsd.touched}
                     maxLength={costUsd.validationRules.maxLength} onChange={this.changeHandler} />
 
-                <Select name="categoryId"
-                    label={categoryId.label} options={categoryId.options}
-                    value={categoryId.value} valid={categoryId.valid} touched={categoryId.touched}
-                    onChange={this.changeHandler} />
-                    
-                <Select name="address"
-                    label={address.label} options={address.options}
-                    value={address.value} valid={address.valid} touched={address.touched}
-                    onChange={this.changeHandler} />
+                <Select2 name="categoryId"
+                    placeholder={categoryId.value ? categoryId.value : "Select..."}
+                    label={categoryId.label} valid={categoryId.valid} touched={categoryId.touched} 
+                    options={categoryId.options} onChange={this.changeSelect2Handler("categoryId")} />
+
+                <Select2 name="address"
+                    placeholder={address.value ? address.value : "Select..."}
+                    label={address.label} valid={address.valid} touched={address.touched} 
+                    options={address.options} onChange={this.changeSelect2Handler("address")} />
 
                 <Select2 name="producerId"
                     placeholder={producerId.value ? producerId.value : "Select..."}
