@@ -57,7 +57,7 @@ const PaginationWrapper = styled('div')({
     justifyContent: "center",
 
     "> div": {
-        maxWidth: "250px",
+        maxWidth: "35em",
         width: "100%"
     },
 
@@ -97,11 +97,7 @@ mq({
 
     "> div": {
         padding: ["0 10px 10px", "0 .5em .5em"],
-        margin: ["0 auto", "initial"],
-
-        "&:first-of-type": {
-            width: ["100%", "100%", "initial"]
-        }
+        margin: ["0 auto", "initial"]
     },
 
     "ul": {

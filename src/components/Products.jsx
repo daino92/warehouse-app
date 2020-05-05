@@ -11,7 +11,6 @@ import {initProducers, producerUpdate} from '../redux/producer/producer.actions'
 import IndividualProduct from './IndividualProduct';
 import {dict} from '../util/variables';
 import Spinner from './Spinner';
-import Select from '../components/forms/Select';
 import Select2 from './forms/Select2';
 import {ErrorContainer, PaginationWrapper} from './Common';
 
@@ -76,14 +75,20 @@ class Products extends Component {
 
     limiSelection = event => {
         const {limitUpdate} = this.props; 
-        const limit = event.target.value; 
+        const limit = {
+            value: event.value,
+            label: event.label
+        }
 
         limitUpdate(limit);
     }
 
     categorySelection = event => {
         const {categoryUpdate} = this.props; 
-        const category = event.target.value;
+        const category = {
+            value: event.value,
+            label: event.label
+        }
 
         categoryUpdate(category);
     }
@@ -135,17 +140,23 @@ class Products extends Component {
                         totalItemsCount={totalItemsPerStore}
                         onChange={this.handlePageChange}
                     />
-                    <Select name="limitOptions"
-                        label={limitOptions.label} options={limitOptions.options}
-                        value={limitOptions.value} onChange={this.limiSelection} />
 
-                    <Select name="categoryOptions"
-                        label={categoryOptions.label} options={categoryOptions.options}
-                        value={categoryOptions.value} onChange={this.categorySelection} />
+                    <Select2
+                        label={limitOptions.label}
+                        placeholder={limitOptions.displayValue ? limitOptions.displayValue : "Select..."}
+                        onChange={this.limiSelection}
+                        options={limitOptions.options}
+                    />
+
+                    <Select2
+                        label={categoryOptions.label}
+                        placeholder={categoryOptions.displayValue ? categoryOptions.displayValue : "Select..."}
+                        onChange={this.categorySelection}
+                        options={categoryOptions.options}
+                    />
 
                     <Select2
                         label={producersOptions.label}
-                        //autoFocus 
                         placeholder={producersOptions.displayValue ? producersOptions.displayValue : "Select..."}
                         onChange={this.producerSelection}
                         options={producersOptions.options}
@@ -173,9 +184,8 @@ const mapStateToProps = state => ({
     limitOptions: state.product.limitOptions,
     errorMessage: state.product.errorMessage,
     page: state.product.page,
-    producers: state.producer.producers,
     producersOptions: state.producer.producersOptions,
-    categoryOptions: state.category.categoryOptions,
+    categoryOptions: state.category.categoryOptions
 })
 
 const mapDispatchToProps = dispatch => ({

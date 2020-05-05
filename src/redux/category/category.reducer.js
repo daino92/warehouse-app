@@ -8,7 +8,8 @@ const initialState = {
     categories: [],
     categoryOptions: {
         label: 'Choose a category',
-        value: '',             
+        value: '',   
+        displayValue: '',          
         options: []
     },
     submitted: false,
@@ -24,6 +25,9 @@ const categoryReducer = (state = initialState, action) => {
                 isFetching: true
             }
         case categoryActionTypes.FETCH_CATEGORIES_SUCCESS:
+            // tweak category response for react-select lib
+            let newCategories = action.payload.map(({ id: value, value: label, ...rest }) => ({ value, label, ...rest })); 
+
             return {
                 ...state,
                 isFetching: false,
@@ -32,7 +36,7 @@ const categoryReducer = (state = initialState, action) => {
                     ...state.categoryOptions,
                     options: [
                         state.categoryOptions.options,
-                        ...action.payload
+                        ...newCategories
                     ]
                 }
             }
@@ -119,11 +123,18 @@ const categoryReducer = (state = initialState, action) => {
                 updated: null
             };
         case categoryActionTypes.CATEGORY_UPDATE:
+            /* Necessary check because empty selection returns undefined in react-select lib */
+            if (action.payload.value === undefined && action.payload.label === undefined) {
+                action.payload.value = "";
+                action.payload.label = "Select...";
+            }
+
             return {
                 ...state,
                 categoryOptions: {
                     ...state.categoryOptions,
-                    value: action.payload
+                    value: action.payload.value,
+                    displayValue: action.payload.label
                 }        
             }   
         default:

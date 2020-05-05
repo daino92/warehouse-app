@@ -7,11 +7,11 @@ const initialState = {
         label: 'Choose limit',
         value: 12,             
         options: [
-            { id: 12, value: 12 }, 
-            { id: 16, value: 16 }, 
-            { id: 20, value: 20 }, 
-            { id: 24, value: 24 }, 
-            { id: 28, value: 28 }
+            { label: 12, value: 12 }, 
+            { label: 16, value: 16 }, 
+            { label: 20, value: 20 }, 
+            { label: 24, value: 24 }, 
+            { label: 28, value: 28 }
         ]
     },
     page: "1",
@@ -129,11 +129,18 @@ const productReducer = (state = initialState, action) => {
                 submitted: false
             };
         case productActionTypes.LIMIT_UPDATE:
+            /* Necessary check because empty selection returns undefined in react-select lib */
+            if (action.payload.value === undefined && action.payload.label === undefined) {
+                action.payload.value = "";
+                action.payload.label = "Select...";
+            }
+
             return {
                 ...state,
                 limitOptions: {
                     ...state.limitOptions,
-                    value: action.payload
+                    value: action.payload.value,
+                    displayValue: action.payload.label
                 }
             };
         case productActionTypes.PAGE_UPDATE:
