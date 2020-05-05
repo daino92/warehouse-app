@@ -55,6 +55,8 @@ const ValidationComponent = styled('div')({
 const PaginationWrapper = styled('div')({
     display: "flex",
     justifyContent: "center",
+    maxWidth: "1100px",
+    margin: "0 auto 1em",
 
     "> div": {
         maxWidth: "35em",
@@ -93,7 +95,6 @@ const PaginationWrapper = styled('div')({
 },
 mq({
     flexDirection: ["column", "row"],
-    marginBottom: ["1em", 0],
 
     "> div": {
         padding: ["0 10px 10px", "0 .5em .5em"],

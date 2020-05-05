@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import styled from '@emotion/styled';
+import get from 'lodash/get';
 import {Modal} from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import {initSingleProduct, initDeleteProduct, initDisableProduct} from '../redux/product/product.actions';
@@ -11,7 +12,6 @@ import {dict} from '../util/variables';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
 import {Snackbar} from '../components/Snackbar';
-//import imagePlaceholder from '../assets/picture-not-available.jpg';
 import imagePlaceholder from '../assets/no-image-icon.png';
 import mq from '../util/mediaQueries.js';
 import {MainContainer, FlexCentered, ModalWarning} from '../components/Common';
@@ -37,8 +37,6 @@ mq({
 }));
 
 const ImageComponent = styled('div')({
-    //height: "150px",
-    //height: "100%",
 	width: "100%",
     maxWidth: "90%",
     borderRadius: "1em",
@@ -190,38 +188,38 @@ class ProductDetails extends Component {
         const {match, loadedProduct, categories, producers, loadedproducer, loadedCategory} = this.props;
         const {snackBarOpen, snackBarMessage, openModalDisable, openModalDelete} = this.state;
 
-        let product = <p style={{textAlign: 'center'}}>{dict.selectProduct}</p>;
+        let product;
         
         if (match.params.productId) product = <Spinner/>
 
         if (loadedProduct) {
-            const currentProduct = loadedProduct[0][0];
-            const otherStock1 = loadedProduct[1][0][0]?.other;
-            const otherStock2 = loadedProduct[1][0][1]?.other;
-            const zeroQuantity =  currentProduct.quantity  === 0;
-            const zeroQuantityOtherShops =  otherStock1?.quantity || otherStock2?.quantity === 0;
+            const currentProduct = get(loadedProduct, '[0][0]', 0);
+            const otherStock1    = get(loadedProduct, '[1][0][0].other', "");
+            const otherStock2    = get(loadedProduct, '[1][0][1].other', "");
+            const zeroQuantity   = currentProduct.quantity === 0;
+            const zeroQuantityOtherShops = otherStock1?.quantity || otherStock2?.quantity === 0;
 
             const imageSource = currentProduct.imageUrl === "" ? imagePlaceholder : currentProduct.imageUrl;
 
-            let categoryId = loadedProduct[0][0].categoryId;
-            let producerId = loadedProduct[0][0].producerId;
+            let categoryId = get(loadedProduct, '[0][0].categoryId', "");
+            let producerId = get(loadedProduct, '[0][0].producerId', "");
 
-            let category = categories.find(cat => cat.id === categoryId)
-            let producer = producers.find(prod => prod.id === producerId)
+            let category = categories.find(cat => cat.id === categoryId);
+            let producer = producers.find(prod => prod.id === producerId);
 
             let producerValue = "";
             let categoryValue = "";
 
             if (loadedproducer?.value) {
-                producerValue = loadedproducer?.value
+                producerValue = loadedproducer?.value;
             } else {
-                producerValue = producer?.value
+                producerValue = producer?.value;
             }
 
             if (loadedCategory?.value) {
-                categoryValue = loadedCategory?.value
+                categoryValue = loadedCategory?.value;
             } else {
-                categoryValue = category?.value
+                categoryValue = category?.value;
             }
 
             product = (

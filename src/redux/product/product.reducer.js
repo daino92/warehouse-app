@@ -126,7 +126,8 @@ const productReducer = (state = initialState, action) => {
             return {
                 ...state,
                 errorMessage: '',
-                submitted: false
+                submitted: false,
+                loadedProduct: ""
             };
         case productActionTypes.LIMIT_UPDATE:
             /* Necessary check because empty selection returns undefined in react-select lib */
