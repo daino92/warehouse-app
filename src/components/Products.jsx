@@ -109,12 +109,12 @@ class Products extends Component {
     }
 
     render () {
-        const {match, history, products, producersOptions, isFetching, errorMessage, limitOptions, categoryOptions} = this.props;
+        const {match, history, products, producersOptions, isFetching, response, limitOptions, categoryOptions} = this.props;
 
         const path = (history.location.pathname).split('/')[1].slice(0, -1);
 
-        if (errorMessage?.status === 404) return (<p style={{textAlign: 'center'}}>{dict.pageNotExist}</p>)
-        if (errorMessage?.status === 400) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)
+        if (response?.status === 404) return (<p style={{textAlign: 'center'}}>{dict.pageNotExist}</p>)
+        if (response?.status === 400) return (<p style={{textAlign: 'center'}}>{dict.unexpectedError}</p>)
     
         if (isFetching) return <Spinner/>
 
@@ -179,11 +179,11 @@ class Products extends Component {
 }
 
 const mapStateToProps = state => ({
+    page: state.product.page,
     products: state.product.products,
     isFetching: state.product.isFetching,
     limitOptions: state.product.limitOptions,
-    errorMessage: state.product.errorMessage,
-    page: state.product.page,
+    response: state.product.response,
     producersOptions: state.producer.producersOptions,
     categoryOptions: state.category.categoryOptions
 })

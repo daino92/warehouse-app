@@ -185,10 +185,12 @@ class ProductDetails extends Component {
     }
 
     render () {
-        const {match, loadedProduct, categories, producers, loadedproducer, loadedCategory} = this.props;
+        const {match, loadedProduct, categories, producers, loadedproducer, loadedCategory, response} = this.props;
         const {snackBarOpen, snackBarMessage, openModalDisable, openModalDelete} = this.state;
 
-        let product;
+        let product;       
+
+        if (response?.status === 404) return <p style={{textAlign: 'center'}}>{dict.productNotFound}</p>
         
         if (match.params.productId) product = <Spinner/>
 

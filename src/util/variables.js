@@ -68,6 +68,7 @@ const dict = {
     selectProduct: 'Please select a Post!',
     pageNotExist: 'This page does not exist',
     categoryNotFound: 'Category Not Found',
+    productNotFound: 'Product Not Found',
     errorUponProductAddition: 'Something went wrong adding that product!',
     errorUponCategoryAddition: 'Something went wrong adding that category!',
     errorUponCategoryUpdate: 'Something went wrong updating that category!',

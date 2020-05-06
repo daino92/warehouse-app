@@ -33,14 +33,13 @@ const productReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isFetching: false,
-                errorMessage: undefined,
                 products: action.payload
             }
         case productActionTypes.FETCH_PRODUCTS_FAILED:
             return {
                 ...state,
                 isFetching: false,
-                errorMessage: action.payload
+                response: action.payload
             }
         case productActionTypes.FETCH_SINGLE_PRODUCT_START:
             return {
@@ -60,7 +59,7 @@ const productReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 error: true,
-                errorMessage: action.payload
+                response: action.payload
             }
         case productActionTypes.DELETE_PRODUCT_START:
             return {
@@ -125,8 +124,9 @@ const productReducer = (state = initialState, action) => {
         case productActionTypes.PAGE_UNLOADED:
             return {
                 ...state,
-                errorMessage: '',
+                response: "",
                 submitted: false,
+                errorMessage: "",
                 loadedProduct: ""
             };
         case productActionTypes.LIMIT_UPDATE:

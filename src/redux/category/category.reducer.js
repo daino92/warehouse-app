@@ -119,8 +119,9 @@ const categoryReducer = (state = initialState, action) => {
         case categoryActionTypes.PAGE_UNLOADED:
             return {
                 ...state,
-                response: '',
-                updated: null
+                updated: "",
+                response: "",
+                loadedCategory: ""
             };
         case categoryActionTypes.CATEGORY_UPDATE:
             /* Necessary check because empty selection returns undefined in react-select lib */
