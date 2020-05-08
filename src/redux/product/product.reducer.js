@@ -19,6 +19,7 @@ const initialState = {
     response: null,
     errorMessage: undefined,
     submitted: false,
+    imageUrl: "",
     error: false
 }
 
@@ -120,6 +121,22 @@ const productReducer = (state = initialState, action) => {
                 isFetching: false,
                 error: true,
                 errorMessage: action.payload
+            }
+
+        case productActionTypes.IMAGE_UPLOAD_START:
+            return {
+                ...state
+            }
+        case productActionTypes.IMAGE_UPLOAD_SUCCESS:
+            return {
+                ...state,
+                imageUrl: action.payload
+            }
+        case productActionTypes.IMAGE_UPLOAD_FAILED:
+            return {
+                ...state,
+                error: true,
+                response: action.payload
             }
         case productActionTypes.PAGE_UNLOADED:
             return {

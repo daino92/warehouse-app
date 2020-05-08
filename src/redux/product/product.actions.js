@@ -219,9 +219,9 @@ export const initPageCount = address => {
 export const initImage = image => {
     return dispatch => {
         dispatch(imageUploadStart());
-        axiosInstance.post(`/image/upload?file=${image}`, {
+        axiosInstance.post('/image/upload/', image, {
             headers: {
-                Accept: "image/*",
+                Accept: "*/*",
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
