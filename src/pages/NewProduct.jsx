@@ -15,12 +15,13 @@ import {initAddProduct, initImage} from '../redux/product/product.actions';
 import {initStores} from '../redux/store/store.actions';
 import {initProducers} from '../redux/producer/producer.actions';
 import Spinner from '../components/Spinner';
-import DropZone from '../components/Dropzone-uploader'
+import Dropzone from '../components/Dropzone';
 
 const getInitialState = () => {
     return ({
         formIsValid: false,
         imageUrl: "",
+        file: "",
         productForm: {
             sku: {
                 label: 'Product SKU',
@@ -349,15 +350,18 @@ class NewProduct extends Component {
         this.setState(getInitialState());
     }
 
-    /* callback to get fileUrl from DropZone component */
-    getFileURL = fileUrl => {
-        this.setState({imageUrl: fileUrl})
+    /* callback to get fileUrl and file from DropZone component */
+    shouldUpload = (fileUrl, file) => {
+        this.setState({
+            imageUrl: fileUrl,
+            file
+        })
     }
     
     formSubmitHandler = event => {
         event.preventDefault();
-        const {initAddProduct} = this.props;
-        const {imageUrl} = this.state;
+        const {initAddProduct, initImage} = this.props;
+        const {imageUrl, file} = this.state;
 
         const formData = {};
         const {productForm} = this.state;
@@ -367,6 +371,10 @@ class NewProduct extends Component {
 
         formData.nonProduce = false;
         formData.imageUrl = imageUrl;
+
+        if (file !== "") {
+            initImage(file)
+        }
 
         console.log("Data inserted: ", formData)
         initAddProduct(formData);
@@ -478,10 +486,10 @@ class NewProduct extends Component {
                     value={color.value} valid={color.valid} touched={color.touched}
                     onChange={this.changeHandler} />
 
-                <DropZone 
+                <Dropzone 
                     label="Upload Image" maxFiles={1}
                     minSize={0} maxSize={1048576}
-                    fileDestinaton={this.getFileURL} />
+                    shouldUpload={this.shouldUpload} />
 
                 <FlexCentered>
                     <Button btnType="success"   disabled={!formIsValid} onClick={this.formSubmitHandler} >{dict.submit}</Button>
