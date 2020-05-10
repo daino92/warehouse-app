@@ -43,20 +43,6 @@ export const deleteProductFailed = errorMessage => ({
     payload: errorMessage 
 })
 
-export const addProductStart = () => ({
-    type: productActionTypes.ADD_PRODUCT_START
-})
-
-export const addProductSuccess = product => ({
-    type: productActionTypes.ADD_PRODUCT_SUCCESS,
-    payload: product
-})
-
-export const addProductFailed = errorMessage => ({
-    type: productActionTypes.ADD_PRODUCT_FAILED,
-    payload: errorMessage 
-})
-
 export const disableProductStart = () => ({
     type: productActionTypes.DISABLE_PRODUCT_START
 })
@@ -109,20 +95,6 @@ export const pageUpdate = page => ({
     payload: page 
 })
 
-export const imageUploadStart = () => ({
-    type: productActionTypes.IMAGE_UPLOAD_START
-})
-
-export const imageUploadSuccess = image => ({
-    type: productActionTypes.IMAGE_UPLOAD_SUCCESS,
-    payload: image
-})
-
-export const imageUploadFailed = errorMessage => ({
-    type: productActionTypes.IMAGE_UPLOAD_FAILED,
-    payload: errorMessage 
-})
-
 export const initProducts = (address, page, limit, category, producerId) => {
     return dispatch => {
         dispatch(fetchProductsStart());
@@ -164,18 +136,6 @@ export const initDeleteProduct = sku => {
     }
 }
 
-export const initAddProduct = product => {
-    return dispatch => {
-        dispatch(addProductStart());
-        axiosInstance.post('/product/create/', product)
-            .then(response => {
-                dispatch(addProductSuccess(response))
-            }).catch(error => {
-                dispatch(addProductFailed(error))
-            });
-    }
-}
-
 export const initDisableProduct = product => {
     return dispatch => {
         dispatch(disableProductStart());
@@ -213,23 +173,5 @@ export const initPageCount = address => {
             .catch(error => {
                 dispatch(fetchPagesFailed(error))
             });
-    }
-}
-
-export const initImage = image => {
-    return dispatch => {
-        dispatch(imageUploadStart());
-        axiosInstance.post('/image/upload/', image, {
-            headers: {
-                Accept: "*/*",
-                'Content-Type': 'multipart/form-data'
-            }
-        }).then(response => {
-            console.log("Response: ", response)
-            dispatch(imageUploadSuccess(response))
-        }).catch(error => {
-            console.log("Error: ", error)
-            dispatch(imageUploadFailed(error))
-        });
     }
 }

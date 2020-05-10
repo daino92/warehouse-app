@@ -19,8 +19,17 @@ const initialState = {
     response: null,
     errorMessage: undefined,
     submitted: false,
-    imageUrl: "",
-    error: false
+    error: false,
+    skuSearch: {
+        params: {
+            placeholder: "E.g. P1134",
+            type: "input"
+        },
+        value: "",
+        maxLength: 5
+    },
+    searchBySKU: false,
+    disableFilters: false
 }
 
 const productReducer = (state = initialState, action) => {
@@ -28,7 +37,7 @@ const productReducer = (state = initialState, action) => {
         case productActionTypes.FETCH_PRODUCTS_START:
             return {
                 ...state,
-                isFetching: true,
+                isFetching: true
             }
         case productActionTypes.FETCH_PRODUCTS_SUCCESS:
             return {
@@ -45,14 +54,12 @@ const productReducer = (state = initialState, action) => {
         case productActionTypes.FETCH_SINGLE_PRODUCT_START:
             return {
                 ...state,
-                isFetching: true,
-                error: false
+                isFetching: true
             }
         case productActionTypes.FETCH_SINGLE_PRODUCT_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
-                error: false,
                 loadedProduct: action.payload
             }
         case productActionTypes.FETCH_SINGLE_PRODUCT_FAILED:
@@ -64,13 +71,11 @@ const productReducer = (state = initialState, action) => {
             }
         case productActionTypes.DELETE_PRODUCT_START:
             return {
-                ...state,
-                error: false
+                ...state
             }
         case productActionTypes.DELETE_PRODUCT_SUCCESS:
             return {
                 ...state,
-                error: false,
                 response: action.payload
             }
         case productActionTypes.DELETE_PRODUCT_FAILED:
@@ -79,40 +84,15 @@ const productReducer = (state = initialState, action) => {
                 error: true,
                 errorMessage: action.payload
             }
-         case productActionTypes.ADD_PRODUCT_START:
-            return {
-                ...state,
-                error: false,
-                isFetching: true,
-                submitted: false
-            }
-        case productActionTypes.ADD_PRODUCT_SUCCESS:
-            return {
-                ...state,
-                error: false,
-                submitted: true,
-                isFetching: false,
-                addedProduct: action.payload
-            }
-        case productActionTypes.ADD_PRODUCT_FAILED:
-            return {
-                ...state,
-                error: true,
-                submitted: false,
-                isFetching: false,
-                errorMessage: action.payload
-            }
         case productActionTypes.FETCH_HISTORY_START:
             return {
                 ...state,
-                isFetching: true,
-                error: false
+                isFetching: true
             }
         case productActionTypes.FETCH_HISTORY_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
-                error: false,
                 products: action.payload
             }
         case productActionTypes.FETCH_HISTORY_FAILED:
@@ -121,22 +101,6 @@ const productReducer = (state = initialState, action) => {
                 isFetching: false,
                 error: true,
                 errorMessage: action.payload
-            }
-
-        case productActionTypes.IMAGE_UPLOAD_START:
-            return {
-                ...state
-            }
-        case productActionTypes.IMAGE_UPLOAD_SUCCESS:
-            return {
-                ...state,
-                imageUrl: action.payload
-            }
-        case productActionTypes.IMAGE_UPLOAD_FAILED:
-            return {
-                ...state,
-                error: true,
-                response: action.payload
             }
         case productActionTypes.PAGE_UNLOADED:
             return {

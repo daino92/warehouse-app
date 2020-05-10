@@ -2,12 +2,11 @@ import React, {Component} from 'react';
 import Dropzone from 'react-dropzone';
 import uploadIcon from '../assets/cloud-upload.svg';
 import styled from '@emotion/styled';
-import {connect} from 'react-redux';
 import {v4 as uuidv4} from 'uuid';
 import {colors} from '../util/variables.js';
-import {initImage} from '../redux/product/product.actions';
 import {LabelComponent, FormComponent} from './Common';
 import {info} from '../util/env.js';
+import {dict} from '../util/variables';
 
 const DropzoneComponent = styled('div')({
     height: 130,
@@ -107,8 +106,6 @@ class DropZone extends Component {
     render() {
         const {label, minSize, maxSize, multiple} = this.props;
         const {files, show} = this.state;
-        
-        console.log("STATE: ", this.state)
 
         return (
             <FormComponent>
@@ -143,7 +140,7 @@ class DropZone extends Component {
                                     { acceptedFiles.length === 0 && isDragReject && 
                                         <>
                                             <Icon alt="upload" src={uploadIcon}/>
-                                            <div>This filetype is not accepted.</div>
+                                            <div>{dict.filetypeNotAccepeted}</div>
                                         </>
                                     }
 
@@ -158,7 +155,7 @@ class DropZone extends Component {
                                     })}
                                 </DropzoneComponent>
                                 { acceptedFiles.length > 0 && show && 
-                                    <Clear onClick={this.onClearImage}>Remove image</Clear> 
+                                    <Clear onClick={this.onClearImage}>{dict.removeImage}</Clear> 
                                 }
                             </>
                         )}
@@ -169,8 +166,4 @@ class DropZone extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    initImage: image => dispatch(initImage(image))
-})
-
-export default connect(null, mapDispatchToProps)(DropZone);
+export default DropZone;

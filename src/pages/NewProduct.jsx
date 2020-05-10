@@ -10,253 +10,14 @@ import Radio from '../components/forms/RadioButton';
 import Button from '../components/Button';
 import {dict} from '../util/variables';
 import {ErrorContainer, MainContainer, FlexCentered} from '../components/Common';
+import {initAddProduct, initPopulateFields, initImage, initImageUploadProperties, initProductValidation, initClearNewProduct} from '../redux/new-product/new-product.actions';
 import {initCategories} from '../redux/category/category.actions';
-import {initAddProduct, initImage} from '../redux/product/product.actions';
 import {initStores} from '../redux/store/store.actions';
 import {initProducers} from '../redux/producer/producer.actions';
 import Spinner from '../components/Spinner';
 import Dropzone from '../components/Dropzone';
 
-const getInitialState = () => {
-    return ({
-        formIsValid: false,
-        imageUrl: "",
-        file: "",
-        productForm: {
-            sku: {
-                label: 'Product SKU',
-                params: {
-                    placeholder: 'Product SKU',
-                    type: 'input'
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    minLength: 5,
-                    maxLength: 7,
-                    isRequired: true
-                },
-                validationMessage: 'SKU should have at least 5 letters'
-            },
-            goldWeight: {
-                label: 'Gold weight',
-                params: {
-                    placeholder: 'Gold weight',
-                    type: 'input'
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    minLength: 1,
-                    maxLength: 5,
-                    isRequired: true,
-                    isNumeric: true,
-                },
-                validationMessage: 'This field is required and it should have 1-5 letters'
-            },
-            silverWeight: {
-                label: 'Silver weight',
-                params: {
-                    placeholder: 'Silver weight',
-                    type: 'input'
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    minLength: 1,
-                    maxLength: 5,
-                    isRequired: true,
-                    isNumeric: true
-                }
-            },
-            otherStoneWeight: {
-                label: 'Other Stone weight',
-                params: {
-                    placeholder: 'Other Stone weight',
-                    type: 'input'
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    minLength: 1,
-                    maxLength: 5,
-                    isRequired: true,
-                    isNumeric: true
-                }
-            },
-            diamondWeight: {
-                label: 'Diamond weight',
-                params: {
-                    placeholder: 'Diamond weight',
-                    type: 'input'
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    minLength: 1,
-                    maxLength: 5,
-                    isRequired: true,
-                    isNumeric: true
-                }
-            },
-            quantity: {
-                label: 'Quantity',
-                params: {
-                    placeholder: 'Quantity',
-                    type: 'input'
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    minLength: 1,
-                    maxLength: 5,
-                    isRequired: true,
-                    isNumeric: true
-                }
-            },
-            otherStone: {
-                label: 'Other stones',
-                params: {
-                    placeholder: 'Other stones',
-                    type: 'input'
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    minLength: 5,
-                    maxLength: 5,
-                    isRequired: true
-                }
-            },
-            karats: {
-                label: 'Karats',
-                params: {
-                    placeholder: 'Karats',
-                    type: 'input'
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    minLength: 1,
-                    maxLength: 5,
-                    isRequired: true,
-                    isNumeric: true
-                }
-            },
-            description: {
-                label: 'Product description',
-                params: {
-                    placeholder: 'Product description',
-                    rows: 2,
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    isRequired: true
-                }
-            },
-            price: {
-                label: 'Product price',
-                params: {
-                    placeholder: 'Product price',
-                    type: 'input'
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    isRequired: true
-                }
-            },
-            costEu: {
-                label: 'Product price EU',
-                params: {
-                    placeholder: 'Product price EU',
-                    type: 'input'
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    isRequired: true
-                }
-            },
-            costUsd: {
-                label: 'Product price USD',
-                params: {
-                    placeholder: 'Product price USD',
-                    type: 'input',
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    isRequired: true
-                }
-            },
-            categoryId: {
-                label: 'Product Category',
-                value: '',
-                valid: false,   
-                touched: false,           
-                options: [],
-                validationRules: {
-                    isRequired: true
-                }
-            },
-            producerId: {
-                label: 'Producer Category',
-                value: '',
-                valid: false,   
-                touched: false,           
-                options: [],
-                validationRules: {
-                    isRequired: true
-                }
-            },
-            address: {
-                label: 'Shop availability',
-                value: '',
-                valid: false,   
-                touched: false,          
-                options: [],
-                validationRules: {
-                    isRequired: true
-                }
-            },
-            color: {
-                label: 'Product color',
-                value: '',
-                valid: false,
-                touched: false,
-                params: {
-                    type: 'radio'
-                },
-                options: [
-                    { value: 'Yellow',  isChecked: false},
-                    { value: 'White',   isChecked: false},
-                    { value: 'Rose',    isChecked: false},
-                    { value: 'Black',   isChecked: false}
-                ],
-                validationRules: {
-                   
-                }
-            }
-        }
-    });
-}
-
 class NewProduct extends Component {
-    state = getInitialState();
 
     componentDidMount () {
         const {initCategories, initStores, initProducers} = this.props;
@@ -268,7 +29,7 @@ class NewProduct extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const {categories, stores, producers} = this.props;
+        const {categories, stores, producers, initPopulateFields} = this.props;
 
         //if(prevProps.categories === categories) return;
         if(prevProps.stores === stores) return;
@@ -278,30 +39,13 @@ class NewProduct extends Component {
         let updatedProducers = producers.map(({ id: value, value: label, ...rest }) => ({ value, label, ...rest })); 
         let updatedCategories = categories.map(({ id: value, value: label }) => ({ value, label })); 
 
-        this.setState({
-            ...this.state,
-            productForm: {
-                ...this.state.productForm,
-                categoryId: {
-                    ...this.state.productForm.categoryId,
-                    options: [
-                        ...updatedCategories
-                    ]
-                },
-                address: {
-                    ...this.state.productForm.address,
-                    options: [
-                        ...updatedStores
-                    ]
-                },
-                producerId: {
-                    ...this.state.productForm.producerId,
-                    options: [
-                        ...updatedProducers
-                    ]
-                }
-            }
-        });
+        const payload = {
+            updatedCategories,
+            updatedStores,
+            updatedProducers
+        }
+
+        initPopulateFields(payload)
     }
 
     /* Helper function to send info to changeHandler for react-select library */
@@ -315,7 +59,7 @@ class NewProduct extends Component {
     }
 
     changeHandler = event => {
-        const {productForm} = this.state;
+        const {productForm, initProductValidation} = this.props;
 
         const name = event.target.name;
 
@@ -337,7 +81,12 @@ class NewProduct extends Component {
             formIsValid = updatedProductForm[inputIdentifier].valid && formIsValid;
         }
 
-        this.setState({productForm: updatedProductForm, formIsValid: formIsValid});
+        const payload = {
+            updatedProductForm,
+            formIsValid
+        }
+
+        initProductValidation(payload)
     }
 
     redirectBack = () => {
@@ -347,24 +96,26 @@ class NewProduct extends Component {
 
     handleClearForm = event => {
         event.preventDefault();
-        this.setState(getInitialState());
+        this.props.initClearNewProduct();
     }
 
     /* callback to get fileUrl and file from DropZone component */
     shouldUpload = (fileUrl, file) => {
-        this.setState({
-            imageUrl: fileUrl,
+        const {initImageUploadProperties} = this.props;
+
+        const payload = {
+            fileUrl,
             file
-        })
+        }
+
+        initImageUploadProperties(payload)
     }
     
     formSubmitHandler = event => {
         event.preventDefault();
-        const {initAddProduct, initImage} = this.props;
-        const {imageUrl, file} = this.state;
+        const {initAddProduct, initImage, imageUrl, file, productForm} = this.props;
 
         const formData = {};
-        const {productForm} = this.state;
         for (let formElementId in productForm) {
             formData[formElementId] = productForm[formElementId].value
         }
@@ -382,9 +133,8 @@ class NewProduct extends Component {
 
     render () {
         let redirect = null;
-        const {submitted, error, isFetching} = this.props;
-        const {formIsValid} = this.state;
-        const {sku, description, price, quantity, costEu, costUsd, karats, categoryId, producerId, address, color, goldWeight, silverWeight, otherStoneWeight, diamondWeight, otherStone} = this.state.productForm;
+        const {submitted, error, isFetching, formIsValid} = this.props;
+        const {sku, description, price, quantity, costEu, costUsd, karats, categoryId, producerId, address, color, goldWeight, silverWeight, otherStoneWeight, diamondWeight, otherStone} = this.props.productForm;
 
         if (submitted) redirect = <Redirect to="/"/>;
 
@@ -510,20 +260,28 @@ class NewProduct extends Component {
 }
 
 const mapStateToProps = state => ({
-    submitted: state.product.submitted,
-    error: state.product.error,
-    stores: state.store.stores,
+    submitted: state.newProduct.submitted,
+    error: state.newProduct.error,
+    isFetching: state.newProduct.isFetching,
+    productForm: state.newProduct.productForm,
+    formIsValid: state.newProduct.formIsValid,
+    file: state.newProduct.file,
+    imageUrl: state.newProduct.imageUrl,
     categories: state.category.categories,
-    producers: state.producer.producers,
-    isFetching: state.product.isFetching
+    stores: state.store.stores,
+    producers: state.producer.producers
 })
   
 const mapDispatchToProps = dispatch => ({
     initAddProduct: product => dispatch(initAddProduct(product)),
     initCategories: () => dispatch(initCategories()),
-    initProducers: () => dispatch(initProducers()),
     initStores: () => dispatch(initStores()),
-    initImage: image => dispatch(initImage(image))
+    initProducers: () => dispatch(initProducers()),
+    initProductValidation: product => dispatch(initProductValidation(product)),
+    initPopulateFields: lists => dispatch(initPopulateFields(lists)),
+    initImage: image => dispatch(initImage(image)),
+    initImageUploadProperties: imageProps => dispatch(initImageUploadProperties(imageProps)),
+    initClearNewProduct: () => dispatch(initClearNewProduct())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NewProduct));

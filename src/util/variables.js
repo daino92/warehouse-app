@@ -86,7 +86,9 @@ const dict = {
     categoriesNotFound: 'Didn\'t find any categories',
     productsNotFound: 'Didn\'t find any products',
     storesNotFound: 'Didn\'t find any stores',
-    productNotExist: 'Sorry, the product does not exist.'
+    productNotExist: 'Sorry, the product does not exist.',
+    filetypeNotAccepeted: 'This filetype is not accepted.',
+    removeImage: 'Remove image'
 }
 
 export {colors, dict};
