@@ -9,9 +9,9 @@ const ProductContainer = styled('div')({
     flexDirection: "column",
     justifyContent: "space-between",
     position: "relative",
-    margin: "10px",
+    margin: 10,
     padding: "1em",
-    width: "280px",
+    width: 280,
     textAlign: "center",
     cursor: "pointer",
 	// borderRadius: ".5em",
@@ -51,7 +51,7 @@ props => ({
 }));
 
 const ImageContainer = styled('div')({
-    height: "150px",
+    height: 150,
     backgroundSize: "contain",
 	backgroundRepeat: "no-repeat",
 	backgroundPosition: "center",
@@ -60,7 +60,8 @@ const ImageContainer = styled('div')({
 const FlexContainer = styled('div')({
     display: "flex",
     flexFlow: "row wrap",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    marginTop: ".3em"
 });
 
 const ProductIdContainer = styled('div')({
@@ -79,13 +80,22 @@ const StonesInformation = styled('div')({
     }
 });
 
+const PriceQuantityInfo = styled('div')({
+    display: "flex",
+	flexDirection: "column",
+	justifyContent: "center",
+	alignItems: "flex-end",
+
+    "span": {
+        fontWeight: 700
+    }
+});
+
 const Line = styled('div')({
 	position: "absolute",
-    // width: "25.5em",
-    width: "24.5em",
+    width: "25em",
 	borderBottom: `2px solid ${colors.red}`,
-	//transform: "translateY(134px) translateX(-81px) rotate(133deg)",
-    transform: "translateY(125px) translateX(-73px) rotate(135deg)"
+    transform: "translateY(128px) translateX(-77px) rotate(134deg)"
 });
 
 const Product = ({clicked, imageUrl, sku, price, quantity, goldWeight, diamondWeight, karats}) => {
@@ -98,8 +108,10 @@ const Product = ({clicked, imageUrl, sku, price, quantity, goldWeight, diamondWe
             <ImageContainer alt={sku} style={{backgroundImage: `url(${imageURL})`}}/>
             <FlexContainer>
             <ProductIdContainer>{sku}</ProductIdContainer>
-                <div>{price} €</div>
-                {/* <div><span>Quantity:</span> {zeroQuantity ? <>{dict.noStock}</> : quantity}</div> */}
+                <PriceQuantityInfo>
+                    <div><span>Price:</span> {price} €</div>
+                    <div><span>Quantity:</span> {zeroQuantity ? <>{dict.noStock}</> : quantity}</div>
+                </PriceQuantityInfo>
             </FlexContainer>
             <FlexContainer>
                 <StonesInformation><span>{dict.goldWeight}</span> {goldWeight}</StonesInformation>

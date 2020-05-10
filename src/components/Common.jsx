@@ -10,7 +10,7 @@ const LabelComponent = styled('label')({
 });
 
 const FormComponent = styled('div')({
-    padding: "10px"
+    padding: 10
 },
 mq({
     width: ["100%", "50%"]
@@ -55,7 +55,7 @@ const ValidationComponent = styled('div')({
 const PaginationWrapper = styled('div')({
     display: "flex",
     justifyContent: "center",
-    maxWidth: "1100px",
+    maxWidth: 1100,
     margin: "0 auto 1em",
 
     "> div": {
@@ -73,8 +73,8 @@ const PaginationWrapper = styled('div')({
 
         "a": {
             display: "inline-block",
-            width: "35px",
-            height: "35px",
+            width: 35,
+            height: 35,
             textAlign: "center"
         },
 
@@ -98,7 +98,11 @@ mq({
 
     "> div": {
         padding: ["0 10px 10px", "0 .5em .5em"],
-        margin: ["0 auto", "initial"]
+        margin: ["0 auto", "initial"],
+        
+        "&:first-of-type": {
+            maxWidth: ["100%", 120]
+        }
     },
 
     "ul": {
