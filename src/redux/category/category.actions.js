@@ -76,6 +76,16 @@ export const categoryUpdate = categoryId => ({
     payload: categoryId 
 })
 
+export const initEditCategory = category => ({
+    type: categoryActionTypes.EDIT_CATEGORY,
+    payload: category
+})
+
+export const initCategoryValidation = category => ({
+    type: categoryActionTypes.VALIDATION_HANDLER,
+    payload: category
+})
+
 export const initCategories = () => {
     return dispatch => {
         dispatch(fetchCategoriesStart());
@@ -96,7 +106,6 @@ export const initSingleCategory = id => {
         axiosInstance.get(`/category/${id}`)
             .then(response => {
                 const category = response.data;
-                console.log("Data of individual category: ", response);
                 dispatch(fetchSingleCategorySuccess(category))
             })
             .catch(error => {
@@ -110,7 +119,6 @@ export const initDeleteCategory = id => {
         dispatch(deleteCategoryStart());
         axiosInstance.delete(`/category/${id}`)
             .then(response => {
-                console.log("Category deleted successfully: ", response);
                 dispatch(deleteCategorySuccess(response))
             }).catch(error => {
                 dispatch(deleteCategoryFailed(error))
@@ -123,7 +131,6 @@ export const initAddCategory = category => {
         dispatch(addCategoryStart());
         axiosInstance.post('/category/create/', category)
             .then(response => {
-                console.log("Category added successfully: " , response);
                 dispatch(addCategorySuccess(response))
             }).catch(error => {
                 dispatch(addCategoryFailed(error))
@@ -136,7 +143,6 @@ export const initUpdateCategory = category => {
         dispatch(updateCategoryStart());
         axiosInstance.patch('/category/update/', category)
             .then(response => {
-                console.log("Category updated successfully: " , response);
                 dispatch(updateCategorySuccess(response))
             }).catch(error => {
                 dispatch(updateCategoryFailed(error))

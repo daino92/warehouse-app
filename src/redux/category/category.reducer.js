@@ -15,6 +15,21 @@ const initialState = {
     submitted: false,
     loadedCategory: null,
     error: false,
+    formIsValid: false,
+    editable: false,
+    categoryForm: {
+        value: {
+            params: {
+                type: 'input'
+            },
+            value: '',
+            valid: false,
+            touched: false,
+            validationRules: {
+                isRequired: true
+            }
+        }
+    }
 }
 
 const categoryReducer = (state = initialState, action) => {
@@ -137,7 +152,27 @@ const categoryReducer = (state = initialState, action) => {
                     value: action.payload.value,
                     displayValue: action.payload.label
                 }        
-            }   
+            }  
+
+        case categoryActionTypes.EDIT_CATEGORY:
+            return {
+                ...state,
+                categoryForm: {
+                    ...state.categoryForm,
+                    value: {
+                        ...state.categoryForm.value,
+                        value: action.payload
+                    }
+                },
+                editable: !state.editable
+            }
+
+        case categoryActionTypes.VALIDATION_HANDLER:
+            return {
+                ...state,
+                formIsValid: action.payload.formIsValid,
+                categoryForm: action.payload.updatedCategoryForm
+            }
         default:
             return state;
     }

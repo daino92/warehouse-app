@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import capitalize from 'lodash/capitalize';
 import {Modal} from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
-import {initSingleCategory, initDeleteCategory, initUpdateCategory} from '../redux/category/category.actions.js';
+import {initSingleCategory, initDeleteCategory, initUpdateCategory, initEditCategory, initCategoryValidation} from '../redux/category/category.actions.js';
 import { dict} from '../util/variables';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
@@ -15,9 +15,9 @@ import {updateObject} from '../util/utilities';
 import {validations} from '../util/validations';
 import {MainContainer, FlexCentered, ModalWarning} from '../components/Common';
 
-const CategoryTitle = styled('h1')`
-    line-height: 1.2;
-`;
+const CategoryTitle = styled('h1')({
+    lineHeight: 1.2
+});
 
 const CategoryName = styled('div')({
     padding: "1em",
@@ -26,23 +26,8 @@ const CategoryName = styled('div')({
 
 class CategoryDetails extends Component {
     state = {
-        formIsValid: false,
-        categoryForm: {
-            value: {
-                params: {
-                    type: 'input'
-                },
-                value: '',
-                valid: false,
-                touched: false,
-                validationRules: {
-                    isRequired: true
-                }
-            }
-        },
         snackBarOpen: false,
         snackBarMessage: '',
-        editable: false,
         openModal: false
     }
 
@@ -121,18 +106,8 @@ class CategoryDetails extends Component {
     }
 
     editCategoryHandler = () => {
-        const {loadedCategory} = this.props
-        this.setState(prevState => ({
-            ...this.state,
-            categoryForm: {
-                ...this.state.categoryForm,
-                value: {
-                    ...this.state.categoryForm.value,
-                    value: loadedCategory.value
-                }
-            },
-            editable: !prevState.editable
-        }));
+        const {loadedCategory, initEditCategory} = this.props
+        initEditCategory(loadedCategory.value)
     }
 
     deleteCategoryHandler = () => {
@@ -141,7 +116,7 @@ class CategoryDetails extends Component {
     }
 
     changeHandler = event => {
-        const {categoryForm} = this.state;
+        const {categoryForm, initCategoryValidation} = this.props;
         const name = event.target.name;
         const value = event.target.value;
 
@@ -159,15 +134,20 @@ class CategoryDetails extends Component {
         for (let inputIdentifier in updatedCategoryForm) {
             formIsValid = updatedCategoryForm[inputIdentifier].valid && formIsValid;
         }
-  
-        this.setState({categoryForm: updatedCategoryForm, formIsValid: formIsValid});
+
+        const payload = {
+            updatedCategoryForm,
+            formIsValid
+        }
+
+        initCategoryValidation(payload)
     }
 
     formSubmitHandler = event => {
         event.preventDefault();
 
         const {initUpdateCategory, match} = this.props;
-        const {categoryForm} = this.state;
+        const {categoryForm} = this.props;
 
         const formData = {};
         for (let formElementId in categoryForm) {
@@ -176,7 +156,7 @@ class CategoryDetails extends Component {
 
         /* Insert categoryId to the payload */
         formData.id = match.params.id;
-     
+
         initUpdateCategory(formData)
     }
 
@@ -186,9 +166,9 @@ class CategoryDetails extends Component {
     }
 
     render () {
-        const {match, loadedCategory, response} = this.props;
-        const {snackBarOpen, snackBarMessage, editable, formIsValid, openModal} = this.state;
-        const {params, value, touched, valid} = this.state.categoryForm.value;
+        const {match, loadedCategory, response, formIsValid, editable} = this.props;
+        const {snackBarOpen, snackBarMessage, openModal} = this.state;
+        const {params, value, touched, valid} = this.props.categoryForm.value;
 
         let category;
 
@@ -203,17 +183,19 @@ class CategoryDetails extends Component {
                     <Modal center open={openModal} onClose={this.onCloseModal}>
                         <ModalWarning>{dict.categoryDeletionMessage}</ModalWarning>   
                         <FlexCentered>
-                            <Button btnType="danger"    disabled={false}  onClick={() => {
+                            <Button btnType="danger" disabled={false} onClick={() => {
                                     this.onCloseModal()
                                     this.deleteCategoryHandler()}}>{dict.yes}</Button>
-                            <Button btnType="edit"      disabled={false} onClick={this.onCloseModal}>{dict.no}</Button>
+                            <Button btnType="edit"   disabled={false} onClick={this.onCloseModal}>{dict.no}</Button>
                         </FlexCentered> 
                     </Modal>
                     <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
                     <CategoryTitle>{dict.category}</CategoryTitle>
                     { editable ? 
                         <FlexCentered>
-                            <TextInput name="value" type={params.type}
+                            <TextInput 
+                                name="value" 
+                                type={params.type}
                                 placeholder={params.placeholder} 
                                 value={value} valid={valid} 
                                 touched={touched}
@@ -222,12 +204,12 @@ class CategoryDetails extends Component {
                         <CategoryName>{capitalizedValue}</CategoryName>
                          }
                     <FlexCentered>
-                        <Button btnType="edit"      disabled={false} onClick={this.editCategoryHandler}>{dict.edit}</Button>
+                        <Button btnType="edit"    disabled={false} onClick={this.editCategoryHandler}>{dict.edit}</Button>
                     { editable ? 
-                        <Button btnType="success"   disabled={!formIsValid} onClick={this.formSubmitHandler} >{dict.submit}</Button> : null }
+                        <Button btnType="success" disabled={!formIsValid} onClick={this.formSubmitHandler}>{dict.submit}</Button> : null }
                     { !editable ?   
-                        <Button btnType="danger"    disabled={false} onClick={this.onOpenModal}>{dict.delete}</Button> : null }
-                        <Button btnType="success"   disabled={false} onClick={this.redirectBack}>{dict.back}</Button>
+                        <Button btnType="danger"  disabled={false} onClick={this.onOpenModal}>{dict.delete}</Button> : null }
+                        <Button btnType="success" disabled={false} onClick={this.redirectBack}>{dict.back}</Button>
                     </FlexCentered>
                 </MainContainer>
             );
@@ -239,13 +221,18 @@ class CategoryDetails extends Component {
 const mapStateToProps = state => ({
     loadedCategory: state.category.loadedCategory,
     response: state.category.response,
-    updated: state.category.updated
+    updated: state.category.updated,
+    editable: state.category.editable,
+    formIsValid: state.category.formIsValid,
+    categoryForm: state.category.categoryForm
 })
   
 const mapDispatchToProps = dispatch => ({
     initSingleCategory: id => dispatch(initSingleCategory(id)),
     initDeleteCategory: id => dispatch(initDeleteCategory(id)),
     initUpdateCategory: id => dispatch(initUpdateCategory(id)),
+    initEditCategory: category => dispatch(initEditCategory(category)),
+    initCategoryValidation: category => dispatch(initCategoryValidation(category)),
     onUnload: () => dispatch({type: 'PAGE_UNLOADED'})
 })
 
