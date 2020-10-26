@@ -22,6 +22,24 @@ const validations = (value, rules) => {
             case 'isAlphaNumeric':
                 isValid = isValid && isAlphaNumeric(value)
                 break
+            case 'isCost':
+                isValid = isValid && isCost(value)
+                break
+            case 'isProduct':
+                isValid = isValid && isProduct(value)
+                break
+            case 'isPrice':
+                isValid = isValid && isPrice(value)
+                break
+            case 'isWeight':
+                isValid = isValid && isWeight(value)
+                break
+            case 'isOtherStone':
+                isValid = isValid && isOtherStone(value)
+                break
+            case 'isKarats':
+                isValid = isValid && isKarats(value)
+                break
             default: 
                 isValid = true
         } 
@@ -113,6 +131,78 @@ const isNumeric = value => {
 
 const isAlphaNumeric = value => {
     const pattern = /^[a-zA-Z0-9]*$/;
+    return pattern.test(String(value).toLowerCase());
+}
+
+/**
+ * cost EU/cost US validation
+ * 
+ * @param value
+ * @return 
+ */
+
+const isCost = value => {
+    const pattern = /^(\d{1,5}\.)\d+$/;
+    return pattern.test(String(value).toLowerCase());
+}
+
+/**
+ * Product validation
+ * 
+ * @param value
+ * @return 
+ */
+
+const isProduct = value => {
+    const pattern = /^[a-zA-Z0-9]{5,5}$/;
+    return pattern.test(String(value).toLowerCase());
+}
+
+/**
+ * Price validation
+ * 
+ * @param value
+ * @return 
+ */
+
+const isPrice = value => {
+    const pattern = /^(\d{1,6}\.)\d+$/;
+    return pattern.test(String(value).toLowerCase());
+}
+
+/**
+ * goldWeight validation
+ * 
+ * @param value
+ * @return 
+ */
+
+const isWeight = value => {
+    const pattern = /^(\d{1,2}\.)\d+$/;
+    return pattern.test(String(value).toLowerCase());
+}
+
+/**
+ * otherStone validation
+ * 
+ * @param value
+ * @return 
+ */
+
+const isOtherStone = value => {
+    const pattern = /^[a-zA-Z0-9, ?]{0,500}$/;
+    return pattern.test(String(value).toLowerCase());
+}
+
+/**
+ * karats validation
+ * 
+ * @param value
+ * @return 
+ */
+
+const isKarats = value => {
+    const pattern = /^(9|14|18|24)$/;
     return pattern.test(String(value).toLowerCase());
 }
   
