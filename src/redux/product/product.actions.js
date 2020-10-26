@@ -95,6 +95,21 @@ export const pageUpdate = page => ({
     payload: page 
 })
 
+export const setSku = sku => ({
+    type: productActionTypes.SET_SKU,
+    payload: sku 
+})
+
+export const searchWithSku = sku => ({
+    type: productActionTypes.SKU_SEARCH,
+    payload: sku 
+})
+
+export const clearSkuSearch = sku => ({
+    type: productActionTypes.CLEAR_SKU_SEARCH,
+    payload: sku 
+})
+
 export const initProducts = (address, page, limit, category, producerId) => {
     return dispatch => {
         dispatch(fetchProductsStart());

@@ -31,6 +31,10 @@ const productActionTypes = {
 
     LIMIT_UPDATE: 'LIMIT_UPDATE',
     PAGE_UPDATE: 'PAGE_UPDATE',
+
+    SET_SKU: 'SET_SKU',
+    SKU_SEARCH: 'SKU_SEARCH',
+    CLEAR_SKU_SEARCH: 'CLEAR_SKU_SEARCH'
 }
 
 export default productActionTypes;

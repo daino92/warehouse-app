@@ -84,6 +84,7 @@ const productReducer = (state = initialState, action) => {
                 error: true,
                 errorMessage: action.payload
             }
+
         case productActionTypes.FETCH_HISTORY_START:
             return {
                 ...state,
@@ -130,6 +131,30 @@ const productReducer = (state = initialState, action) => {
                 ...state,
                 page: action.payload
             };
+        case productActionTypes.SET_SKU:
+            return {
+                ...state,
+                skuSearch: {
+                    ...state.skuSearch,
+                    value: action.payload
+                }
+            }
+        case productActionTypes.SKU_SEARCH:
+            return {
+                ...state,
+                disableFilters: true,
+                searchBySKU: true
+            }
+        case productActionTypes.CLEAR_SKU_SEARCH:
+            return {
+                ...state,
+                disableFilters: false,
+                searchBySKU: false,
+                skuSearch: {
+                    ...state.skuSearch,
+                    value: ""
+                }
+            }
         default:
             return state;
     }
