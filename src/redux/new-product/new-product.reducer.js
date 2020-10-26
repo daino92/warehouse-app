@@ -6,7 +6,9 @@ const initialState = {
     file: "",
     isFetching: false,
     response: null,
+    updated: null,
     error: false,
+    editable: false,
     submitted: false,
     productForm: {
         sku: {
@@ -21,6 +23,7 @@ const initialState = {
             validationRules: {
                 minLength: 5,
                 maxLength: 7,
+                isProduct: true,
                 isRequired: true
             },
             validationMessage: 'SKU should have at least 5 letters'
@@ -35,28 +38,12 @@ const initialState = {
             valid: false,
             touched: false,
             validationRules: {
-                minLength: 1,
+                minLength: 3,
                 maxLength: 5,
-                isRequired: true,
-                isNumeric: true,
+                isWeight: true,
+                isRequired: true
             },
-            validationMessage: 'This field is required and it should have 1-5 letters'
-        },
-        silverWeight: {
-            label: 'Silver weight',
-            params: {
-                placeholder: 'Silver weight',
-                type: 'input'
-            },
-            value: '',
-            valid: false,
-            touched: false,
-            validationRules: {
-                minLength: 1,
-                maxLength: 5,
-                isRequired: true,
-                isNumeric: true
-            }
+            validationMessage: 'Before dot the max range of digits should be 2. Also the dot is mandatory'
         },
         otherStoneWeight: {
             label: 'Other Stone weight',
@@ -68,11 +55,12 @@ const initialState = {
             valid: false,
             touched: false,
             validationRules: {
-                minLength: 1,
+                minLength: 3,
                 maxLength: 5,
                 isRequired: true,
-                isNumeric: true
-            }
+                isWeight: true
+            },
+            validationMessage: 'Before dot the max range of digits should be 2. Also the dot is mandatory'
         },
         diamondWeight: {
             label: 'Diamond weight',
@@ -84,11 +72,12 @@ const initialState = {
             valid: false,
             touched: false,
             validationRules: {
-                minLength: 1,
+                minLength: 3,
                 maxLength: 5,
                 isRequired: true,
-                isNumeric: true
-            }
+                isWeight: true
+            },
+            validationMessage: 'Before dot the max range of digits should be 2. Also the dot is mandatory'
         },
         quantity: {
             label: 'Quantity',
@@ -101,23 +90,25 @@ const initialState = {
             touched: false,
             validationRules: {
                 minLength: 1,
-                maxLength: 5,
+                maxLength: 10,
                 isRequired: true,
                 isNumeric: true
-            }
+            },
+            validationMessage: 'Before dot the max range of digits should be 2. Also the dot is mandatory'
         },
         otherStone: {
             label: 'Other stones',
             params: {
                 placeholder: 'Other stones',
-                type: 'input'
+                rows: 2,
             },
             value: '',
             valid: false,
             touched: false,
             validationRules: {
-                minLength: 5,
-                maxLength: 5,
+                minLength: 1,
+                maxLength: 500,
+                isOtherStone: true,
                 isRequired: true
             }
         },
@@ -131,11 +122,10 @@ const initialState = {
             valid: false,
             touched: false,
             validationRules: {
-                minLength: 1,
-                maxLength: 5,
                 isRequired: true,
-                isNumeric: true
-            }
+                isKarats: true
+            },
+            validationMessage: 'The value of karats is wrong. Choose one of the existing'
         },
         description: {
             label: 'Product description',
@@ -147,7 +137,9 @@ const initialState = {
             valid: false,
             touched: false,
             validationRules: {
-                isRequired: true
+                isRequired: true,
+                minLength: 1,
+                maxLength: 500
             }
         },
         price: {
@@ -160,8 +152,12 @@ const initialState = {
             valid: false,
             touched: false,
             validationRules: {
-                isRequired: true
-            }
+                isRequired: true,
+                isPrice: true,
+                minLength: 3,
+                maxLength: 9
+            },
+            validationMessage: 'The correct value could be something like 99999.99 (max 6 digits before dot and min 1)'
         },
         costEu: {
             label: 'Product price EU',
@@ -173,8 +169,12 @@ const initialState = {
             valid: false,
             touched: false,
             validationRules: {
-                isRequired: true
-            }
+                isRequired: true,
+                isCost: true,
+                minLength: 3,
+                maxLength: 8
+            },
+            validationMessage: 'The correct value could be something like 99999.99 (max 5 digits before dot and min 1)'
         },
         costUsd: {
             label: 'Product price USD',
@@ -186,8 +186,12 @@ const initialState = {
             valid: false,
             touched: false,
             validationRules: {
-                isRequired: true
-            }
+                isRequired: true,
+                isCost: true,
+                minLength: 3,
+                maxLength: 8
+            },
+            validationMessage: 'The correct value could be something like 99999.99 (max 5 digits before dot and min 1)'
         },
         categoryId: {
             label: 'Product Category',
@@ -236,6 +240,18 @@ const initialState = {
             validationRules: {
                 
             }
+        },
+        imageUrl: {
+            label: 'Upload Image',
+            value: '',
+            valid: true,
+            touched: true,
+            maxFiles: 1,
+            minSize: 0,
+            maxSize: 1048576,
+            validationRules: {
+                isRequired: false
+            }
         }
     }
 }
@@ -262,6 +278,23 @@ const newProductReducer = (state = initialState, action) => {
                 isFetching: false,
                 response: action.payload
             }
+        case newProductActionTypes.UPDATE_PRODUCT_START:
+            return {
+                ...state,
+                submitted: false
+            }
+        case newProductActionTypes.UPDATE_PRODUCT_SUCCESS:
+            return {
+                ...state,
+                submitted: true,
+                updated: action.payload
+            }
+        case newProductActionTypes.UPDATE_PRODUCT_FAILED:
+            return {
+                ...state,
+                error: true,
+                submitted: false
+            }
         case newProductActionTypes.IMAGE_UPLOAD_START:
             return {
                 ...state
@@ -278,11 +311,26 @@ const newProductReducer = (state = initialState, action) => {
                 response: action.payload
             }
         case newProductActionTypes.IMAGE_UPLOAD_PROPERTIES:
-            return {
+        console.log("STATE IMAGE", state)
+            let tmp = {
                 ...state,
-                imageUrl: action.payload.fileUrl,
-                file: action.payload.file
+                //imageUrl: action.payload.fileUrl,
+                imageUrl: {
+                    ...state.imageUrl,
+                    value: action.payload.fileUrl
+                },
+                productForm: {
+                    ...state.productForm,
+                    imageUrl: {
+                        ...state.productForm.imageUrl,
+                        value: action.payload.fileUrl
+                    }
+                },
+                file: action.payload.file,
+                // formIsValid: true
             }
+            console.log("tmp", tmp)
+            return tmp
         case newProductActionTypes.POPULATE_SELECT_FIELDS:
             return {
                 ...state,
@@ -309,15 +357,243 @@ const newProductReducer = (state = initialState, action) => {
                 }
             } 
         case newProductActionTypes.VALIDATION_HANDLER:
+        console.log("VALIDATION_HANDLER", action.payload.updatedProductForm)
+        console.log("STATE", state)
             return {
                 ...state,
                 formIsValid: action.payload.formIsValid,
                 productForm: action.payload.updatedProductForm
             } 
+        case newProductActionTypes.EDIT_PRODUCT:
+        console.log("EDIT_PRODUCT",action.payload)
+            return {
+                ...state,
+                productForm: {
+                    ...state.productForm,
+                    sku: {
+                        ...state.productForm.sku,
+                        value: action.payload.sku,
+                        valid: true,
+                        touched: true
+                    },
+                    goldWeight: {
+                        ...state.productForm.goldWeight,
+                        value: action.payload.goldWeight,
+                        valid: true,
+                        touched: true
+                    },
+                    silverWeight: {
+                        ...state.productForm.silverWeight,
+                        value: action.payload.silverWeight,
+                        valid: true,
+                        touched: true
+                    },
+                    otherStoneWeight: {
+                        ...state.productForm.otherStoneWeight,
+                        value: action.payload.otherStoneWeight,
+                        valid: true,
+                        touched: true
+                    },
+                    diamondWeight: {
+                        ...state.productForm.diamondWeight,
+                        value: action.payload.diamondWeight,
+                        valid: true,
+                        touched: true
+                    },
+                    quantity: {
+                        ...state.productForm.quantity,
+                        value: action.payload.quantity,
+                        valid: true,
+                        touched: true
+                    },
+                    otherStone: {
+                        ...state.productForm.otherStone,
+                        value: action.payload.otherStone,
+                        valid: true,
+                        touched: true
+                    },
+                    karats: {
+                        ...state.productForm.karats,
+                        value: action.payload.karats,
+                        valid: true,
+                        touched: true
+                    },
+                    description: {
+                        ...state.productForm.description,
+                        value: action.payload.description,
+                        valid: true,
+                        touched: true
+                    },
+                    price: {
+                        ...state.productForm.price,
+                        value: action.payload.price,
+                        valid: true,
+                        touched: true
+                    },
+                    costEu: {
+                        ...state.productForm.costEu,
+                        value: action.payload.costEu,
+                        valid: true,
+                        touched: true
+                    },
+                    costUsd: {
+                        ...state.productForm.costUsd,
+                        value: action.payload.costUsd,
+                        valid: true,
+                        touched: true
+                    },
+                    categoryId: {
+                        ...state.productForm.categoryId,
+                        value: action.payload.categoryId,
+                        valid: true,
+                        touched: true
+                    },
+                    producerId: {
+                        ...state.productForm.producerId,
+                        value: action.payload.producerId,
+                        valid: true,
+                        touched: true
+                    },
+                    address: {
+                        ...state.productForm.address,
+                        value: action.payload.address,
+                        valid: true,
+                        touched: true
+                    },
+                    color: {
+                        ...state.productForm.color,
+                        value: action.payload.color,
+                        valid: true,
+                        touched: true
+                    },
+                    imageUrl: {
+                        ...state.productForm.imageUrl,
+                        value: action.payload.imageUrl,
+                        valid: true,
+                        touched: true
+                    }
+                },
+                editable: !state.editable
+            }
         case newProductActionTypes.CLEAR_NEW_PRODUCT:
             return {
                 ...initialState
             }
+        case newProductActionTypes.PAGE_UNLOADED:
+            return {
+                ...state,
+                response: "",
+                submitted: false,
+                updated: "",
+                imageUrl: "",
+                formIsValid: false,
+                editable: false,
+                productForm: {
+                    ...state.productForm,
+                    sku: {
+                        ...state.productForm.sku,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    goldWeight: {
+                        ...state.productForm.goldWeight,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    silverWeight: {
+                        ...state.productForm.silverWeight,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    otherStoneWeight: {
+                        ...state.productForm.otherStoneWeight,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    diamondWeight: {
+                        ...state.productForm.diamondWeight,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    quantity: {
+                        ...state.productForm.quantity,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    otherStone: {
+                        ...state.productForm.otherStone,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    karats: {
+                        ...state.productForm.karats,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    description: {
+                        ...state.productForm.description,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    price: {
+                        ...state.productForm.price,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    costEu: {
+                        ...state.productForm.costEu,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    costUsd: {
+                        ...state.productForm.costUsd,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    categoryId: {
+                        ...state.productForm.categoryId,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    producerId: {
+                        ...state.productForm.producerId,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    address: {
+                        ...state.productForm.address,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    color: {
+                        ...state.productForm.color,
+                        value: "",
+                        valid: false,
+                        touched: false
+                    },
+                    imageUrl: {
+                        ...state.productForm.imageUrl,
+                        value: "",
+                        valid: true,
+                        touched: true
+                    }
+                }
+            };
         default:
             return state;
     }

@@ -107,6 +107,7 @@ class CategoryDetails extends Component {
 
     editCategoryHandler = () => {
         const {loadedCategory, initEditCategory} = this.props
+        console.log("loadedCategory.value",loadedCategory.value)
         initEditCategory(loadedCategory.value)
     }
 

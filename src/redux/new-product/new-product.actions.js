@@ -15,6 +15,20 @@ export const addProductFailed = errorMessage => ({
     payload: errorMessage 
 })
 
+export const updateProductStart = () => ({
+    type: newProductActionTypes.UPDATE_PRODUCT_START
+})
+
+export const updateProductSuccess = product => ({
+    type: newProductActionTypes.UPDATE_PRODUCT_SUCCESS,
+    payload: product
+})
+
+export const updateProductFailed = errorMessage => ({
+    type: newProductActionTypes.UPDATE_PRODUCT_FAILED,
+    payload: errorMessage 
+})
+
 export const imageUploadStart = () => ({
     type: newProductActionTypes.IMAGE_UPLOAD_START
 })
@@ -61,6 +75,18 @@ export const initAddProduct = product => {
                 dispatch(addProductSuccess(response))
             }).catch(error => {
                 dispatch(addProductFailed(error))
+            });
+    }
+}
+
+export const initUpdateProduct = product => {
+    return dispatch => {
+        dispatch(updateProductStart());
+        axiosInstance.patch('/product/update/', product)
+            .then(response => {
+                dispatch(updateProductSuccess(response))
+            }).catch(error => {
+                dispatch(updateProductFailed(error))
             });
     }
 }

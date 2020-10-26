@@ -8,6 +8,15 @@ import "react-responsive-modal/styles.css";
 import {initSingleProduct, initDeleteProduct, initDisableProduct} from '../redux/product/product.actions';
 import {initCategories, initSingleCategory} from '../redux/category/category.actions';
 import {initProducers, initSingleProducer} from '../redux/producer/producer.actions';
+import {initStores} from '../redux/store/store.actions';
+import {initEditProduct, initProductValidation, initUpdateProduct, initImage, initImageUploadProperties, initPopulateFields} from '../redux/new-product/new-product.actions';
+import TextInput from '../components/forms/TextInput';
+import TextArea from '../components/forms/TextArea';
+import Select2 from '../components/forms/Select2';
+import Radio from '../components/forms/RadioButton';
+import Dropzone from '../components/Dropzone';
+import {updateObject} from '../util/utilities';
+import {validations} from '../util/validations';
 import {dict} from '../util/variables';
 import Spinner from '../components/Spinner';
 import Button from '../components/Button';
@@ -85,17 +94,32 @@ class ProductDetails extends Component {
     }
 
     showSnackbarHandler = () => {
-        const {response} = this.props; 
-        console.log("responseInfo status: ", response?.status)
+        const {response, updated} = this.props; 
+        console.log(`responseInfo status: ${response?.status} and updateInfo status: ${updated?.status}`)
 
         if (response?.status && response?.status === 200) {
             this.setState({snackBarOpen: true, snackBarMessage: dict.successfulProductDeletion})
-
+            
             setTimeout(() => {
                this.redirectBack()
             }, 1500);
-        } else {
+        } 
+        if (updated?.status && updated?.status === 200) {
+            this.setState({snackBarOpen: true, snackBarMessage: dict.successfulProductUpdate})
+            
+            setTimeout(() => {
+               this.redirectBack()
+            }, 1500);
+        } 
+        if (response?.status && response?.status !== 200) {
             this.setState({snackBarOpen: true, snackBarMessage: dict.errorUponProductDeletion})
+            
+            setTimeout(() => {
+                this.setState({snackBarOpen: false, snackBarMessage: ''})
+            }, 3500);
+        } 
+        if (updated?.status && updated?.status !== 200) {
+            this.setState({snackBarOpen: true, snackBarMessage: dict.errorUponProductUpdate})
 
             setTimeout(() => {
                this.setState({snackBarOpen: false, snackBarMessage: ''})
@@ -109,19 +133,15 @@ class ProductDetails extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const {product, match, response} = this.props;
+        const {product, match, response, updated} = this.props;
         console.log("ProductDetails.jsx did update: ", this.props);
         
         if (prevProps.match.params.stockId !== match.params.stockId && product && product.loadedProduct.stock.id) {
             this.loadData();
         }
 
-        if (prevProps.response !== response) {
+        if ((prevProps.response !== response) || (prevProps.updated !== updated)) {
             this.showSnackbarHandler()
-
-            if (response?.status === 404) {
-                this.redirectBack()
-            }
         }
     }
 
@@ -142,15 +162,18 @@ class ProductDetails extends Component {
     };
 
     loadData = () => {
-        const {match, history, initSingleProduct, initCategories, initProducers, initSingleProducer, initSingleCategory} = this.props;
+        const {match, history, initSingleProduct, initCategories, initProducers, initStores, initSingleProducer, initSingleCategory} = this.props;
 
         if (history.location.state) {
-            initSingleProducer(history.location.state?.producerId);
-            initSingleCategory(history.location.state?.categoryId);
+            // initSingleProducer(history.location.state?.producerId);
+            // initSingleCategory(history.location.state?.categoryId);
+            initCategories();
+            initProducers();
         } else {
             initCategories();
             initProducers();
         }
+        initStores();
         initSingleProduct(match.params.productId);
     }
 
@@ -161,7 +184,110 @@ class ProductDetails extends Component {
     }
 
     editProductHandler = () => {
-        console.log("Just a test for the edition of the product..")
+        const {loadedProduct, initEditProduct, categories, stores, producers, initPopulateFields} = this.props;
+
+        initEditProduct(loadedProduct[0][0])
+
+        /* Tweak store, producer and category response because react-select lib works with value/label keys  */
+        let updatedStores = stores.map(({ id: value, address: label }) => ({ value: label, label }));
+        let updatedProducers = producers.map(({ id: value, value: label, ...rest }) => ({ value, label, ...rest })); 
+        let updatedCategories = categories.map(({ id: value, value: label }) => ({ value, label })); 
+
+        const payload = {
+            updatedCategories,
+            updatedStores,
+            updatedProducers
+        }
+
+        initPopulateFields(payload)
+    }
+
+    /* callback to get fileUrl and file from DropZone component */
+    shouldUpload = (fileUrl, file) => {
+        const {initImageUploadProperties} = this.props;
+
+        const payload = {
+            fileUrl,
+            file
+        }
+
+        console.log("PAYLOAD: ", payload)
+
+        initImageUploadProperties(payload)
+
+        this.changeHandler({
+            target: {
+                name: "imageUrl",
+                value: fileUrl
+            }
+        })
+    }
+
+    /* Helper function to send info to changeHandler for react-select library */
+    changeSelect2Handler = name => ({value, label}) => {
+        this.changeHandler({
+            target: {
+                name,
+                value
+            }
+        })
+    }
+
+    changeHandler = event => {
+        const {productForm, initProductValidation} = this.props;
+
+        const name = event.target.name;
+
+        const value = event.target.type === "checkbox" 
+             ? event.target.checked : event.target.value;
+
+        const updatedFormElement = updateObject(productForm[name], {
+            value: value,
+            valid: validations(value, productForm[name].validationRules),
+            touched: true
+        })
+
+        const updatedProductForm = updateObject(productForm, {
+            [name]: updatedFormElement
+        })
+  
+        let formIsValid = true;
+        for (let inputIdentifier in updatedProductForm) {
+            formIsValid = updatedProductForm[inputIdentifier].valid && formIsValid;
+        }
+
+        const payload = {
+            updatedProductForm,
+            formIsValid
+        }
+
+        console.log("updatedProductForm",updatedProductForm)
+
+        initProductValidation(payload)
+    }
+
+    formSubmitHandler = event => {
+        event.preventDefault();
+        const {match, initUpdateProduct, initImage, imageUrl, file, productForm} = this.props;
+
+        const formData = {};
+        for (let formElementId in productForm) {
+            formData[formElementId] = productForm[formElementId].value
+        }
+         /* Insert categoryId to the payload */
+        formData.id = match.params.productId;
+        console.log("imageUrl", imageUrl)
+        formData.nonProduce = false;
+        if (imageUrl !== "") {
+            formData.imageUrl = imageUrl.value;
+        }
+
+        if (file !== "") {
+            initImage(file)
+        }
+
+        console.log("Data inserted: ", formData)
+        initUpdateProduct(formData);
     }
 
     disableProductHandler = () => {
@@ -181,12 +307,16 @@ class ProductDetails extends Component {
 
     redirectBack = () => {
         const {history} = this.props;
-        if(history) history.push('/');
+        if(history) history.push('/products/Kifisia/1');
     }
 
     render () {
-        const {match, loadedProduct, categories, producers, loadedproducer, loadedCategory, response} = this.props;
+        const {match, loadedProduct, categories, producers, loadedproducer, loadedCategory, response, editable, formIsValid} = this.props;
+        const {sku, description, price, quantity, costEu, costUsd, karats, categoryId, producerId, address, color, goldWeight, otherStoneWeight, diamondWeight, otherStone, imageUrl} = this.props.productForm;
+        
         const {snackBarOpen, snackBarMessage, openModalDisable, openModalDelete} = this.state;
+
+        console.log("props", this.props)
 
         let product;       
 
@@ -201,13 +331,13 @@ class ProductDetails extends Component {
             const zeroQuantity   = currentProduct.quantity === 0;
             const zeroQuantityOtherShops = otherStock1?.quantity || otherStock2?.quantity === 0;
 
-            const imageSource = currentProduct.imageUrl === "" ? imagePlaceholder : currentProduct.imageUrl;
+            const imageSource = currentProduct.imageUrl === "" || currentProduct.imageUrl === null ? imagePlaceholder : currentProduct.imageUrl;
 
-            let categoryId = get(loadedProduct, '[0][0].categoryId', "");
-            let producerId = get(loadedProduct, '[0][0].producerId', "");
+            let _categoryId = get(loadedProduct, '[0][0].categoryId', "");
+            let _producerId = get(loadedProduct, '[0][0].producerId', "");
 
-            let category = categories.find(cat => cat.id === categoryId);
-            let producer = producers.find(prod => prod.id === producerId);
+            let category = categories.find(cat => cat.id  === _categoryId);
+            let producer = producers.find(prod => prod.id === _producerId);
 
             let producerValue = "";
             let categoryValue = "";
@@ -223,67 +353,200 @@ class ProductDetails extends Component {
             } else {
                 categoryValue = category?.value;
             }
+    
+            if (editable) {
+                /* Tweak store, producer and category response because react-select lib works with value/label keys  */
+                let updatedProducers = producers.map(({ id: value, value: label, ...rest }) => ({ value, label, ...rest })); 
+                let updatedCategories = categories.map(({ id: value, value: label }) => ({ value, label })); 
+
+                const producersIdForUpdate = updatedProducers.find(prod => prod.value === producerId.value)
+                const categoryIdForUpdate = updatedCategories.find(cat => cat.value === categoryId.value)
+                //categoryId.value = categoryIdForUpdate?.label;
+                //producerId.value = producersIdForUpdate?.label;
+            }
 
             product = (
                 <MainContainer>
                     <Modal center open={openModalDisable} onClose={this.onCloseModalDisable}>
                         <ModalWarning>{dict.productDisableMessage}</ModalWarning>   
                         <FlexCentered>
-                            <Button btnType="danger"    disabled={false}  onClick={() => {
+                            <Button btnType="danger" disabled={false} onClick={() => {
                                     this.onCloseModalDisable()
                                     this.disableProductHandler()}}>{dict.yes}</Button>
-                            <Button btnType="edit"      disabled={false} onClick={this.onCloseModalDisable}>{dict.no}</Button>
+                            <Button btnType="edit"   disabled={false} onClick={this.onCloseModalDisable}>{dict.no}</Button>
                         </FlexCentered> 
                     </Modal>
                     <Modal center open={openModalDelete} onClose={this.onCloseModalDelete}>
                         <ModalWarning>{dict.productDeleteMessage}</ModalWarning>   
                         <FlexCentered>
-                            <Button btnType="danger"    disabled={false}  onClick={() => {
+                            <Button btnType="danger" disabled={false} onClick={() => {
                                     this.onCloseModalDelete()
                                     this.deleteProductHandler()}}>{dict.yes}</Button>
-                            <Button btnType="edit"      disabled={false} onClick={this.onCloseModalDelete}>{dict.no}</Button>
+                            <Button btnType="edit"   disabled={false} onClick={this.onCloseModalDelete}>{dict.no}</Button>
                         </FlexCentered> 
                     </Modal>
                     <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
-                    <ProductTitle>{currentProduct.sku}</ProductTitle>
-                    <ProductBody>
-                        <ProductImage>
-                            <ImageComponent alt={currentProduct.description} style={{backgroundImage: `url(${imageSource})`}}/>
-                        </ProductImage>
-                        <ProductInformation>
-                            <InformationTitle>{dict.productInfo}</InformationTitle>
-                            <AttributesColumn>
-                                <div>{dict.producerCode}: {producerValue}</div>
-                                <div>{dict.description}: {currentProduct.description}</div>
-                                <div>{dict.karats}: {currentProduct.karats}</div>
-                                <div>{dict.color}: {currentProduct.color}</div>
-                                <div>{dict.costDollars}: {currentProduct.costUsd}$</div>
-                                <div>{dict.costEuro}: {currentProduct.costEu}€</div>
-                            </AttributesColumn>
-                            <AttributesColumn>
-                                <div>{dict.stones}: {currentProduct.otherStone}</div>
-                                <div>{dict.goldWeight}: {currentProduct.goldWeight}</div>
-                                <div>{dict.silverWeight}: {currentProduct.silverWeight}</div>
-                                <div>{dict.stoneWeight}: {currentProduct.otherStoneWeight}</div>
-                                <div>{dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : currentProduct.quantity}</div>
-                                <div>{dict.category}: {categoryValue}</div>
-                            </AttributesColumn>
+                    { editable ? 
+                        <form>
+                            <TextInput name="sku" type={sku.params.type}
+                                placeholder={sku.params.placeholder} label={sku.label}
+                                value={sku.value} valid={sku.valid} touched={sku.touched}
+                                minLength={sku.validationRules.minLength}
+                                maxLength={sku.validationRules.maxLength} 
+                                onChange={this.changeHandler}
+                                validationMessage={sku.validationMessage} />
 
-                            {otherStock1 && otherStock2 &&
-                                <OtherShops>  
-                                    <InformationTitle>{dict.otherShops}</InformationTitle> 
-                                    <div>{otherStock1.address} : {dict.quantity}: {zeroQuantityOtherShops ? <>{dict.noStock}</> : otherStock1.quantity}</div>
-                                    <div>{otherStock2.address} : {dict.quantity}: {zeroQuantityOtherShops ? <>{dict.noStock}</> : otherStock2.quantity}</div>
-                                </OtherShops>
-                            }
-                        </ProductInformation>
-                    </ProductBody>
+                            <TextInput name="quantity" type={quantity.params.type}
+                                placeholder={quantity.params.placeholder} label={quantity.label}
+                                value={quantity.value} valid={quantity.valid} touched={quantity.touched}
+                                minLength={quantity.validationRules.minLength}
+                                maxLength={quantity.validationRules.maxLength}
+                                onChange={this.changeHandler} 
+                                validationMessage={quantity.validationMessage} />
+
+                            <TextInput name="goldWeight" type={goldWeight.params.type}
+                                placeholder={goldWeight.params.placeholder} label={goldWeight.label}
+                                value={goldWeight.value} valid={goldWeight.valid} touched={goldWeight.touched}
+                                minLength={goldWeight.validationRules.minLength}
+                                maxLength={goldWeight.validationRules.maxLength}
+                                onChange={this.changeHandler}
+                                validationMessage={goldWeight.validationMessage} />
+
+                            <TextInput name="diamondWeight" type={diamondWeight.params.type}
+                                placeholder={diamondWeight.params.placeholder} label={diamondWeight.label}
+                                value={diamondWeight.value} valid={diamondWeight.valid} touched={diamondWeight.touched}
+                                minLength={diamondWeight.validationRules.minLength}
+                                maxLength={diamondWeight.validationRules.maxLength}
+                                onChange={this.changeHandler} 
+                                validationMessage={diamondWeight.validationMessage} />
+
+                            <TextInput name="price" type={price.params.type}
+                                placeholder={price.params.placeholder} label={price.label}
+                                value={price.value} touched={price.touched} valid={price.valid}
+                                minLength={price.validationRules.minLength}
+                                maxLength={price.validationRules.maxLength}
+                                onChange={this.changeHandler}
+                                validationMessage={price.validationMessage} />
+
+                            <TextInput name="karats" type={karats.params.type}
+                                placeholder={karats.params.placeholder} label={karats.label}
+                                value={karats.value} valid={karats.valid} touched={karats.touched}
+                                onChange={this.changeHandler}
+                                validationMessage={karats.validationMessage} />
+
+                            <TextInput name="costEu" type={costEu.params.type}
+                                placeholder={costEu.params.placeholder} label={costEu.label}
+                                value={costEu.value} valid={costEu.valid} touched={costEu.touched}
+                                minLength={costEu.validationRules.minLength}
+                                maxLength={costEu.validationRules.maxLength} 
+                                onChange={this.changeHandler}
+                                validationMessage={costEu.validationMessage} />
+
+                            <TextInput name="costUsd" type={costUsd.params.type}
+                                placeholder={costUsd.params.placeholder} label={costUsd.label}
+                                value={costUsd.value} valid={costUsd.valid} touched={costUsd.touched}
+                                minLength={costUsd.validationRules.minLength}
+                                maxLength={costUsd.validationRules.maxLength}
+                                onChange={this.changeHandler}
+                                validationMessage={costUsd.validationMessage} />
+
+                            <TextArea name="description"
+                                placeholder={description.params.placeholder} label={description.label}
+                                value={description.value} valid={description.valid} touched={description.touched}
+                                minLength={description.validationRules.minLength}
+                                maxLength={description.validationRules.maxLength}
+                                rows={description.params.rows}
+                                onChange={this.changeHandler} />
+
+                            <TextArea name="otherStone" type={otherStone.params.type}
+                                placeholder={otherStone.params.placeholder} label={otherStone.label}
+                                value={otherStone.value} valid={otherStone.valid} touched={otherStone.touched}
+                                minLength={otherStone.validationRules.minLength}
+                                maxLength={otherStone.validationRules.maxLength}
+                                rows={otherStone.params.rows}
+                                onChange={this.changeHandler} />
+
+                            <TextInput name="otherStoneWeight" type={otherStoneWeight.params.type}
+                                placeholder={otherStoneWeight.params.placeholder} label={otherStoneWeight.label}
+                                value={otherStoneWeight.value} valid={otherStoneWeight.valid} touched={otherStoneWeight.touched}
+                                minLength={otherStoneWeight.validationRules.minLength}
+                                maxLength={otherStoneWeight.validationRules.maxLength}
+                                onChange={this.changeHandler}
+                                validationMessage={otherStoneWeight.validationMessage} />
+
+                            <Select2 name="categoryId"
+                                placeholder={categoryId.value ? categoryId.value : "Select..."}
+                                label={categoryId.label} valid={categoryId.valid} touched={categoryId.touched} 
+                                options={categoryId.options} onChange={this.changeSelect2Handler("categoryId")} />
+
+                            <Select2 name="address"
+                                placeholder={address.value ? address.value : "Select..."}
+                                label={address.label} valid={address.valid} touched={address.touched} 
+                                options={address.options} onChange={this.changeSelect2Handler("address")} />
+
+                            <Select2 name="producerId"
+                                placeholder={producerId.value ? producerId.value : "Select..."}
+                                label={producerId.label} valid={producerId.valid} touched={producerId.touched} 
+                                options={producerId.options} onChange={this.changeSelect2Handler("producerId")} />
+
+                            <Dropzone name="imageUrl"
+                                label={imageUrl.label} maxFiles={imageUrl.maxFiles}
+                                minSize={imageUrl.minSize} 
+                                maxSize={imageUrl.maxSize}
+                                shouldUpload={this.shouldUpload} /> 
+
+                            <Radio name="color"
+                                label={color.label} options={color.options} type={color.params.type}
+                                value={color.value} valid={color.valid} touched={color.touched}
+                                onChange={this.changeHandler} />
+                        </form> :
+                        <>
+                            <ProductTitle>{currentProduct.sku}</ProductTitle>
+                            <ProductBody>
+                                <ProductImage>
+                                    <ImageComponent alt={currentProduct.description} style={{backgroundImage: `url(${imageSource})`}}/>
+                                </ProductImage>
+                                <ProductInformation>
+                                    <InformationTitle>{dict.productInfo}</InformationTitle>
+                                    <AttributesColumn>
+                                        <div>{dict.producerCode}: {producerValue}</div>
+                                        <div>{dict.description}: {currentProduct.description}</div>
+                                        <div>{dict.karats}: {currentProduct.karats}</div>
+                                        <div>{dict.color}: {currentProduct.color}</div>
+                                        <div>{dict.costDollars}: {currentProduct.costUsd}$</div>
+                                        <div>{dict.costEuro}: {currentProduct.costEu}€</div>
+                                    </AttributesColumn>
+                                    <AttributesColumn>
+                                        <div>{dict.stones}: {currentProduct.otherStone}</div>
+                                        <div>{dict.goldWeight}: {currentProduct.goldWeight}</div>
+                                        <div>{dict.silverWeight}: {currentProduct.silverWeight}</div>
+                                        <div>{dict.stoneWeight}: {currentProduct.otherStoneWeight}</div>
+                                        <div>{dict.quantity}: {zeroQuantity ? <>{dict.noStock}</> : currentProduct.quantity}</div>
+                                        <div>{dict.category}: {categoryValue}</div>
+                                    </AttributesColumn>
+
+                                    {otherStock1 && otherStock2 &&
+                                        <OtherShops>  
+                                            <InformationTitle>{dict.otherShops}</InformationTitle> 
+                                            <div>{otherStock1.address} : {dict.quantity}: {zeroQuantityOtherShops ? <>{dict.noStock}</> : otherStock1.quantity}</div>
+                                            <div>{otherStock2.address} : {dict.quantity}: {zeroQuantityOtherShops ? <>{dict.noStock}</> : otherStock2.quantity}</div>
+                                        </OtherShops>
+                                    }
+                                </ProductInformation>
+                            </ProductBody>
+                        </>
+                    }
                     <FlexCentered>
-                        <Button btnType="add"       disabled={false}    onClick={this.addProductHandler}>{dict.add}</Button>
-                        <Button btnType='edit'      disabled={false}    onClick={this.editProductHandler}>{dict.edit}</Button>
-                        <Button btnType='danger'    disabled={false}    onClick={this.onOpenModalDisable}>{dict.disable}</Button>
-                        <Button btnType='danger'    disabled={false}    onClick={this.onOpenModalDelete}>{dict.delete}</Button>
-                        <Button btnType='success'   disabled={false}    onClick={this.redirectBack}>{dict.back}</Button>
+                        <Button btnType='edit'    disabled={false} onClick={this.editProductHandler}>{dict.edit}</Button>
+                    { editable ? 
+                        <Button btnType="success" disabled={!formIsValid} onClick={this.formSubmitHandler}>{dict.submit}</Button> : null }
+                    { !editable ?   
+                        <>
+                            <Button btnType="add"    disabled={false} onClick={this.addProductHandler}>{dict.add}</Button>
+                            <Button btnType='danger' disabled={false} onClick={this.onOpenModalDisable}>{dict.disable}</Button>
+                            <Button btnType='danger' disabled={false} onClick={this.onOpenModalDelete}>{dict.delete}</Button> 
+                        </> : null }
+                        <Button btnType='success' disabled={false} onClick={this.redirectBack}>{dict.back}</Button>
                     </FlexCentered>
                 </MainContainer>
             );
@@ -294,21 +557,35 @@ class ProductDetails extends Component {
 
 const mapStateToProps = state => ({
     loadedProduct: state.product.loadedProduct,
-    response: state.product.response,
-    categories: state.category.categories,
-    producers: state.producer.producers,
+    loadedproducer: state.producer.loadedproducer,
     loadedCategory: state.category.loadedCategory,
-    loadedproducer: state.producer.loadedproducer
+    categories: state.category.categories,
+    stores: state.store.stores,
+    producers: state.producer.producers,
+    response: state.product.response,
+    updated: state.newProduct.updated,
+    editable: state.newProduct.editable,
+    file: state.newProduct.file,
+    imageUrl: state.newProduct.imageUrl,
+    productForm: state.newProduct.productForm,
+    formIsValid: state.newProduct.formIsValid,
 })
   
 const mapDispatchToProps = dispatch => ({
     initSingleProduct: productId => dispatch(initSingleProduct(productId)),
     initDeleteProduct: productId => dispatch(initDeleteProduct(productId)),
     initDisableProduct: productId => dispatch(initDisableProduct(productId)),
+    initUpdateProduct: product => dispatch(initUpdateProduct(product)),
     initCategories: () => dispatch(initCategories()),
     initProducers: () => dispatch(initProducers()),
+    initStores: () => dispatch(initStores()),
+    initEditProduct: product => dispatch(initEditProduct(product)),
+    initPopulateFields: lists => dispatch(initPopulateFields(lists)),
+    initProductValidation: product => dispatch(initProductValidation(product)),
     initSingleCategory: (categoryId) => dispatch(initSingleCategory(categoryId)),
+    initImage: image => dispatch(initImage(image)),
     initSingleProducer: (producerId) => dispatch(initSingleProducer(producerId)),
+    initImageUploadProperties: imageProps => dispatch(initImageUploadProperties(imageProps)),
     onUnload: () => dispatch({type: 'PAGE_UNLOADED'})
 })
 

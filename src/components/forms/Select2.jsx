@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Select from 'react-select';
 import {LabelComponent, FormComponent} from '../Common';
 
@@ -37,25 +37,19 @@ const customStyles = {
     })
 };
 
-class Select2 extends Component {
-
-    render() {
-        const {name, options, placeholder, onChange, label, autoFocus} = this.props;
-
-        return (
-            <FormComponent>
-                <LabelComponent>{label}</LabelComponent>
-                <Select
-                    name={name}
-                    styles={customStyles}
-                    options={options}
-                    onChange={onChange}
-                    placeholder={placeholder}
-                    autoFocus={autoFocus}
-                />
-            </FormComponent>
-        );
-    }
-}
+const Select2 = ({name, options, placeholder, onChange, label, autoFocus, isDisabled}) => (
+    <FormComponent>
+        <LabelComponent>{label}</LabelComponent>
+        <Select
+            name={name}
+            styles={customStyles}
+            options={options}
+            onChange={onChange}
+            placeholder={placeholder}
+            autoFocus={autoFocus}
+            isDisabled={isDisabled}
+        />
+    </FormComponent>
+);
 
 export default Select2;

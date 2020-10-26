@@ -121,7 +121,7 @@ class NewProduct extends Component {
         }
 
         formData.nonProduce = false;
-        formData.imageUrl = imageUrl;
+        formData.imageUrl = imageUrl.value;
 
         if (file !== "") {
             initImage(file)
@@ -134,7 +134,7 @@ class NewProduct extends Component {
     render () {
         let redirect = null;
         const {submitted, error, isFetching, formIsValid} = this.props;
-        const {sku, description, price, quantity, costEu, costUsd, karats, categoryId, producerId, address, color, goldWeight, silverWeight, otherStoneWeight, diamondWeight, otherStone} = this.props.productForm;
+        const {sku, description, price, quantity, costEu, costUsd, karats, categoryId, producerId, address, color, goldWeight, otherStoneWeight, diamondWeight, otherStone, imageUrl} = this.props.productForm;
 
         if (submitted) redirect = <Redirect to="/"/>;
 
@@ -157,64 +157,88 @@ class NewProduct extends Component {
                 <TextInput name="sku" type={sku.params.type}
                     placeholder={sku.params.placeholder} label={sku.label}
                     value={sku.value} valid={sku.valid} touched={sku.touched}
-                    maxLength={sku.validationRules.maxLength} onChange={this.changeHandler}
+                    minLength={sku.validationRules.minLength}
+                    maxLength={sku.validationRules.maxLength} 
+                    onChange={this.changeHandler}
                     validationMessage={sku.validationMessage} />
-
-                <TextArea name="description"
-                    placeholder={description.params.placeholder} label={description.label}
-                    value={description.value} valid={description.valid} touched={description.touched}
-                    onChange={this.changeHandler} rows={description.params.rows} />
-
-                <TextInput name="goldWeight" type={goldWeight.params.type}
-                    placeholder={goldWeight.params.placeholder} label={goldWeight.label}
-                    value={goldWeight.value} valid={goldWeight.valid} touched={goldWeight.touched}
-                    maxLength={goldWeight.validationRules.maxLength} onChange={this.changeHandler}
-                    validationMessage={goldWeight.validationMessage} />
-
-                <TextInput name="silverWeight" type={silverWeight.params.type}
-                    placeholder={silverWeight.params.placeholder} label={silverWeight.label}
-                    value={silverWeight.value} valid={silverWeight.valid} touched={silverWeight.touched}
-                    maxLength={silverWeight.validationRules.maxLength} onChange={this.changeHandler} />
-
-                <TextInput name="otherStoneWeight" type={otherStoneWeight.params.type}
-                    placeholder={otherStoneWeight.params.placeholder} label={otherStoneWeight.label}
-                    value={otherStoneWeight.value} valid={otherStoneWeight.valid} touched={otherStoneWeight.touched}
-                    maxLength={otherStoneWeight.validationRules.maxLength} onChange={this.changeHandler} />
-
-                <TextInput name="diamondWeight" type={diamondWeight.params.type}
-                    placeholder={diamondWeight.params.placeholder} label={diamondWeight.label}
-                    value={diamondWeight.value} valid={diamondWeight.valid} touched={diamondWeight.touched}
-                    maxLength={diamondWeight.validationRules.maxLength} onChange={this.changeHandler} />
 
                 <TextInput name="quantity" type={quantity.params.type}
                     placeholder={quantity.params.placeholder} label={quantity.label}
                     value={quantity.value} valid={quantity.valid} touched={quantity.touched}
-                    maxLength={quantity.validationRules.maxLength} onChange={this.changeHandler} />
+                    minLength={quantity.validationRules.minLength}
+                    maxLength={quantity.validationRules.maxLength}
+                    onChange={this.changeHandler} 
+                    validationMessage={quantity.validationMessage} />
 
-                <TextInput name="otherStone" type={otherStone.params.type}
-                    placeholder={otherStone.params.placeholder} label={otherStone.label}
-                    value={otherStone.value} valid={otherStone.valid} touched={otherStone.touched}
-                    maxLength={otherStone.validationRules.maxLength} onChange={this.changeHandler} />
+                <TextInput name="goldWeight" type={goldWeight.params.type}
+                    placeholder={goldWeight.params.placeholder} label={goldWeight.label}
+                    value={goldWeight.value} valid={goldWeight.valid} touched={goldWeight.touched}
+                    minLength={goldWeight.validationRules.minLength}
+                    maxLength={goldWeight.validationRules.maxLength}
+                    onChange={this.changeHandler}
+                    validationMessage={goldWeight.validationMessage} />
+
+                <TextInput name="diamondWeight" type={diamondWeight.params.type}
+                    placeholder={diamondWeight.params.placeholder} label={diamondWeight.label}
+                    value={diamondWeight.value} valid={diamondWeight.valid} touched={diamondWeight.touched}
+                    minLength={diamondWeight.validationRules.minLength}
+                    maxLength={diamondWeight.validationRules.maxLength}
+                    onChange={this.changeHandler} 
+                    validationMessage={diamondWeight.validationMessage} />
 
                 <TextInput name="price" type={price.params.type}
                     placeholder={price.params.placeholder} label={price.label}
                     value={price.value} touched={price.touched} valid={price.valid}
-                    maxLength={price.validationRules.maxLength} onChange={this.changeHandler} />
-                
+                    minLength={price.validationRules.minLength}
+                    maxLength={price.validationRules.maxLength}
+                    onChange={this.changeHandler}
+                    validationMessage={price.validationMessage} />
+
                 <TextInput name="karats" type={karats.params.type}
                     placeholder={karats.params.placeholder} label={karats.label}
                     value={karats.value} valid={karats.valid} touched={karats.touched}
-                    maxLength={karats.validationRules.maxLength} onChange={this.changeHandler} />
+                    onChange={this.changeHandler}
+                    validationMessage={karats.validationMessage} />
 
                 <TextInput name="costEu" type={costEu.params.type}
                     placeholder={costEu.params.placeholder} label={costEu.label}
                     value={costEu.value} valid={costEu.valid} touched={costEu.touched}
-                    maxLength={costEu.validationRules.maxLength} onChange={this.changeHandler} />
+                    minLength={costEu.validationRules.minLength}
+                    maxLength={costEu.validationRules.maxLength} 
+                    onChange={this.changeHandler}
+                    validationMessage={costEu.validationMessage} />
 
                 <TextInput name="costUsd" type={costUsd.params.type}
                     placeholder={costUsd.params.placeholder} label={costUsd.label}
                     value={costUsd.value} valid={costUsd.valid} touched={costUsd.touched}
-                    maxLength={costUsd.validationRules.maxLength} onChange={this.changeHandler} />
+                    minLength={costUsd.validationRules.minLength}
+                    maxLength={costUsd.validationRules.maxLength}
+                    onChange={this.changeHandler}
+                    validationMessage={costUsd.validationMessage} />
+
+                <TextArea name="description"
+                    placeholder={description.params.placeholder} label={description.label}
+                    value={description.value} valid={description.valid} touched={description.touched}
+                    minLength={description.validationRules.minLength}
+                    maxLength={description.validationRules.maxLength}
+                    rows={description.params.rows}
+                    onChange={this.changeHandler} />
+
+                <TextArea name="otherStone" type={otherStone.params.type}
+                    placeholder={otherStone.params.placeholder} label={otherStone.label}
+                    value={otherStone.value} valid={otherStone.valid} touched={otherStone.touched}
+                    minLength={otherStone.validationRules.minLength}
+                    maxLength={otherStone.validationRules.maxLength}
+                    rows={otherStone.params.rows}
+                    onChange={this.changeHandler} />
+
+                <TextInput name="otherStoneWeight" type={otherStoneWeight.params.type}
+                    placeholder={otherStoneWeight.params.placeholder} label={otherStoneWeight.label}
+                    value={otherStoneWeight.value} valid={otherStoneWeight.valid} touched={otherStoneWeight.touched}
+                    minLength={otherStoneWeight.validationRules.minLength}
+                    maxLength={otherStoneWeight.validationRules.maxLength}
+                    onChange={this.changeHandler}
+                    validationMessage={otherStoneWeight.validationMessage} />
 
                 <Select2 name="categoryId"
                     placeholder={categoryId.value ? categoryId.value : "Select..."}
@@ -231,15 +255,16 @@ class NewProduct extends Component {
                     label={producerId.label} valid={producerId.valid} touched={producerId.touched} 
                     options={producerId.options} onChange={this.changeSelect2Handler("producerId")} />
 
+                <Dropzone name="imageUrl"
+                    label={imageUrl.label} maxFiles={imageUrl.maxFiles}
+                    minSize={imageUrl.minSize} 
+                    maxSize={imageUrl.maxSize}
+                    shouldUpload={this.shouldUpload} /> 
+
                 <Radio name="color"
                     label={color.label} options={color.options} type={color.params.type}
                     value={color.value} valid={color.valid} touched={color.touched}
                     onChange={this.changeHandler} />
-
-                <Dropzone 
-                    label="Upload Image" maxFiles={1}
-                    minSize={0} maxSize={1048576}
-                    shouldUpload={this.shouldUpload} />
 
                 <FlexCentered>
                     <Button btnType="success"   disabled={!formIsValid} onClick={this.formSubmitHandler} >{dict.submit}</Button>
