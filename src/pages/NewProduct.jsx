@@ -122,6 +122,9 @@ class NewProduct extends Component {
 
         formData.nonProduce = false;
         formData.imageUrl = imageUrl.value;
+        if (formData.imageUrl == null) {
+            formData.imageUrl = ""
+        }
 
         if (file !== "") {
             initImage(file)

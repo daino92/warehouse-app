@@ -9,38 +9,39 @@ const HeaderContainer = styled('header')({
     display: "flex",
     justifyContent: "space-between",
     height: "70px",
-    width: "100%",
+    width: "100%"
 },
 mq({
     padding: ["10px", "20px 40px", "20px 60px"],
-    marginBottom: ["1em", "2em"],
+    marginBottom: ["1em", "2em"]
 }))
 
-const LogoContainer = styled(Link)`
-    display: flex;
-	align-items: center;
-	justify-content: center;
-    height: 100%;
-    width: 70px;
-`;
+const LogoContainer = styled(Link)({
+    display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+    height: "100%",
+    width: "70px"
+})
 
-const OptionsContainer = styled('div')`
-    width: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-`;
+const OptionsContainer = styled('div')({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    height: "100%",
+    width: "50%"
+})
 
-const OptionLink = styled(NavLink)`
-    padding: 10px 15px;
-    cursor: pointer;
-
-    &.active {
-        color: ${colors.sun};
-        text-decoration: underline;
+const OptionLink = styled(NavLink)({
+    padding: "10px 5px 5px",
+    margin: ".5em",
+    cursor: "pointer",
+    
+    "&.active": {
+        color: `${colors.sun}`,
+        borderBottom: "2px solid"
     }
-`;
+})
 
 const Header = () => (
     <HeaderContainer>

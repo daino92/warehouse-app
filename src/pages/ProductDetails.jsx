@@ -12,8 +12,6 @@ import {initStores} from '../redux/store/store.actions';
 import {initEditProduct, initProductValidation, initUpdateProduct, initImage, initImageUploadProperties, initPopulateFields} from '../redux/new-product/new-product.actions';
 import TextInput from '../components/forms/TextInput';
 import TextArea from '../components/forms/TextArea';
-import Select2 from '../components/forms/Select2';
-import Radio from '../components/forms/RadioButton';
 import Dropzone from '../components/Dropzone';
 import {updateObject} from '../util/utilities';
 import {validations} from '../util/validations';
@@ -239,7 +237,7 @@ class ProductDetails extends Component {
         const name = event.target.name;
 
         const value = event.target.type === "checkbox" 
-             ? event.target.checked : event.target.value;
+            ? event.target.checked : event.target.value;
 
         const updatedFormElement = updateObject(productForm[name], {
             value: value,
@@ -312,7 +310,7 @@ class ProductDetails extends Component {
 
     render () {
         const {match, loadedProduct, categories, producers, loadedproducer, loadedCategory, response, editable, formIsValid} = this.props;
-        const {sku, description, price, quantity, costEu, costUsd, karats, categoryId, producerId, address, color, goldWeight, otherStoneWeight, diamondWeight, otherStone, imageUrl} = this.props.productForm;
+        const {description, price, quantity, costEu, costUsd, karats, goldWeight, otherStoneWeight, diamondWeight, otherStone, imageUrl} = this.props.productForm;
         
         const {snackBarOpen, snackBarMessage, openModalDisable, openModalDelete} = this.state;
 
@@ -353,17 +351,6 @@ class ProductDetails extends Component {
             } else {
                 categoryValue = category?.value;
             }
-    
-            if (editable) {
-                /* Tweak store, producer and category response because react-select lib works with value/label keys  */
-                let updatedProducers = producers.map(({ id: value, value: label, ...rest }) => ({ value, label, ...rest })); 
-                let updatedCategories = categories.map(({ id: value, value: label }) => ({ value, label })); 
-
-                const producersIdForUpdate = updatedProducers.find(prod => prod.value === producerId.value)
-                const categoryIdForUpdate = updatedCategories.find(cat => cat.value === categoryId.value)
-                //categoryId.value = categoryIdForUpdate?.label;
-                //producerId.value = producersIdForUpdate?.label;
-            }
 
             product = (
                 <MainContainer>
@@ -388,14 +375,6 @@ class ProductDetails extends Component {
                     <Snackbar snackBarOpen={snackBarOpen} snackBarMessage={snackBarMessage}/>
                     { editable ? 
                         <form>
-                            <TextInput name="sku" type={sku.params.type}
-                                placeholder={sku.params.placeholder} label={sku.label}
-                                value={sku.value} valid={sku.valid} touched={sku.touched}
-                                minLength={sku.validationRules.minLength}
-                                maxLength={sku.validationRules.maxLength} 
-                                onChange={this.changeHandler}
-                                validationMessage={sku.validationMessage} />
-
                             <TextInput name="quantity" type={quantity.params.type}
                                 placeholder={quantity.params.placeholder} label={quantity.label}
                                 value={quantity.value} valid={quantity.valid} touched={quantity.touched}
@@ -474,31 +453,12 @@ class ProductDetails extends Component {
                                 onChange={this.changeHandler}
                                 validationMessage={otherStoneWeight.validationMessage} />
 
-                            <Select2 name="categoryId"
-                                placeholder={categoryId.value ? categoryId.value : "Select..."}
-                                label={categoryId.label} valid={categoryId.valid} touched={categoryId.touched} 
-                                options={categoryId.options} onChange={this.changeSelect2Handler("categoryId")} />
-
-                            <Select2 name="address"
-                                placeholder={address.value ? address.value : "Select..."}
-                                label={address.label} valid={address.valid} touched={address.touched} 
-                                options={address.options} onChange={this.changeSelect2Handler("address")} />
-
-                            <Select2 name="producerId"
-                                placeholder={producerId.value ? producerId.value : "Select..."}
-                                label={producerId.label} valid={producerId.valid} touched={producerId.touched} 
-                                options={producerId.options} onChange={this.changeSelect2Handler("producerId")} />
-
                             <Dropzone name="imageUrl"
                                 label={imageUrl.label} maxFiles={imageUrl.maxFiles}
                                 minSize={imageUrl.minSize} 
                                 maxSize={imageUrl.maxSize}
                                 shouldUpload={this.shouldUpload} /> 
 
-                            <Radio name="color"
-                                label={color.label} options={color.options} type={color.params.type}
-                                value={color.value} valid={color.valid} touched={color.touched}
-                                onChange={this.changeHandler} />
                         </form> :
                         <>
                             <ProductTitle>{currentProduct.sku}</ProductTitle>

@@ -22,7 +22,7 @@ const ProductsWrapper = styled('section')({
     justifyContent: "center",
     width: "100%",
     maxWidth: "1200px",
-    margin: "auto" 
+    margin: "0 auto 1.5em" 
 });
 
 const SkuSearch = styled('div')({
