@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/core": "^10.0.21",
     "@emotion/styled": "^10.0.17",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "babel-plugin-emotion": "^10.0.21",
     "facepaint": "^1.2.1",
     "react": "^16.10.2",
